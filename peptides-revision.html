@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Peptides — Révision interactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,660;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --paper:#F1F3EE;
+  --paper-2:#E8EBE3;
+  --ink:#1B2420;
+  --ink-soft:#525C54;
+  --line:#CBD1C5;
+  --card:#FFFFFF;
+  --bond:#1F6F54;
+  --bond-soft:#DCEAE3;
+  --blue:#3D5F9E;
+  --blue-soft:#DDE5F2;
+  --violet:#6C3FA0;
+  --violet-soft:#EBE1F5;
+  --rust:#AD4530;
+  --rust-soft:#F5E1DB;
+  --gold:#B78A2E;
+  --radius:10px;
+  --maxw:760px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px;}
+
+h1,h2,h3{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  line-height:1.15;
+  margin:0 0 .4em;
+  color:var(--ink);
+}
+h2{font-size:1.5rem; letter-spacing:-.01em;}
+h3{font-size:1.08rem; font-weight:660;}
+p{margin:0 0 1em;}
+p:last-child{margin-bottom:0;}
+.lede{color:var(--ink-soft); font-size:1rem; max-width:56ch;}
+.kicker{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.72rem;
+  color:var(--bond);
+  letter-spacing:.02em;
+  margin-bottom:.5em;
+  display:block;
+}
+strong{font-weight:600;}
+.mono{font-family:'IBM Plex Mono', monospace;}
+
+/* --- nav --- */
+nav.top{
+  position:sticky; top:0; z-index:50;
+  background:rgba(241,243,238,.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+nav.top .wrap{
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:12px; padding-bottom:12px; gap:12px;
+}
+nav.top .brand{
+  font-family:'Fraunces', serif; font-weight:660; font-size:1rem;
+}
+nav.top .links{display:flex; gap:16px; overflow-x:auto; scrollbar-width:none;}
+nav.top .links::-webkit-scrollbar{display:none;}
+nav.top a{
+  color:var(--ink-soft); text-decoration:none; font-size:.82rem;
+  white-space:nowrap; padding:4px 0; border-bottom:2px solid transparent;
+}
+nav.top a:hover{color:var(--ink); border-color:var(--bond);}
+.score-badge{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.72rem;
+  background:var(--bond); color:#fff;
+  padding:4px 9px; border-radius:20px;
+  white-space:nowrap;
+}
+
+/* --- hero --- */
+header.hero{padding:56px 0 34px;}
+header.hero h1{font-size:clamp(2.1rem, 5vw, 2.9rem);}
+.chain-svg{width:100%; height:auto; margin:26px 0 6px; display:block;}
+.chain-svg circle.res{fill:var(--card); stroke:var(--bond); stroke-width:2;}
+.chain-svg text{font-family:'IBM Plex Mono', monospace; font-size:9.5px; fill:var(--ink); text-anchor:middle;}
+.chain-svg path.bb{fill:none; stroke:var(--bond); stroke-width:2;}
+.chain-svg .label{font-family:'IBM Plex Mono', monospace; font-size:9px; fill:var(--ink-soft);}
+
+/* --- section rhythm --- */
+section{padding:44px 0;}
+.divider{
+  display:flex; align-items:center; gap:8px; margin:0 0 30px;
+  color:var(--line);
+}
+.divider .dash{flex:1; height:1px; background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px);}
+.divider .node{width:6px; height:6px; border-radius:50%; background:var(--bond);}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px 22px;
+}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media(max-width:560px){.grid-2{grid-template-columns:1fr;}}
+
+/* --- buttons / chips --- */
+button{
+  font-family:'IBM Plex Sans', sans-serif;
+  cursor:pointer; border:none;
+}
+.btn{
+  background:var(--ink); color:#fff;
+  padding:9px 16px; border-radius:8px;
+  font-size:.85rem; font-weight:500;
+}
+.btn:hover{background:var(--bond);}
+.btn.ghost{
+  background:transparent; color:var(--ink);
+  border:1px solid var(--line);
+}
+.btn.ghost:hover{border-color:var(--bond); color:var(--bond);}
+.btn:disabled{opacity:.4; cursor:default;}
+.btn:disabled:hover{background:var(--ink);}
+
+.chip{
+  display:inline-flex; align-items:center;
+  background:var(--paper-2); border:1px solid var(--line);
+  padding:7px 13px; border-radius:20px;
+  font-size:.85rem; margin:4px 6px 4px 0;
+  cursor:pointer; user-select:none;
+  transition:transform .12s ease;
+}
+.chip:hover{border-color:var(--bond);}
+.chip.selected{background:var(--bond); color:#fff; border-color:var(--bond);}
+.chip.correct{background:var(--violet); color:#fff; border-color:var(--violet);}
+.chip.wrong{background:var(--rust); color:#fff; border-color:var(--rust); animation:shake .3s;}
+.chip.locked{cursor:default; opacity:.55;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+
+/* --- size classifier --- */
+.size-stage{
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+  text-align:center;
+}
+.size-number{
+  font-family:'Fraunces', serif; font-weight:660; font-size:3rem;
+  color:var(--bond);
+}
+.size-choices{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
+.size-feedback{min-height:1.4em; font-size:.88rem; font-weight:500;}
+.size-feedback.ok{color:var(--bond);}
+.size-feedback.no{color:var(--rust);}
+.streak{font-family:'IBM Plex Mono', monospace; font-size:.75rem; color:var(--ink-soft);}
+
+/* --- accordion --- */
+.acc-item{border-bottom:1px solid var(--line);}
+.acc-item:first-child{border-top:1px solid var(--line);}
+.acc-head{
+  width:100%; text-align:left; background:none;
+  padding:15px 2px; display:flex; justify-content:space-between; align-items:center;
+  font-family:'Fraunces', serif; font-weight:560; font-size:1rem; color:var(--ink);
+}
+.acc-head .plus{font-family:'IBM Plex Mono',monospace; color:var(--bond); font-size:1.1rem;}
+.acc-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+.acc-body .inner{padding:0 2px 16px; color:var(--ink-soft); font-size:.92rem;}
+.acc-item.open .acc-body{max-height:400px;}
+.acc-item.open .plus{transform:rotate(45deg);}
+
+/* --- biuret demo --- */
+.biuret-wrap{display:flex; gap:22px; align-items:center; flex-wrap:wrap;}
+.tube{
+  width:64px; height:130px; border:2px solid var(--ink);
+  border-top:none; border-radius:0 0 26px 26px;
+  position:relative; overflow:hidden; background:#fff; flex:none;
+}
+.tube .fluid{
+  position:absolute; bottom:0; left:0; right:0; height:65%;
+  background:var(--blue-soft);
+  transition:background .5s ease;
+}
+.tube .fluid.positive{background:var(--violet);}
+.biuret-controls{flex:1; min-width:220px;}
+.biuret-controls .row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+input[type=range]{flex:1; accent-color:var(--bond);}
+.biuret-result{font-size:.88rem; font-weight:500;}
+.biuret-result .yes{color:var(--violet);}
+.biuret-result .no{color:var(--blue);}
+
+/* --- cleave exercise --- */
+.seq-row{display:flex; flex-wrap:wrap; align-items:center; margin:18px 0;}
+.res-chip{
+  font-family:'IBM Plex Mono', monospace; font-size:.82rem; font-weight:600;
+  background:var(--paper-2); border:1px solid var(--line);
+  padding:6px 10px; border-radius:6px;
+}
+.gap{
+  width:16px; height:20px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; position:relative;
+}
+.gap::after{
+  content:""; width:2px; height:14px; background:var(--line); border-radius:1px;
+}
+.gap:hover::after{background:var(--bond);}
+.gap.picked::after{background:var(--blue); width:4px;}
+.gap.correct::after{background:var(--violet); width:4px;}
+.gap.wrong::after{background:var(--rust); width:4px;}
+.enzyme-toggle{display:flex; gap:8px; margin-bottom:6px;}
+.enzyme-toggle .btn.active{background:var(--bond);}
+
+/* --- sorter --- */
+.sorter-pool{
+  min-height:52px; padding:10px 0;
+  border-bottom:1px dashed var(--line); margin-bottom:20px;
+}
+.cat-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media(max-width:560px){.cat-grid{grid-template-columns:1fr;}}
+.cat-box{
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:12px 14px; min-height:70px; background:var(--card);
+  transition:border-color .15s ease;
+}
+.cat-box.target{border-color:var(--bond); background:var(--bond-soft);}
+.cat-box h4{
+  margin:0 0 8px; font-family:'IBM Plex Mono', monospace; font-size:.72rem;
+  text-transform:none; color:var(--ink-soft); font-weight:600;
+}
+.cat-box .placed{display:flex; flex-wrap:wrap; gap:5px;}
+.cat-box .placed .chip{margin:0; font-size:.75rem; padding:4px 9px;}
+.sorter-status{font-size:.85rem; color:var(--ink-soft); margin-top:14px;}
+
+/* --- quiz --- */
+.quiz-progress{
+  height:4px; background:var(--paper-2); border-radius:2px; overflow:hidden; margin-bottom:18px;
+}
+.quiz-progress .bar{height:100%; background:var(--bond); width:0%; transition:width .3s ease;}
+.quiz-meta{display:flex; justify-content:space-between; font-size:.78rem; color:var(--ink-soft); margin-bottom:14px; font-family:'IBM Plex Mono', monospace;}
+.q-text{font-size:1.05rem; font-weight:500; margin-bottom:16px;}
+.q-opt{
+  display:block; width:100%; text-align:left;
+  background:var(--card); border:1px solid var(--line); border-radius:8px;
+  padding:11px 14px; margin-bottom:9px; font-size:.92rem;
+}
+.q-opt:hover{border-color:var(--bond);}
+.q-opt.correct{background:var(--violet-soft); border-color:var(--violet); color:var(--violet);}
+.q-opt.wrong{background:var(--rust-soft); border-color:var(--rust); color:var(--rust);}
+.q-opt:disabled{cursor:default;}
+.q-explain{
+  font-size:.85rem; color:var(--ink-soft); background:var(--paper-2);
+  border-radius:8px; padding:12px 14px; margin-top:6px; display:none;
+}
+.q-explain.show{display:block;}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.quiz-result{text-align:center; padding:10px 0;}
+.quiz-result .num{font-family:'Fraunces', serif; font-weight:660; font-size:2.6rem; color:var(--bond);}
+
+/* --- flashcards --- */
+.fc-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media(max-width:560px){.fc-grid{grid-template-columns:1fr;}}
+.fc{
+  perspective:1000px; height:150px; cursor:pointer;
+}
+.fc-inner{
+  position:relative; width:100%; height:100%;
+  transform-style:preserve-3d; transition:transform .5s;
+}
+.fc.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{
+  position:absolute; inset:0; backface-visibility:hidden;
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; display:flex; align-items:center;
+  font-size:.86rem; overflow:auto;
+}
+.fc-front{background:var(--card); font-family:'Fraunces', serif; font-weight:560; font-size:.98rem;}
+.fc-back{background:var(--ink); color:var(--paper); transform:rotateY(180deg);}
+.fc-hint{position:absolute; bottom:8px; right:10px; font-size:.65rem; font-family:'IBM Plex Mono',monospace; color:var(--ink-soft);}
+
+footer{padding:36px 0 60px; color:var(--ink-soft); font-size:.8rem;}
+footer a{color:var(--bond);}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important; scroll-behavior:auto !important;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <span class="brand">Les Peptides</span>
+    <div class="links">
+      <a href="#tailles">Tailles</a>
+      <a href="#liaison">Liaison</a>
+      <a href="#proprietes">Propriétés</a>
+      <a href="#coupe">Coupure</a>
+      <a href="#tri">Exemples</a>
+      <a href="#qcm">QCM</a>
+      <a href="#fiches">Fiches</a>
+    </div>
+    <span class="score-badge" id="scoreBadge">meilleur QCM : —</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Biochimie structurale · Chapitre 1</span>
+    <h1>Les peptides</h1>
+    <p class="lede">Un outil de révision pour retenir la structure de la liaison peptidique, les propriétés des peptides et les exemples clés du cours — carnosine, insuline, EGF, glutathion, cobratoxine, aspartame...</p>
+
+    <svg class="chain-svg" viewBox="0 0 720 120" preserveAspectRatio="xMidYMid meet">
+      <path class="bb" d="M20,80 L80,40 L140,80 L200,40 L260,80 L320,40 L380,80 L440,40 L500,80 L560,40 L620,80 L680,40"></path>
+      <g>
+        <circle class="res" cx="20" cy="80" r="14"></circle><text x="20" y="83">Gly</text>
+        <circle class="res" cx="80" cy="40" r="14"></circle><text x="80" y="43">Ala</text>
+        <circle class="res" cx="140" cy="80" r="14"></circle><text x="140" y="83">Val</text>
+        <circle class="res" cx="200" cy="40" r="14"></circle><text x="200" y="43">Leu</text>
+        <circle class="res" cx="260" cy="80" r="14"></circle><text x="260" y="83">Cys</text>
+        <circle class="res" cx="320" cy="40" r="14"></circle><text x="320" y="43">Ala</text>
+        <circle class="res" cx="380" cy="80" r="14"></circle><text x="380" y="83">Val</text>
+        <circle class="res" cx="440" cy="40" r="14"></circle><text x="440" y="43">Cys</text>
+        <circle class="res" cx="500" cy="80" r="14"></circle><text x="500" y="83">Ser</text>
+        <circle class="res" cx="560" cy="40" r="14"></circle><text x="560" y="43">Gln</text>
+        <circle class="res" cx="620" cy="80" r="14"></circle><text x="620" y="83">Thr</text>
+        <circle class="res" cx="680" cy="40" r="14"></circle><text x="680" y="43">Pro</text>
+      </g>
+      <text class="label" x="20" y="108">H2N</text>
+      <text class="label" x="680" y="70">COOH</text>
+    </svg>
+  </div>
+</header>
+
+<!-- ===================== TAILLES ===================== -->
+<section id="tailles">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">01 · Nomenclature</span>
+    <h2>Classe le peptide par sa taille</h2>
+    <p class="lede">Un peptide de longueur donnée apparaît : place-le dans la bonne catégorie. Repère les seuils, ils reviennent souvent en QCM.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="size-stage">
+        <div>
+          <div class="size-number" id="sizeNumber">—</div>
+          <div class="mono" style="font-size:.78rem; color:var(--ink-soft);">acides aminés</div>
+        </div>
+        <div class="size-choices" id="sizeChoices"></div>
+        <div class="size-feedback" id="sizeFeedback"></div>
+        <div class="streak" id="sizeStreak">série : 0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LIAISON ===================== -->
+<section id="liaison">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">02 · Structure</span>
+    <h2>La liaison peptidique</h2>
+    <p class="lede">Déplie chaque point pour vérifier ce que tu sais déjà.</p>
+
+    <div class="card" style="margin-top:20px; padding:6px 22px;">
+      <div id="accordion"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROPRIETES ===================== -->
+<section id="proprietes">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">03 · Propriétés chimiques</span>
+    <h2>La réaction du Biuret</h2>
+    <p class="lede">Fais varier le nombre de liaisons peptidiques du composé testé et observe le virage de couleur — le seuil de positivité est une valeur à connaître par cœur.</p>
+
+    <div class="card biuret-wrap" style="margin-top:20px;">
+      <div class="tube"><div class="fluid" id="biuretFluid"></div></div>
+      <div class="biuret-controls">
+        <div class="row">
+          <span class="mono" style="font-size:.78rem;">liaisons peptidiques</span>
+          <input type="range" min="0" max="6" value="0" id="biuretRange">
+          <span class="mono" id="biuretVal" style="width:1.4em;">0</span>
+        </div>
+        <div class="biuret-result" id="biuretResult">Solution de peptide + NaOH + CuSO₄ — ajuste le curseur.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COUPE ===================== -->
+<section id="coupe">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">04 · Réactions enzymatiques</span>
+    <h2>Où coupent les endopeptidases ?</h2>
+    <p class="lede">C'est la séquence-exemple du cours. Choisis une enzyme, puis clique entre les résidus où tu penses qu'elle coupe.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="enzyme-toggle" id="enzymeToggle"></div>
+      <div class="seq-row" id="seqRow"></div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn" id="checkCut">Vérifier</button>
+        <button class="btn ghost" id="resetCut">Réinitialiser</button>
+        <span class="size-feedback" id="cutFeedback"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TRI ===================== -->
+<section id="tri">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">05 · Rôles biologiques</span>
+    <h2>Trie les peptides du cours</h2>
+    <p class="lede">Clique un peptide dans la liste, puis clique la famille à laquelle il appartient. C'est la meilleure façon de fixer les exemples.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="sorter-pool" id="sorterPool"></div>
+      <div class="cat-grid" id="catGrid"></div>
+      <div class="sorter-status" id="sorterStatus">0 / 16 placés · 0 erreur</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QCM ===================== -->
+<section id="qcm">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">06 · Auto-évaluation</span>
+    <h2>QCM final</h2>
+    <p class="lede">25 questions couvrant tout le chapitre. Ton meilleur score reste enregistré sur cet appareil.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div id="quizArea"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FICHES ===================== -->
+<section id="fiches">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">07 · À retenir</span>
+    <h2>Fiches flash</h2>
+    <p class="lede">Clique une carte pour la retourner.</p>
+
+    <div class="fc-grid" id="fcGrid" style="margin-top:20px;"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    D'après le cours « Biochimie Structurale — Chapitre 1 : Les Peptides », G. Prévot, Université de Guyane, 2026-2027.
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   01. TAILLES — classification game
+   ============================================================ */
+(function(){
+  const cats = [
+    {name:'Oligopeptide', min:2, max:12},
+    {name:'Peptide', min:13, max:49},
+    {name:'Polypeptide', min:50, max:100},
+    {name:'Protéine', min:101, max:320}
+  ];
+  const numEl = document.getElementById('sizeNumber');
+  const choicesEl = document.getElementById('sizeChoices');
+  const fbEl = document.getElementById('sizeFeedback');
+  const streakEl = document.getElementById('sizeStreak');
+  let current, streak = 0;
+
+  cats.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = 'btn ghost'; b.textContent = c.name;
+    b.addEventListener('click', ()=>answer(c));
+    choicesEl.appendChild(b);
+  });
+
+  function roll(){
+    current = Math.floor(Math.random()*319)+2;
+    numEl.textContent = current;
+    fbEl.textContent = '';
+    fbEl.className = 'size-feedback';
+  }
+  function answer(choice){
+    const correct = cats.find(c=>current>=c.min && current<=c.max);
+    if(choice.name===correct.name){
+      streak++;
+      fbEl.textContent = 'Exact — ' + correct.name + ' (' + correct.min + (correct.max>300?'+':'–'+correct.max) + ' aa).';
+      fbEl.classList.add('ok');
+    } else {
+      streak = 0;
+      fbEl.textContent = 'Non — c’était un ' + correct.name + ' (' + correct.min + (correct.max>300?'+':'–'+correct.max) + ' aa).';
+      fbEl.classList.add('no');
+    }
+    streakEl.textContent = 'série : ' + streak;
+    setTimeout(roll, 1400);
+  }
+  roll();
+})();
+
+/* ============================================================
+   02. LIAISON — accordion
+   ============================================================ */
+(function(){
+  const items = [
+    {t:'Pourquoi la liaison peptidique est-elle partielle ?', b:'Elle possède 4 électrons π (2 pour C=O, 2 pour le doublet libre de N). Un hybride de résonance s’établit : la liaison C-N, normalement simple (σ), est partiellement doublée par une liaison π. Cela génère des charges partielles : δ- sur O, δ+ sur N.'},
+    {t:'Configuration trans ou cis ?', b:'La configuration trans est stabilisée car elle réduit les répulsions entre les deux carbones Cα situés de part et d’autre du plan C-N. C’est elle qui donne la structure en zig-zag de la chaîne peptidique.'},
+    {t:'Le plan rigide de la liaison peptidique', b:'Les atomes C, H, O, N de la liaison sont coplanaires : chaque plan comprend 6 atomes. La libre rotation autour de la liaison C-N n’est pas possible sans apport énergétique.'},
+    {t:'Angles Φ (phi) et Ψ (psi)', b:'Ce sont les deux seules liaisons dont l’orientation reste libre. Φ : rotation autour de Cα-N (à gauche, côté N-terminal). Ψ : rotation autour de Cα-C (à droite, côté C-terminal). La structure secondaire d’une protéine dépend de ces deux angles pour chaque acide aminé.'},
+    {t:'Structure tridimensionnelle des peptides', b:'Les petits peptides sont le plus souvent linéaires ou circulaires (cyclopeptides). Les peptides de plus grande taille peuvent adopter une structure secondaire (hélice α, feuillet β), voire tertiaire.'}
+  ];
+  const acc = document.getElementById('accordion');
+  items.forEach((it,i)=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'acc-item';
+    wrap.innerHTML = '<button class="acc-head"><span>'+it.t+'</span><span class="plus">+</span></button><div class="acc-body"><div class="inner">'+it.b+'</div></div>';
+    wrap.querySelector('.acc-head').addEventListener('click', ()=>{
+      wrap.classList.toggle('open');
+    });
+    acc.appendChild(wrap);
+  });
+})();
+
+/* ============================================================
+   03. PROPRIETES — biuret demo
+   ============================================================ */
+(function(){
+  const range = document.getElementById('biuretRange');
+  const val = document.getElementById('biuretVal');
+  const fluid = document.getElementById('biuretFluid');
+  const result = document.getElementById('biuretResult');
+  function update(){
+    const n = parseInt(range.value,10);
+    val.textContent = n;
+    const positive = n>=3;
+    fluid.classList.toggle('positive', positive);
+    if(n===0){
+      result.innerHTML = 'Solution de peptide + NaOH + CuSO₄ — ajuste le curseur.';
+    } else if(positive){
+      result.innerHTML = '<span class="yes">Coloration violette</span> — réaction positive (≥ 3 liaisons peptidiques, soit un tétrapeptide ou plus).';
+    } else {
+      result.innerHTML = '<span class="no">Reste bleue</span> — pas assez de liaisons peptidiques pour une réaction franche.';
+    }
+  }
+  range.addEventListener('input', update);
+  update();
+})();
+
+/* ============================================================
+   04. COUPE — trypsin / chymotrypsin exercise
+   ============================================================ */
+(function(){
+  const seq = ['Ala','Ser','Phe','Pro','Lys','Gly','Gly','Arg','Trp','Asp','Glu','Lys','Cys'];
+  const answers = {
+    trypsine: [4,7,11],       // cut AFTER these indices (0-based) -> after Lys, Arg, Lys
+    chymotrypsine: [2,8]      // after Phe, Trp
+  };
+  let enzyme = 'trypsine';
+  let picked = new Set();
+  let checked = false;
+
+  const toggleEl = document.getElementById('enzymeToggle');
+  const seqEl = document.getElementById('seqRow');
+  const fbEl = document.getElementById('cutFeedback');
+
+  ['trypsine','chymotrypsine'].forEach(name=>{
+    const b = document.createElement('button');
+    b.className = 'btn ghost' + (name===enzyme?' active':'');
+    b.textContent = name.charAt(0).toUpperCase()+name.slice(1);
+    b.addEventListener('click', ()=>{ enzyme = name; picked = new Set(); checked=false; fbEl.textContent=''; render();
+      [...toggleEl.children].forEach(c=>c.classList.remove('active'));
+      b.classList.add('active');
+    });
+    toggleEl.appendChild(b);
+  });
+
+  function render(){
+    seqEl.innerHTML = '';
+    seq.forEach((aa,i)=>{
+      const chip = document.createElement('span');
+      chip.className = 'res-chip'; chip.textContent = aa;
+      seqEl.appendChild(chip);
+      if(i<seq.length-1){
+        const gap = document.createElement('span');
+        gap.className = 'gap' + (picked.has(i)?' picked':'');
+        gap.dataset.idx = i;
+        if(!checked){
+          gap.addEventListener('click', ()=>{
+            picked.has(i) ? picked.delete(i) : picked.add(i);
+            render();
+          });
+        }
+        seqEl.appendChild(gap);
+      }
+    });
+  }
+
+  document.getElementById('checkCut').addEventListener('click', ()=>{
+    checked = true;
+    const correctSet = new Set(answers[enzyme]);
+    render();
+    [...seqEl.querySelectorAll('.gap')].forEach(g=>{
+      const i = parseInt(g.dataset.idx,10);
+      if(correctSet.has(i)) g.classList.add('correct');
+      else if(picked.has(i)) g.classList.add('wrong');
+    });
+    let good = 0;
+    picked.forEach(i=>{ if(correctSet.has(i)) good++; });
+    const allCorrect = good===correctSet.size && picked.size===correctSet.size;
+    fbEl.textContent = allCorrect
+      ? 'Exact — ' + (enzyme==='trypsine' ? 'coupe après Lys / Arg.' : 'coupe après un acide aminé aromatique (Phe, Trp, Tyr).')
+      : correctSet.size + ' coupure(s) attendue(s), ' + good + ' correcte(s).';
+    fbEl.className = 'size-feedback ' + (allCorrect?'ok':'no');
+  });
+
+  document.getElementById('resetCut').addEventListener('click', ()=>{
+    picked = new Set(); checked = false; fbEl.textContent=''; render();
+  });
+
+  render();
+})();
+
+/* ============================================================
+   05. TRI — sorting game
+   ============================================================ */
+(function(){
+  const categories = [
+    {key:'tampon', label:'Peptide tampon'},
+    {key:'hormone', label:'Hormone / neurotransmetteur'},
+    {key:'croissance', label:'Facteur de croissance'},
+    {key:'enzyme', label:"Inhibiteur / activateur d'enzyme"},
+    {key:'toxine', label:'Toxine (venin)'},
+    {key:'antibiotique', label:'Antibiotique bactérien / fongique'},
+    {key:'alimentaire', label:"Intérêt alimentaire"}
+  ];
+  const items = [
+    {name:'Carnosine', cat:'tampon'},
+    {name:'Insuline', cat:'hormone'},
+    {name:'Glucagon', cat:'hormone'},
+    {name:'Ocytocine', cat:'hormone'},
+    {name:'Vasopressine', cat:'hormone'},
+    {name:'Angiotensine II', cat:'hormone'},
+    {name:'EGF', cat:'croissance'},
+    {name:'Glutathion', cat:'enzyme'},
+    {name:'Inhibiteur de Kunitz', cat:'enzyme'},
+    {name:'Cobratoxine', cat:'toxine'},
+    {name:'Tyrocidine', cat:'antibiotique'},
+    {name:'Gramicidine S', cat:'antibiotique'},
+    {name:'Bacitracine A', cat:'antibiotique'},
+    {name:'Polymyxine', cat:'antibiotique'},
+    {name:'Pénicilline', cat:'antibiotique'},
+    {name:'Aspartame', cat:'alimentaire'}
+  ];
+  const pool = document.getElementById('sorterPool');
+  const catGrid = document.getElementById('catGrid');
+  const status = document.getElementById('sorterStatus');
+  let placed = 0, errors = 0, selected = null;
+
+  function shuffled(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+  function renderCats(){
+    catGrid.innerHTML = '';
+    categories.forEach(c=>{
+      const box = document.createElement('div');
+      box.className = 'cat-box';
+      box.dataset.cat = c.key;
+      box.innerHTML = '<h4>'+c.label+'</h4><div class="placed"></div>';
+      box.addEventListener('click', ()=>{
+        if(!selected) return;
+        const correct = selected.dataset.cat === c.key;
+        if(correct){
+          selected.classList.remove('selected');
+          selected.classList.add('correct','locked');
+          selected.removeEventListener('click', selectHandler);
+          box.querySelector('.placed').appendChild(selected);
+          placed++;
+          selected = null;
+          renderStatus();
+          if(placed===items.length){
+            status.textContent = 'Terminé — 16 / 16 placés · ' + errors + ' erreur' + (errors===1?'':'s') + '. Bravo.';
+          }
+        } else {
+          box.classList.add('target');
+          selected.classList.add('wrong');
+          errors++;
+          setTimeout(()=>{
+            selected.classList.remove('wrong');
+            box.classList.remove('target');
+          }, 350);
+          renderStatus();
+        }
+      });
+      catGrid.appendChild(box);
+    });
+  }
+
+  function selectHandler(e){
+    const chip = e.currentTarget;
+    if(chip.classList.contains('locked')) return;
+    if(selected) selected.classList.remove('selected');
+    if(selected===chip){ selected=null; return; }
+    selected = chip;
+    chip.classList.add('selected');
+  }
+
+  function renderPool(){
+    pool.innerHTML = '';
+    shuffled(items).forEach(it=>{
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = it.name;
+      chip.dataset.cat = it.cat;
+      chip.addEventListener('click', selectHandler);
+      pool.appendChild(chip);
+    });
+  }
+
+  function renderStatus(){
+    status.textContent = placed + ' / ' + items.length + ' placés · ' + errors + ' erreur' + (errors===1?'':'s');
+  }
+
+  renderPool();
+  renderCats();
+  renderStatus();
+})();
+
+/* ============================================================
+   06. QCM
+   ============================================================ */
+(function(){
+  const questions = [
+    {q:"Quelle est la limite de masse moléculaire séparant peptides et protéines ?", o:["1 000 Da","10 000 Da","100 000 Da","50 000 Da"], c:1, e:"Les chaînes d'acides aminés de masse < 10 000 Da (environ < 100 aa) sont des peptides."},
+    {q:"Combien d'acides aminés naturels entrent dans la composition des protéines ?", o:["16","18","20","22"], c:2, e:"Il existe 20 acides aminés naturels constituant les protéines."},
+    {q:"Un oligopeptide contient :", o:["2 à 12 acides aminés","13 à 49 acides aminés","50 à 100 acides aminés","plus de 100 acides aminés"], c:0, e:"Oligopeptide = chaîne très courte, 2 à 12 aa."},
+    {q:"Un polypeptide (nomenclature par taille) contient :", o:["moins de 12 aa","entre 50 et 100 aa","plus de 200 aa","exactement 20 aa"], c:1, e:"Polypeptide = chaîne longue, entre 50 et 100 aa."},
+    {q:"Sauf indication contraire, le premier acide aminé cité dans un peptide est :", o:["le C-terminal","le N-terminal","au centre de la chaîne","engagé dans un pont disulfure"], c:1, e:"Si rien n'est précisé, le premier aa cité est toujours l'aa N-terminal."},
+    {q:"Un acide aminé dont le COOH est engagé dans une liaison peptidique porte le suffixe :", o:["-ine","-ate","-yle","-ase"], c:2, e:"Le suffixe -yle est ajouté ; seul le dernier acide aminé (C-terminal) garde son nom entier."},
+    {q:"Quelle méthode sépare peptides et protéines par précipitation ?", o:["La dialyse","L'électrophorèse","La précipitation au TCA","La chromatographie"], c:2, e:"Les protéines précipitent avec le TCA, pas les peptides (exceptions : certaines glycoprotéines)."},
+    {q:"Lors d'une dialyse :", o:["Peptides et protéines traversent la membrane","Ni les peptides ni les protéines ne traversent","Les peptides traversent, pas les protéines","Les protéines traversent, pas les peptides"], c:2, e:"Les peptides traversent la membrane de cellophane ; les protéines non."},
+    {q:"La liaison peptidique adopte préférentiellement la configuration :", o:["cis","trans","gauche","aléatoire"], c:1, e:"La configuration trans est stabilisée : elle réduit les répulsions entre les deux atomes de Cα."},
+    {q:"Combien d'atomes sont coplanaires dans un plan de la liaison peptidique ?", o:["4","5","6","8"], c:2, e:"Chaque plan de la liaison peptidique comprend 6 atomes (C, H, O, N et les deux Cα voisins)."},
+    {q:"L'angle Φ (phi) correspond à la rotation autour de la liaison :", o:["Cα–C","Cα–N","C–N (la liaison peptidique elle-même)","N–H"], c:1, e:"Φ = rotation autour de Cα-N (côté N-terminal) ; Ψ = rotation autour de Cα-C (côté C-terminal)."},
+    {q:"Les peptides absorbent dans l'UV entre 180 et 230 nm grâce à :", o:["leurs acides aminés aromatiques uniquement","la liaison peptidique","leurs ponts disulfure","leur charge nette"], c:1, e:"Cette absorbance correspond à la liaison peptidique. L'absorbance à 280 nm nécessite des aa aromatiques."},
+    {q:"La réaction du Biuret devient nettement positive (violette) à partir de :", o:["1 liaison peptidique","2 liaisons peptidiques","3 liaisons peptidiques","6 liaisons peptidiques"], c:2, e:"À partir de 3 liaisons peptidiques, soit un tétrapeptide ou plus."},
+    {q:"Les réactifs de la réaction du Biuret sont :", o:["TCA + eau","NaOH + CuSO₄","HCl + AgNO₃","Acide performique"], c:1, e:"Solution de peptide + NaOH (soude) + CuSO₄ (sulfate de cuivre) → coloration violette."},
+    {q:"La carboxypeptidase est une exopeptidase qui détache :", o:["l'acide aminé N-terminal","l'acide aminé C-terminal","un acide aminé aromatique interne","une lysine interne"], c:1, e:"Carboxypeptidase → C-terminal ; aminopeptidase → N-terminal."},
+    {q:"La trypsine coupe la chaîne peptidique après :", o:["un acide aminé aromatique","une proline","une lysine ou une arginine","un acide glutamique"], c:2, e:"La trypsine est une endopeptidase qui coupe après Lys ou Arg."},
+    {q:"La chymotrypsine coupe après :", o:["Lys ou Arg","Phe, Trp ou Tyr","Glu","Pro"], c:1, e:"La chymotrypsine coupe après un acide aminé aromatique : Phe, Trp ou Tyr."},
+    {q:"La pepsine coupe la chaîne :", o:["après un acide aminé aromatique","avant un acide aminé aromatique","après une lysine","avant une proline"], c:1, e:"La pepsine coupe avant un acide aminé aromatique."},
+    {q:"Le glutathion est composé de :", o:["Gly-Ala-Val","Glu-Cys-Gly","Cys-Tyr-Gly","Asp-Phe-Gly"], c:1, e:"Glutathion = γ-glutamyl-cystéinyl-glycine. Son groupement thiol (-SH) est porté par la cystéine."},
+    {q:"L'insuline est constituée de :", o:["une chaîne unique de 51 aa","2 chaînes reliées par 2 ponts disulfure (21 et 30 aa)","3 chaînes reliées par ponts disulfure","une structure cyclique à 10 résidus"], c:1, e:"Chaîne A (21 aa) et chaîne B (30 aa), reliées par 2 ponts disulfure inter-chaîne."},
+    {q:"L'ocytocine et la vasopressine sont :", o:["des cyclopeptides bactériens","des nonapeptides semi-cycliques par un pont disulfure","des polypeptides de 124 résidus","des hétéropeptides"], c:1, e:"Ce sont des nonapeptides (9 aa), semi-cycliques grâce à un pont disulfure intra-chaîne."},
+    {q:"L'EGF (forme mature) comporte :", o:["8 acides aminés","29 acides aminés","53 acides aminés","124 acides aminés"], c:2, e:"L'EGF mature fait 53 aa, stabilisés par 3 ponts disulfure."},
+    {q:"La carnosine est composée de :", o:["bêta-alanine + histidine","glutamate + cystéine + glycine","aspartate + phénylalanine","deux résidus de glycine"], c:0, e:"Dipeptide tampon musculaire et cérébral, composé de bêta-alanine et d'histidine."},
+    {q:"L'aspartame est :", o:["un tripeptide", "un dipeptide méthylé (Asp-Phe-OCH₃)", "un hétéropeptide à cycle β-lactame", "un peptide cyclique bactérien"], c:1, e:"Aspartyl-phénylalanine méthyl ester ; contre-indiqué en cas de phénylcétonurie."},
+    {q:"La pénicilline est qualifiée d'hétéropeptide car :", o:["elle contient 20 aa différents","elle comporte un groupement de nature non peptidique (cycle β-lactame)","elle est synthétisée par plusieurs bactéries","elle n'a pas de liaison peptidique"], c:1, e:"Le cycle β-lactame, non peptidique, est responsable de l'activité antibiotique."}
+  ];
+
+  let order = [...questions.keys()];
+  let idx = 0, score = 0, answered = false;
+  const area = document.getElementById('quizArea');
+  const scoreBadge = document.getElementById('scoreBadge');
+
+  function bestScore(){
+    return localStorage.getItem('peptides_qcm_best');
+  }
+  function refreshBadge(){
+    const b = bestScore();
+    scoreBadge.textContent = 'meilleur QCM : ' + (b ? b + ' / ' + questions.length : '—');
+  }
+
+  function shuffle(){ order = [...questions.keys()].sort(()=>Math.random()-0.5); idx=0; score=0; answered=false; render(); }
+
+  function render(){
+    if(idx>=order.length){ renderResult(); return; }
+    const q = questions[order[idx]];
+    answered = false;
+    area.innerHTML =
+      '<div class="quiz-progress"><div class="bar" style="width:'+(idx/order.length*100)+'%"></div></div>' +
+      '<div class="quiz-meta"><span>Question '+(idx+1)+' / '+order.length+'</span><span>score : '+score+'</span></div>' +
+      '<div class="q-text">'+q.q+'</div>' +
+      '<div id="qopts"></div>' +
+      '<div class="q-explain" id="qexp">'+q.e+'</div>' +
+      '<div class="quiz-nav"><button class="btn" id="nextBtn" disabled>Suivant</button></div>';
+
+    const optsWrap = document.getElementById('qopts');
+    q.o.forEach((opt,i)=>{
+      const b = document.createElement('button');
+      b.className = 'q-opt';
+      b.textContent = opt;
+      b.addEventListener('click', ()=>{
+        if(answered) return;
+        answered = true;
+        const opts = optsWrap.querySelectorAll('.q-opt');
+        opts.forEach((o,j)=>{
+          o.disabled = true;
+          if(j===q.c) o.classList.add('correct');
+          else if(j===i) o.classList.add('wrong');
+        });
+        if(i===q.c) score++;
+        document.getElementById('qexp').classList.add('show');
+        document.getElementById('nextBtn').disabled = false;
+      });
+      optsWrap.appendChild(b);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      idx++; render();
+    });
+  }
+
+  function renderResult(){
+    const best = bestScore();
+    if(!best || score>parseInt(best,10)){
+      localStorage.setItem('peptides_qcm_best', score);
+    }
+    refreshBadge();
+    area.innerHTML =
+      '<div class="quiz-result">' +
+        '<div class="num">'+score+' / '+order.length+'</div>' +
+        '<p class="lede" style="margin:8px auto 18px;">'+(score/order.length>=0.8?'Excellent niveau sur ce chapitre.':score/order.length>=0.5?'Bonne base — revois les points ratés.':'Reprends les fiches et refais le QCM.')+'</p>' +
+        '<button class="btn" id="restartBtn">Recommencer</button>' +
+      '</div>';
+    document.getElementById('restartBtn').addEventListener('click', shuffle);
+  }
+
+  refreshBadge();
+  shuffle();
+})();
+
+/* ============================================================
+   07. FICHES — flashcards
+   ============================================================ */
+(function(){
+  const cards = [
+    {f:"Peptide vs protéine", b:"Peptide : < 100 aa, masse < 10 000 Da. Protéine : > 100 aa, avec repliement 3D stable et fonction biologique définie."},
+    {f:"Oligo / peptide / polypeptide", b:"Oligopeptide 2–12 aa · Peptide < 50 aa · Polypeptide 50–100 aa."},
+    {f:"N-terminal / C-terminal", b:"N-terminal : NH₂ libre, 1er aa cité par défaut. C-terminal : COOH libre, dernier aa, garde son nom entier."},
+    {f:"Pourquoi la liaison peptidique est-elle rigide et plane ?", b:"Caractère partiel de double liaison (résonance C=O / C–N) : 4 électrons π délocalisés, rotation impossible sans apport d'énergie → 6 atomes coplanaires."},
+    {f:"Angles Φ et Ψ", b:"Φ : rotation autour de Cα–N. Ψ : rotation autour de Cα–C. Ce sont eux qui définissent la structure secondaire."},
+    {f:"Réaction du Biuret", b:"Peptide + NaOH + CuSO₄ → coloration violette si ≥ 3 liaisons peptidiques (tétrapeptide ou plus). Non spécifique aux peptides."},
+    {f:"Exopeptidase vs endopeptidase", b:"Exopeptidase : coupe en bout de chaîne (amino-/carboxypeptidase). Endopeptidase : coupe au milieu (trypsine, chymotrypsine, pepsine...)."},
+    {f:"Sites de coupure : trypsine / chymotrypsine / pepsine", b:"Trypsine : après Lys/Arg. Chymotrypsine : après un aa aromatique. Pepsine : avant un aa aromatique."},
+    {f:"Pont disulfure inter- vs intra-chaîne", b:"Inter-chaîne : relie deux chaînes séparées (ex. insuline). Intra-chaîne : referme une seule chaîne sur elle-même (ex. ocytocine)."},
+    {f:"Glutathion (GSH)", b:"Tripeptide Glu-Cys-Gly. Forme réduite (GSH, actif) / oxydée (GSSG). Antioxydant majeur grâce au thiol de la cystéine."},
+    {f:"Exemples à mémoriser par rôle", b:"Tampon : carnosine · Hormones : insuline, glucagon, ocytocine, vasopressine, angiotensine II · Croissance : EGF · Enzymes : glutathion, inhibiteur de Kunitz · Toxine : cobratoxine · Antibiotiques : tyrocidine, gramicidine, bacitracine, polymyxine, pénicilline · Alimentaire : aspartame."}
+  ];
+  const grid = document.getElementById('fcGrid');
+  cards.forEach(c=>{
+    const el = document.createElement('div');
+    el.className = 'fc';
+    el.innerHTML =
+      '<div class="fc-inner">' +
+        '<div class="fc-face fc-front">'+c.f+'<span class="fc-hint">clique</span></div>' +
+        '<div class="fc-face fc-back">'+c.b+'</div>' +
+      '</div>';
+    el.addEventListener('click', ()=>el.classList.toggle('flipped'));
+    grid.appendChild(el);
+  });
+})();
+</script>
+</body>
+</html>
