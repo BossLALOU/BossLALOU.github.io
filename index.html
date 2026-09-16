@@ -1,7 +1,70 @@
 <!DOCTYPE html>
-<html>
-<head><title>Mon site</title></head>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes exercices</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f4f6f8;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+  .matiere {
+    background: white;
+    border-radius: 10px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .matiere h2 {
+    font-size: 1.2rem;
+    margin: 0 0 12px 0;
+    color: #2d3e50;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  a {
+    text-decoration: none;
+    color: #2563eb;
+    font-size: 0.95rem;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
 <body>
-<h1>Ça marche !</h1>
+<div class="container">
+  <h1>Mes exercices</h1>
+
+  <div class="matiere">
+    <h2>Biochimie Structurale</h2>
+    <ul>
+      <li><a href="biochimie/exercice1.html">Exercice 1</a></li>
+      <!-- Ajoute une ligne comme ci-dessus pour chaque nouvel exo -->
+    </ul>
+  </div>
+
+  <!-- Copie tout le bloc .matiere ci-dessus pour ajouter une nouvelle matière -->
+
+</div>
 </body>
 </html>
