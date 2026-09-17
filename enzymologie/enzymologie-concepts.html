@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinétique &amp; Enzymologie — Concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F6F5;
+    --bg-card:#FFFFFF;
+    --ink:#182420;
+    --ink-soft:#4C5B56;
+    --line:#D6E2DE;
+    --teal:#0E7C7B;
+    --teal-dark:#0A5D5C;
+    --amber:#C06B22;
+    --amber-soft:#F3E3D2;
+    --success:#2E8B45;
+    --success-bg:#E4F3E6;
+    --error:#C1443C;
+    --error-bg:#FBE6E4;
+    --radius:10px;
+    --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal-dark);}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px 80px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    background:linear-gradient(180deg, #E7F1EF 0%, var(--bg) 100%);
+    border-bottom:1px solid var(--line);
+    padding:36px 0 0;
+  }
+  .hero-inner{max-width:760px;margin:0 auto;padding:0 20px;}
+  .eyebrow-free-title{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(28px,5vw,40px);
+    letter-spacing:-0.01em;
+    margin:0 0 6px;
+  }
+  .hero p.sub{
+    margin:0 0 22px;
+    color:var(--ink-soft);
+    font-size:15.5px;
+    max-width:52ch;
+  }
+  .curve-box{position:relative;}
+  svg#curve{display:block;width:100%;height:auto;}
+  .curve-fill{
+    stroke:var(--teal);
+    stroke-width:3.5;
+    fill:none;
+    stroke-linecap:round;
+    transition:stroke-dashoffset .6s ease;
+  }
+  .curve-track{
+    stroke:#C7D6D2;
+    stroke-width:3.5;
+    fill:none;
+    stroke-linecap:round;
+  }
+  .curve-label{
+    font-family:var(--sans);
+    font-size:11.5px;
+    fill:var(--ink-soft);
+  }
+  .curve-label.strong{fill:var(--ink); font-weight:600;}
+  .progress-readout{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:6px 0 18px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .progress-readout strong{color:var(--ink); font-family:var(--serif); font-size:16px; font-weight:600;}
+
+  /* ---------- NAV ---------- */
+  nav.tabs{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+  }
+  .tabs-inner{
+    max-width:760px;margin:0 auto;padding:10px 20px;
+    display:flex;gap:6px;overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs-inner::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    flex:0 0 auto;
+    border:1px solid var(--line);
+    background:var(--bg-card);
+    color:var(--ink-soft);
+    font-family:var(--sans);
+    font-size:13.5px;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .tab-btn .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--line);
+    flex:0 0 auto;
+  }
+  .tab-btn.done .dot{background:var(--success);}
+  .tab-btn:hover{border-color:var(--teal);}
+  .tab-btn.active{
+    background:var(--ink);
+    color:#fff;
+    border-color:var(--ink);
+  }
+  .tab-btn.active .dot{background:var(--amber);}
+
+  /* ---------- SECTIONS ---------- */
+  main{padding-top:28px;}
+  section.panel{display:none;}
+  section.panel.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+  .section-head{margin-bottom:22px;}
+  .section-head h2{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:24px;
+    margin:0 0 6px;
+  }
+  .section-head p{margin:0; color:var(--ink-soft); font-size:14.5px; max-width:56ch;}
+
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 20px 18px;
+    margin-bottom:16px;
+  }
+  .card .kicker{
+    font-size:12px;
+    color:var(--teal-dark);
+    font-weight:600;
+    margin:0 0 8px;
+  }
+  .card h3.q{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:17.5px;
+    line-height:1.4;
+    margin:0 0 14px;
+  }
+
+  /* QCM options */
+  .opts{list-style:none; margin:0; padding:0; display:grid; gap:8px;}
+  .opt-btn{
+    text-align:left;
+    width:100%;
+    border:1px solid var(--line);
+    background:#FBFDFC;
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:14.5px;
+    padding:11px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .opt-btn:hover:not(:disabled){border-color:var(--teal);}
+  .opt-btn:disabled{cursor:default;}
+  .opt-btn.correct{background:var(--success-bg); border-color:var(--success); font-weight:600;}
+  .opt-btn.incorrect{background:var(--error-bg); border-color:var(--error);}
+  .opt-btn.faded{opacity:.55;}
+
+  .explain{
+    margin-top:14px;
+    padding:12px 14px;
+    border-left:3px solid var(--teal);
+    background:#F0F7F6;
+    font-size:13.8px;
+    color:var(--ink-soft);
+    border-radius:0 6px 6px 0;
+    display:none;
+  }
+  .explain.show{display:block;}
+  .explain strong{color:var(--ink);}
+
+  /* Match exercise */
+  .match-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:520px){.match-grid{gap:12px;}}
+  .match-col{display:grid; gap:8px;}
+  .match-item{
+    border:1px solid var(--line);
+    background:#FBFDFC;
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:13.8px;
+    cursor:pointer;
+    transition:border-color .15s, background .15s, transform .1s;
+  }
+  .match-item:hover{border-color:var(--teal);}
+  .match-item.selected{border-color:var(--amber); background:var(--amber-soft);}
+  .match-item.matched{background:var(--success-bg); border-color:var(--success); cursor:default; opacity:.85;}
+  .match-item.wrong{background:var(--error-bg); border-color:var(--error);}
+
+  /* Sort exercise */
+  .sort-pool{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
+  .chip{
+    border:1px solid var(--line);
+    background:#FBFDFC;
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:13.3px;
+    cursor:pointer;
+  }
+  .chip.selected{border-color:var(--amber); background:var(--amber-soft);}
+  .chip.placed{display:none;}
+  .buckets{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:520px){.buckets{grid-template-columns:1fr;}}
+  .bucket{
+    border:1.5px dashed var(--line);
+    border-radius:10px;
+    padding:12px;
+    min-height:120px;
+  }
+  .bucket h4{
+    margin:0 0 10px;
+    font-family:var(--serif);
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--teal-dark);
+  }
+  .bucket .placed-item{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:7px 10px;
+    font-size:13px;
+    margin-bottom:6px;
+  }
+  .bucket .placed-item.correct{border-color:var(--success); background:var(--success-bg);}
+  .bucket .placed-item.incorrect{border-color:var(--error); background:var(--error-bg);}
+
+  .status-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:12px; font-weight:600; color:var(--success);
+    margin-left:8px;
+  }
+
+  /* Final quiz */
+  .final-shell{text-align:center; padding:10px 0 6px;}
+  .final-shell button.big{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:15px;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    padding:13px 26px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .final-shell button.big:hover{background:var(--teal-dark);}
+  .final-progress{
+    font-size:13px; color:var(--ink-soft); margin-bottom:18px;
+  }
+  .score-screen{text-align:center; padding:30px 10px;}
+  .score-screen .big-num{
+    font-family:var(--serif); font-size:56px; font-weight:600; color:var(--teal-dark); line-height:1;
+  }
+  .score-screen p.msg{font-size:15px; color:var(--ink-soft); max-width:44ch; margin:10px auto 24px;}
+
+  footer{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    padding:30px 20px 10px;
+  }
+
+  ::selection{background:#CFE8E5;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <h1 class="eyebrow-free-title">Cinétique chimique &amp; Enzymologie</h1>
+    <p class="sub">Exercices de concepts — pas de calcul, juste comprendre le sens des ordres de réaction, de la théorie de l'état de transition et de la catalyse enzymatique.</p>
+    <div class="curve-box">
+      <svg id="curve" viewBox="0 0 720 130" preserveAspectRatio="none">
+        <path class="curve-track" d="M20,105 C 160,105 230,20 360,20 C 490,20 560,80 700,80"></path>
+        <path id="curveFill" class="curve-fill" d="M20,105 C 160,105 230,20 360,20 C 490,20 560,80 700,80"></path>
+        <circle cx="20" cy="105" r="4" fill="#0E7C7B"></circle>
+        <circle cx="360" cy="20" r="4" fill="#C06B22"></circle>
+        <circle cx="700" cy="80" r="4" fill="#0E7C7B"></circle>
+        <text x="14" y="122" class="curve-label">Réactifs</text>
+        <text x="322" y="12" class="curve-label strong">État de transition ‡</text>
+        <text x="662" y="100" class="curve-label">Produits</text>
+      </svg>
+    </div>
+    <div class="progress-readout">
+      <span>Progression le long du chemin réactionnel</span>
+      <strong id="progressText">0 / 0</strong>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabsInner"></div>
+</nav>
+
+<main class="wrap">
+  <section class="panel" id="panel-ordres">
+    <div class="section-head">
+      <h2>1 · Ordres de réaction</h2>
+      <p>Ce que chaque ordre signifie réellement — sans poser de calcul.</p>
+    </div>
+    <div id="host-ordres"></div>
+  </section>
+
+  <section class="panel" id="panel-vitesse">
+    <div class="section-head">
+      <h2>2 · Vitesse, ordre &amp; molécularité</h2>
+      <p>Le piège classique : ordre ≠ molécularité, et k ≠ K.</p>
+    </div>
+    <div id="host-vitesse"></div>
+  </section>
+
+  <section class="panel" id="panel-transition">
+    <div class="section-head">
+      <h2>3 · Théorie de l'état de transition</h2>
+      <p>Le complexe activé, ΔG‡ et l'équation d'Eyring — sur le fond, pas sur la formule.</p>
+    </div>
+    <div id="host-transition"></div>
+  </section>
+
+  <section class="panel" id="panel-enzymes">
+    <div class="section-head">
+      <h2>4 · Enzymes &amp; catalyse</h2>
+      <p>Ribozymes, RNase P, classes EC, et le sens de Michaelis-Menten.</p>
+    </div>
+    <div id="host-enzymes"></div>
+  </section>
+
+  <section class="panel" id="panel-pieges">
+    <div class="section-head">
+      <h2>5 · Pièges classiques</h2>
+      <p>Vrai / Faux rapide sur les erreurs les plus fréquentes signalées dans le cours corrigé.</p>
+    </div>
+    <div id="host-pieges"></div>
+  </section>
+
+  <section class="panel" id="panel-final">
+    <div class="section-head">
+      <h2>6 · Quiz final mélangé</h2>
+      <p>Un tirage aléatoire de 15 questions parmi toutes les sections, à refaire autant de fois que tu veux.</p>
+    </div>
+    <div id="host-final"></div>
+  </section>
+</main>
+
+<footer>Basé sur tes deux cours d'enzymologie/cinétique chimique · progression sauvegardée dans ce navigateur</footer>
+
+<script>
+/* ============ DATA ============ */
+// Every QCM-type item (includes former "vrai/faux" items, modeled as 2-option QCM)
+const QCM = [
+  // --- Ordres de réaction ---
+  {id:'q1', section:'ordres', q:"Pour une réaction d'ordre 1, si on trace ln[A] en fonction du temps, on obtient…",
+   opts:[{t:"Une droite décroissante",c:true},{t:"Une courbe exponentielle croissante",c:false},{t:"Une hyperbole",c:false},{t:"Une droite croissante",c:false}],
+   exp:"ln[A]=ln[A]₀ − kt : c'est l'équation d'une droite de pente −k. C'est la signature graphique d'un ordre 1."},
+  {id:'q2', section:'ordres', q:"Quelle grandeur est une fonction linéaire du temps pour une réaction d'ordre 2 ?",
+   opts:[{t:"[A]",c:false},{t:"ln[A]",c:false},{t:"1/[A]",c:true},{t:"[A]²",c:false}],
+   exp:"1/[A] = 1/[A]₀ + kt : c'est l'inverse de la concentration qui devient linéaire en t, pas [A] ni ln[A]."},
+  {id:'q3', section:'ordres', q:"Pour une réaction d'ordre 0, la vitesse…",
+   opts:[{t:"Diminue avec le temps",c:false},{t:"Est constante, indépendante de [A]",c:true},{t:"Est proportionnelle à [A]",c:false},{t:"Est proportionnelle à [A]²",c:false}],
+   exp:"v = k, une constante : la vitesse ne dépend pas de la concentration du réactif. C'est le cas de la bromation de l'acétone."},
+  {id:'q4', section:'ordres', q:"Une réaction de pseudo-premier ordre est en réalité toujours une réaction unimoléculaire.",
+   opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"C'est presque toujours une réaction bimoléculaire A+B où B est en large excès. Sa concentration reste quasi constante, donc la réaction se comporte comme un ordre 1 — sans être unimoléculaire pour autant."},
+  {id:'q5', section:'ordres', q:"L'hydrolyse du saccharose (bimoléculaire) est observée d'ordre global 1. Pourquoi ?",
+   opts:[{t:"L'eau réagit plus vite que le saccharose",c:false},{t:"L'eau est en très large excès, sa concentration reste quasi constante",c:true},{t:"Le saccharose se comporte comme un catalyseur",c:false},{t:"La réaction n'implique pas réellement l'eau",c:false}],
+   exp:"C'est l'exemple classique de pseudo-premier ordre : l'eau (solvant, en excès énorme) ne varie pratiquement pas, seule [saccharose] pilote la vitesse observée."},
+  {id:'q7', section:'ordres', q:"Le temps de demi-vie d'une réaction d'ordre 1 dépend de la concentration initiale [A]₀.",
+   opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"t₁/₂ = ln2 / k : k ne dépend pas de [A]₀, donc t₁/₂ non plus. C'est une propriété spécifique et importante de l'ordre 1."},
+  {id:'q8', section:'ordres', q:"L'ordre d'une réaction est déterminé…",
+   opts:[{t:"Uniquement à partir de l'équation bilan",c:false},{t:"Expérimentalement, à partir de la loi de vitesse mesurée",c:true},{t:"Par le simple nombre de réactifs",c:false},{t:"Par la valeur numérique de k",c:false}],
+   exp:"L'ordre est un fait expérimental (méthode des vitesses initiales, tracé de ln v en fonction de ln[A]…), jamais une déduction directe du bilan stœchiométrique."},
+
+  // --- Vitesse & molécularité ---
+  {id:'q10', section:'vitesse', q:"k (constante de vitesse) et K (constante d'équilibre) sont…",
+   opts:[{t:"La même chose",c:false},{t:"Deux grandeurs différentes : k dépend de T, K est un rapport de concentrations à l'équilibre",c:true},{t:"K dépend de T mais pas k",c:false},{t:"k est toujours plus grand que K",c:false}],
+   exp:"Piège classique signalé dans le cours corrigé : ne jamais confondre k (loi de vitesse, dépend de T via Arrhenius/Eyring) et K (constante d'équilibre)."},
+  {id:'q11', section:'vitesse', q:"Dans la loi de vitesse v = k[A][B], on multiplie deux constantes de vitesse entre elles.",
+   opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"Erreur relevée explicitement dans les notes corrigées : on multiplie UNE constante k par des concentrations [A] et [B], jamais deux constantes."},
+  {id:'q12', section:'vitesse', q:"Dans v = −(1/a)·d[A]/dt = +(1/c)·d[C]/dt, pourquoi divise-t-on par le coefficient stœchiométrique ?",
+   opts:[{t:"Pour convertir les concentrations en masses",c:false},{t:"Pour obtenir une vitesse de réaction unique, indépendante de l'espèce suivie",c:true},{t:"C'est imposé par la loi d'Arrhenius",c:false},{t:"Pour annuler les unités",c:false}],
+   exp:"Chaque espèce disparaît ou apparaît à une vitesse propre à son coefficient ; diviser par ce coefficient donne une seule vitesse de réaction, quelle que soit l'espèce choisie pour la suivre."},
+  {id:'q13', section:'vitesse', q:"Dans une loi de vitesse, les crochets [A] désignent…",
+   opts:[{t:"Une parenthèse mathématique",c:false},{t:"La concentration molaire de l'espèce A",c:true},{t:"La masse de A",c:false},{t:"Le nombre de moles de A",c:false}],
+   exp:"Point de vigilance du cours corrigé : les notes originales utilisaient parfois des parenthèses (A) par erreur — ce sont bien des crochets, qui notent une concentration molaire."},
+
+  // --- État de transition ---
+  {id:'q14', section:'transition', q:"Le complexe activé (état de transition) est caractérisé par…",
+   opts:[{t:"Une concentration élevée et une grande stabilité",c:false},{t:"Une probabilité égale de redonner réactifs ou produits, et une concentration très faible",c:true},{t:"Une liaison chimique définitive et isolable",c:false},{t:"Une énergie plus basse que les réactifs",c:false}],
+   exp:"L'état de transition [A···B···C]‡ est un maximum d'énergie fugace : sa concentration est très faible et sa décomposition (vers réactifs ou produits) est équiprobable."},
+  {id:'q15', section:'transition', q:"On peut isoler et stocker l'état de transition d'une réaction comme un intermédiaire stable.",
+   opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"C'est un état fugace, jamais une espèce qu'on peut isoler — contrairement à un intermédiaire réactionnel stable."},
+  {id:'q16', section:'transition', q:"Selon l'équation d'Eyring, plus ΔG‡ est grand…",
+   opts:[{t:"Plus la réaction est rapide",c:false},{t:"Plus la réaction est lente",c:true},{t:"Plus la réaction est à l'équilibre",c:false},{t:"Cela n'a aucun effet sur la vitesse",c:false}],
+   exp:"k = (kBT/h)·exp(−ΔG‡/RT) : ΔG‡ est dans l'exponentielle avec un signe négatif, donc plus ΔG‡ augmente, plus k diminue, donc plus la réaction est lente."},
+  {id:'q18', section:'transition', q:"L'étape considérée comme limitante de la vitesse d'une réaction est…",
+   opts:[{t:"La formation des réactifs de départ",c:false},{t:"La décomposition de l'état de transition",c:true},{t:"La formation du produit final, quelle que soit la voie",c:false},{t:"La simple collision, sans réarrangement",c:false}],
+   exp:"La décomposition du complexe activé est le passage obligé et le plus lent : c'est lui qui contrôle la vitesse globale."},
+
+  // --- Enzymes ---
+  {id:'q19', section:'enzymes', q:"Une enzyme accélère une réaction principalement en…",
+   opts:[{t:"Modifiant l'énergie globale (ΔG) de la réaction",c:false},{t:"Abaissant l'énergie d'activation (ΔG‡) en stabilisant l'état de transition",c:true},{t:"Consommant les produits au fur et à mesure",c:false},{t:"Augmentant simplement la concentration des réactifs",c:false}],
+   exp:"L'enzyme stabilise l'état de transition, ce qui abaisse ΔG‡ et augmente k — elle ne change pas le bilan thermodynamique global de la réaction."},
+  {id:'q20', section:'enzymes', q:"Un ribozyme peut toujours être considéré comme un véritable catalyseur, car il est systématiquement régénéré intact.",
+   opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"Nuance importante du cours : un ribozyme est souvent modifié par sa propre réaction catalytique, donc pas toujours régénéré intact — un vrai catalyseur, par définition, ne doit pas être consommé."},
+  {id:'q21', section:'enzymes', q:"Dans la RNase P d'E. coli, quel composant porte l'activité catalytique ?",
+   opts:[{t:"La protéine (~14 kDa)",c:false},{t:"L'ARN M1 (~400 nt)",c:true},{t:"Les deux à parts égales",c:false},{t:"Un cofacteur métallique externe",c:false}],
+   exp:"L'ARN M1 peut, seul, hydrolyser le pré-ARNt in vitro à forte concentration saline : c'est lui qui porte l'activité catalytique."},
+  {id:'q22', section:'enzymes', q:"Le rôle principal de la protéine dans la RNase P est de…",
+   opts:[{t:"Catalyser elle-même la réaction",c:false},{t:"Stabiliser les interactions ARN–substrat en diminuant les répulsions électrostatiques",c:true},{t:"Dégrader l'ARN M1 après la réaction",c:false},{t:"Servir de substrat à l'ARN M1",c:false}],
+   exp:"La protéine ne catalyse pas ; elle facilite l'interaction entre l'ARN M1 (chargé négativement) et l'ARNt substrat (aussi chargé négativement) en atténuant la répulsion électrostatique."},
+  {id:'q24a', section:'enzymes', q:"D'après v = Vmax[S] / (KM + [S]), quand [S] devient très supérieur à KM, v tend vers…",
+   opts:[{t:"0",c:false},{t:"Vmax",c:true},{t:"KM",c:false},{t:"Vmax/2",c:false}],
+   exp:"Si [S] ≫ KM, alors KM devient négligeable devant [S] : v ≈ Vmax[S]/[S] = Vmax. L'enzyme est saturée en substrat."},
+  {id:'q24b', section:'enzymes', q:"Toujours d'après cette équation, que vaut v lorsque [S] = KM ?",
+   opts:[{t:"Vmax",c:false},{t:"Vmax/2",c:true},{t:"0",c:false},{t:"2·Vmax",c:false}],
+   exp:"En remplaçant [S] par KM : v = Vmax·KM / (KM+KM) = Vmax·KM / 2KM = Vmax/2. C'est d'ailleurs la définition opérationnelle de KM."},
+
+  // --- Pièges classiques (vrai/faux rapides) ---
+  {id:'p1', section:'pieges', q:"k et K désignent la même constante.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"k = constante de vitesse (dépend de T) ; K = constante d'équilibre. Deux notions différentes."},
+  {id:'p2', section:'pieges', q:"L'ordre d'une réaction est toujours égal à sa molécularité.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"L'ordre est expérimental, la molécularité est théorique (acte élémentaire). Ils coïncident parfois, mais pas toujours (ex. hydrolyse du saccharose)."},
+  {id:'p3', section:'pieges', q:"Les crochets [ ] et les parenthèses ( ) sont interchangeables pour noter une concentration.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"Seuls les crochets [A] notent une concentration molaire en cinétique chimique — point de vigilance signalé explicitement dans le cours corrigé."},
+  {id:'p4', section:'pieges', q:"Dans une loi de vitesse, on multiplie des concentrations entre elles, jamais deux constantes.", opts:[{t:"Vrai",c:true},{t:"Faux",c:false}],
+   exp:"C'est la bonne lecture de v = k[A][B] : une constante k, multipliée par des concentrations — pas un produit de deux constantes."},
+  {id:'p5', section:'pieges', q:"Une réaction d'ordre 1 est forcément unimoléculaire.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"Contre-exemple du cours : l'hydrolyse du saccharose est bimoléculaire mais d'ordre 1 observé, car l'eau est en excès."},
+  {id:'p6', section:'pieges', q:"Le temps de demi-vie d'une réaction d'ordre 1 est constant, indépendant de [A]₀.", opts:[{t:"Vrai",c:true},{t:"Faux",c:false}],
+   exp:"t₁/₂ = ln2/k ne dépend que de k, jamais de la concentration initiale — propriété propre à l'ordre 1."},
+  {id:'p7', section:'pieges', q:"La molécularité peut dépasser 3 pour des réactions élémentaires courantes.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"La probabilité de collision simultanée de 4 molécules ou plus est quasi nulle : la molécularité pratique ne dépasse pas 3."},
+  {id:'p8', section:'pieges', q:"L'ordre d'une réaction se déduit directement des coefficients stœchiométriques du bilan.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"C'est un fait expérimental déterminé par la loi de vitesse mesurée, pas une lecture directe de l'équation bilan."},
+  {id:'p9', section:'pieges', q:"Un ribozyme est une protéine à activité catalytique.", opts:[{t:"Vrai",c:false},{t:"Faux",c:true}],
+   exp:"Un ribozyme est une molécule d'ARN possédant une activité catalytique — pas une protéine."},
+  {id:'p10', section:'pieges', q:"La nomenclature des enzymes suit typiquement 'substrat + réaction + suffixe -ase'.", opts:[{t:"Vrai",c:true},{t:"Faux",c:false}],
+   exp:"Exemple donné dans le cours : lactate déshydrogénase = substrat (lactate) + réaction (déshydrogénation) + -ase."},
+];
+
+const MATCHES = [
+  {id:'m1', section:'ordres', title:"Associe chaque type de cinétique à sa signature graphique",
+   pairs:[
+     ["Ordre 0","[A] décroît linéairement avec le temps"],
+     ["Ordre 1","ln[A] décroît linéairement avec le temps"],
+     ["Ordre 2","1/[A] croît linéairement avec le temps"],
+     ["Pseudo-premier ordre","Un réactif en large excès garde une concentration quasi constante"],
+   ]},
+  {id:'m2', section:'transition', title:"Associe chaque terme de l'équation d'Eyring à sa signification",
+   pairs:[
+     ["kB","Constante de Boltzmann"],
+     ["h","Constante de Planck"],
+     ["ΔG‡","Énergie libre d'activation"],
+     ["R · T","Constante des gaz parfaits · température absolue"],
+   ]},
+  {id:'m3', section:'enzymes', title:"Associe chaque classe EC à son type de réaction",
+   pairs:[
+     ["EC 1 — Oxydoréductases","Transfert d'électrons"],
+     ["EC 2 — Transférases","Transfert de groupes fonctionnels"],
+     ["EC 3 — Hydrolases","Hydrolyse de liaisons"],
+     ["EC 4 — Lyases","Addition / élimination sur doubles liaisons"],
+     ["EC 5 — Isomérases","Isomérisation"],
+     ["EC 6 — Ligases","Formation de liaisons, avec hydrolyse d'ATP"],
+   ]},
+];
+
+const SORTS = [
+  {id:'s1', section:'vitesse', title:"Classe chaque affirmation dans « Ordre » ou « Molécularité »",
+   buckets:['Ordre de réaction','Molécularité'],
+   items:[
+     ["Notion expérimentale, déterminée par la loi de vitesse mesurée","Ordre de réaction"],
+     ["Notion théorique, valable pour un acte élémentaire","Molécularité"],
+     ["Peut être non entier, nul, voire négatif","Ordre de réaction"],
+     ["Ne peut pas dépasser 3 en pratique","Molécularité"],
+     ["Somme des exposants de la loi de vitesse v = k[A]^a[B]^b","Ordre de réaction"],
+     ["Nombre de molécules qui se rencontrent dans l'acte élémentaire","Molécularité"],
+   ]},
+];
+
+const SECTION_META = [
+  {id:'ordres', label:'Ordres de réaction'},
+  {id:'vitesse', label:'Vitesse & molécularité'},
+  {id:'transition', label:"État de transition"},
+  {id:'enzymes', label:'Enzymes & catalyse'},
+  {id:'pieges', label:'Pièges classiques'},
+  {id:'final', label:'Quiz final'},
+];
+
+/* ============ PROGRESS (localStorage) ============ */
+const STORE_KEY = 'enzymo-concepts-progress-v1';
+let progress = {};
+try{ progress = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ progress = {}; }
+function saveProgress(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }catch(e){} }
+function markDone(id){ if(!progress[id]){ progress[id]=true; saveProgress(); updateGlobalProgress(); } }
+
+function totalTrackableCount(){
+  let n = QCM.length;
+  MATCHES.forEach(m=> n += m.pairs.length);
+  SORTS.forEach(s=> n += s.items.length);
+  return n;
+}
+function doneTrackableCount(){
+  return Object.keys(progress).filter(k=>progress[k]).length;
+}
+function sectionDone(sectionId){
+  const ids = [];
+  QCM.filter(x=>x.section===sectionId).forEach(x=>ids.push(x.id));
+  MATCHES.filter(x=>x.section===sectionId).forEach(m=> m.pairs.forEach((p,i)=>ids.push(m.id+'-'+i)));
+  SORTS.filter(x=>x.section===sectionId).forEach(s=> s.items.forEach((it,i)=>ids.push(s.id+'-'+i)));
+  if(ids.length===0) return false;
+  return ids.every(id=>progress[id]);
+}
+
+function updateGlobalProgress(){
+  const total = totalTrackableCount();
+  const done = doneTrackableCount();
+  document.getElementById('progressText').textContent = done + ' / ' + total;
+  const pct = total? done/total : 0;
+  const path = document.getElementById('curveFill');
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len;
+  path.style.strokeDashoffset = len * (1-pct);
+  // update tab dots
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    const sid = btn.dataset.section;
+    if(sid==='final') return;
+    btn.classList.toggle('done', sectionDone(sid));
+  });
+}
+
+/* ============ RENDER: QCM ============ */
+function renderQcmCard(item, container, opts){
+  opts = opts || {};
+  const card = document.createElement('div');
+  card.className = 'card';
+  const already = progress[item.id];
+  card.innerHTML = `
+    <p class="kicker">${opts.kicker || 'Concept'}${already && !opts.isFinal ? '<span class="status-badge">✓ maîtrisé</span>' : ''}</p>
+    <h3 class="q">${item.q}</h3>
+    <ul class="opts"></ul>
+    <div class="explain"><strong>Explication —</strong> <span></span></div>
+  `;
+  const ul = card.querySelector('.opts');
+  const explain = card.querySelector('.explain');
+  const explainSpan = explain.querySelector('span');
+  explainSpan.textContent = item.exp;
+
+  // shuffle option order for display, keep correctness attached
+  const shuffled = item.opts.map((o,i)=>({...o, _i:i}));
+  for(let i=shuffled.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+
+  let answered = false;
+  shuffled.forEach(o=>{
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o.t;
+    btn.addEventListener('click', ()=>{
+      if(answered) return;
+      answered = true;
+      const allBtns = ul.querySelectorAll('.opt-btn');
+      allBtns.forEach(b=> b.disabled = true);
+      if(o.c){
+        btn.classList.add('correct');
+        markDone(item.id);
+        if(opts.onAnswer) opts.onAnswer(true);
+      } else {
+        btn.classList.add('incorrect');
+        allBtns.forEach(b=>{ if(b!==btn) b.classList.add('faded'); });
+        // reveal correct one
+        const correctBtn = [...allBtns].find((b,idx)=> shuffled[idx].c);
+        if(correctBtn) correctBtn.classList.add('correct');
+        if(opts.onAnswer) opts.onAnswer(false);
+      }
+      explain.classList.add('show');
+    });
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+  container.appendChild(card);
+}
+
+/* ============ RENDER: MATCH ============ */
+function renderMatchCard(m, container){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<p class="kicker">Association</p><h3 class="q">${m.title}</h3><div class="match-grid"></div>`;
+  const grid = card.querySelector('.match-grid');
+  const left = document.createElement('div'); left.className='match-col';
+  const right = document.createElement('div'); right.className='match-col';
+
+  const leftItems = m.pairs.map((p,i)=>({text:p[0], idx:i}));
+  const rightItems = m.pairs.map((p,i)=>({text:p[1], idx:i}));
+  shuffleArr(leftItems); shuffleArr(rightItems);
+
+  let selectedLeft = null;
+  let matchedCount = 0;
+
+  function makeItem(obj, col, isLeft){
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    div.textContent = obj.text;
+    div.dataset.idx = obj.idx;
+    div.addEventListener('click', ()=>{
+      if(div.classList.contains('matched')) return;
+      if(isLeft){
+        col.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedLeft = div;
+      } else {
+        if(!selectedLeft) return;
+        const leftIdx = parseInt(selectedLeft.dataset.idx,10);
+        const rightIdx = parseInt(div.dataset.idx,10);
+        if(leftIdx === rightIdx){
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('matched');
+          div.classList.add('matched');
+          selectedLeft = null;
+          matchedCount++;
+          markDone(m.id + '-' + leftIdx);
+          if(matchedCount === m.pairs.length){
+            markDone(m.id);
+          }
+        } else {
+          div.classList.add('wrong');
+          selectedLeft.classList.add('wrong');
+          setTimeout(()=>{
+            div.classList.remove('wrong');
+            selectedLeft && selectedLeft.classList.remove('wrong','selected');
+            selectedLeft = null;
+          }, 500);
+        }
+      }
+    });
+    return div;
+  }
+  leftItems.forEach(o=> left.appendChild(makeItem(o,left,true)));
+  rightItems.forEach(o=> right.appendChild(makeItem(o,right,false)));
+  grid.appendChild(left); grid.appendChild(right);
+  container.appendChild(card);
+}
+
+function shuffleArr(arr){
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+}
+
+/* ============ RENDER: SORT ============ */
+function renderSortCard(s, container){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<p class="kicker">Classement</p><h3 class="q">${s.title}</h3>
+    <div class="sort-pool"></div>
+    <div class="buckets"></div>`;
+  const pool = card.querySelector('.sort-pool');
+  const bucketsEl = card.querySelector('.buckets');
+
+  const itemsShuffled = s.items.map((it,i)=>({text:it[0], bucket:it[1], idx:i}));
+  shuffleArr(itemsShuffled);
+
+  let selectedChip = null;
+
+  const bucketDivs = {};
+  s.buckets.forEach(bname=>{
+    const b = document.createElement('div');
+    b.className = 'bucket';
+    b.innerHTML = `<h4>${bname}</h4><div class="bucket-content"></div>`;
+    b.addEventListener('click', ()=>{
+      if(!selectedChip) return;
+      const idx = parseInt(selectedChip.dataset.idx,10);
+      const item = itemsShuffled.find(x=>x.idx===idx);
+      const content = b.querySelector('.bucket-content');
+      const placed = document.createElement('div');
+      const isCorrect = item.bucket === bname;
+      placed.className = 'placed-item ' + (isCorrect?'correct':'incorrect');
+      placed.textContent = item.text + (isCorrect? ' ✓' : ' — pas la bonne catégorie');
+      content.appendChild(placed);
+      if(isCorrect){
+        selectedChip.classList.add('placed');
+        markDone(s.id + '-' + idx);
+        const remaining = pool.querySelectorAll('.chip:not(.placed)').length;
+        if(remaining === 0) markDone(s.id);
+      } else {
+        setTimeout(()=> placed.remove(), 900);
+      }
+      selectedChip.classList.remove('selected');
+      selectedChip = null;
+    });
+    bucketsEl.appendChild(b);
+    bucketDivs[bname]=b;
+  });
+
+  itemsShuffled.forEach(it=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = it.text;
+    chip.dataset.idx = it.idx;
+    chip.addEventListener('click', ()=>{
+      if(chip.classList.contains('placed')) return;
+      pool.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      selectedChip = chip;
+    });
+    pool.appendChild(chip);
+  });
+
+  container.appendChild(card);
+}
+
+/* ============ BUILD SECTIONS ============ */
+function buildSection(sectionId){
+  const host = document.getElementById('host-'+sectionId);
+  host.innerHTML = '';
+  QCM.filter(x=>x.section===sectionId).forEach(item=> renderQcmCard(item, host));
+  MATCHES.filter(x=>x.section===sectionId).forEach(m=> renderMatchCard(m, host));
+  SORTS.filter(x=>x.section===sectionId).forEach(s=> renderSortCard(s, host));
+}
+['ordres','vitesse','transition','enzymes','pieges'].forEach(buildSection);
+
+/* ============ FINAL QUIZ ============ */
+const finalHost = document.getElementById('host-final');
+function startFinalQuiz(){
+  finalHost.innerHTML = '';
+  const pool = [...QCM];
+  shuffleArr(pool);
+  const picked = pool.slice(0, 15);
+  let score = 0;
+  let answeredCount = 0;
+
+  const progDiv = document.createElement('div');
+  progDiv.className = 'final-progress';
+  progDiv.textContent = `Question 0 / ${picked.length} · score : 0`;
+  finalHost.appendChild(progDiv);
+
+  const qWrap = document.createElement('div');
+  finalHost.appendChild(qWrap);
+
+  picked.forEach((item, i)=>{
+    const box = document.createElement('div');
+    box.style.display = i===0 ? 'block' : 'none';
+    box.dataset.i = i;
+    renderQcmCard(item, box, {
+      kicker: `Question ${i+1} / ${picked.length}`,
+      isFinal: true,
+      onAnswer: (correct)=>{
+        if(correct) score++;
+        answeredCount++;
+        progDiv.textContent = `Question ${answeredCount} / ${picked.length} · score : ${score}`;
+        setTimeout(()=>{
+          box.style.display = 'none';
+          if(i+1 < picked.length){
+            qWrap.children[i+1].style.display = 'block';
+          } else {
+            showFinalScore(score, picked.length);
+          }
+        }, 1100);
+      }
+    });
+    qWrap.appendChild(box);
+  });
+}
+
+function showFinalScore(score, total){
+  const pct = score/total;
+  let msg;
+  if(pct === 1) msg = "Sans faute. Les concepts sont acquis — tu peux passer aux exercices de calcul l'esprit tranquille.";
+  else if(pct >= 0.8) msg = "Très solide. Repasse juste sur les quelques notions ratées avant l'exam.";
+  else if(pct >= 0.6) msg = "Correct, mais il reste des zones floues — retourne dans les sections concernées.";
+  else msg = "Les bases méritent d'être revues section par section avant de repasser ce quiz.";
+
+  finalHost.innerHTML = `
+    <div class="score-screen">
+      <div class="big-num">${score} / ${total}</div>
+      <p class="msg">${msg}</p>
+      <button class="big" id="retryFinal">Retenter avec un nouveau tirage</button>
+    </div>`;
+  document.getElementById('retryFinal').addEventListener('click', startFinalQuiz);
+}
+
+function buildFinalIntro(){
+  finalHost.innerHTML = `
+    <div class="final-shell">
+      <button class="big" id="launchFinal">Lancer le quiz (15 questions)</button>
+    </div>`;
+  document.getElementById('launchFinal').addEventListener('click', startFinalQuiz);
+}
+buildFinalIntro();
+
+/* ============ TABS ============ */
+const tabsInner = document.getElementById('tabsInner');
+SECTION_META.forEach((s,i)=>{
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i===0?' active':'');
+  btn.dataset.section = s.id;
+  btn.innerHTML = `<span class="dot"></span>${s.label}`;
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+s.id).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+  tabsInner.appendChild(btn);
+});
+document.getElementById('panel-ordres').classList.add('active');
+
+updateGlobalProgress();
+</script>
+</body>
+</html>
