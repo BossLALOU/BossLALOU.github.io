@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Métabolites primaires et secondaires du fruit — Révisions</title>
+<style>
+  :root{
+    --bg:#0f1117; --card:#181b24; --card2:#1f2330; --text:#e8e9ee; --muted:#9aa0ae;
+    --accent:#5eead4; --accent2:#818cf8; --good:#4ade80; --bad:#f87171; --warn:#fbbf24;
+    --border:#2a2f3d;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f4f5f7; --card:#ffffff; --card2:#f0f1f5; --text:#1c1e26; --muted:#5b6172;
+    --accent:#0d9488; --accent2:#4338ca; --border:#e2e4ea; }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:24px 16px 64px;}
+  header{ text-align:center; margin-bottom:24px; }
+  header h1{ font-size:1.5rem; margin:0 0 4px; }
+  header p{ color:var(--muted); margin:0; font-size:.9rem; }
+
+  nav.tabs{ display:flex; gap:8px; justify-content:center; margin:20px 0; flex-wrap:wrap; }
+  nav.tabs button{
+    background:var(--card2); color:var(--text); border:1px solid var(--border);
+    padding:8px 16px; border-radius:999px; cursor:pointer; font-size:.85rem; font-weight:600;
+  }
+  nav.tabs button.active{ background:var(--accent2); color:#fff; border-color:var(--accent2); }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  select, button.primary{
+    font-family:inherit; font-size:.9rem; padding:8px 12px; border-radius:8px;
+    border:1px solid var(--border); background:var(--card2); color:var(--text); cursor:pointer;
+  }
+  .controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; margin-bottom:18px;}
+
+  .progressbar{ height:8px; background:var(--card2); border-radius:999px; overflow:hidden; margin-bottom:18px; border:1px solid var(--border);}
+  .progressbar > div{ height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); width:0%; transition:width .3s; }
+
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:24px; margin-bottom:16px; box-shadow:0 4px 20px rgba(0,0,0,.08);
+  }
+  .qmeta{ display:flex; justify-content:space-between; color:var(--muted); font-size:.78rem; margin-bottom:10px; text-transform:uppercase; letter-spacing:.04em;}
+  .qtext{ font-size:1.08rem; font-weight:600; line-height:1.45; margin-bottom:18px; }
+
+  .opts{ display:flex; flex-direction:column; gap:10px; }
+  .opt{
+    text-align:left; padding:12px 14px; border-radius:10px; border:1px solid var(--border);
+    background:var(--card2); color:var(--text); cursor:pointer; font-size:.95rem; line-height:1.35;
+    transition:transform .05s ease;
+  }
+  .opt:hover{ border-color:var(--accent2); }
+  .opt.correct{ background:rgba(74,222,128,.15); border-color:var(--good); }
+  .opt.incorrect{ background:rgba(248,113,113,.15); border-color:var(--bad); }
+  .opt:disabled{ cursor:default; opacity:.85; }
+
+  .explain{
+    margin-top:16px; padding:14px; border-radius:10px; background:var(--card2);
+    border-left:4px solid var(--accent); font-size:.9rem; line-height:1.5; display:none;
+  }
+  .explain.show{ display:block; }
+
+  .navbtns{ display:flex; justify-content:space-between; margin-top:18px; }
+  .navbtns button{
+    background:var(--accent2); color:#fff; border:none; padding:10px 20px;
+    border-radius:8px; cursor:pointer; font-weight:600; font-size:.9rem;
+  }
+  .navbtns button:disabled{ opacity:.35; cursor:default; }
+  .navbtns button.ghost{ background:transparent; border:1px solid var(--border); color:var(--text); }
+
+  .scorebox{ text-align:center; padding:32px 20px; }
+  .scorebox .big{ font-size:2.6rem; font-weight:800; margin:8px 0; }
+  .scorebox .sub{ color:var(--muted); margin-bottom:20px; }
+
+  /* Flashcards */
+  .flashwrap{ perspective:1200px; }
+  .flashcard{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    min-height:220px; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:28px; cursor:pointer; font-size:1.05rem; line-height:1.5;
+    position:relative;
+  }
+  .flashcard .tag{ position:absolute; top:14px; left:16px; font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+  .flashcard .hint{ position:absolute; bottom:12px; font-size:.72rem; color:var(--muted); }
+  .flash-answer{ color:var(--accent); font-weight:600; }
+
+  .flashnav{ display:flex; justify-content:center; gap:12px; margin-top:16px; }
+  .flashnav button{
+    background:var(--card2); border:1px solid var(--border); color:var(--text);
+    padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .flashnav button.know{ background:rgba(74,222,128,.15); border-color:var(--good); }
+  .flashnav button.dontknow{ background:rgba(248,113,113,.15); border-color:var(--bad); }
+
+  .counter{ text-align:center; color:var(--muted); font-size:.85rem; margin-top:10px;}
+
+  footer{ text-align:center; margin-top:40px; color:var(--muted); font-size:.75rem; }
+  footer a{ color:var(--accent2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🍅 Métabolites primaires et secondaires du fruit</h1>
+    <p>D'après Génard et al., 2010 — QCM interactif + flashcards</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="quiz" class="active">QCM</button>
+    <button data-tab="flash">Flashcards</button>
+  </nav>
+
+  <!-- ================= QUIZ PANEL ================= -->
+  <section id="panel-quiz" class="panel active">
+    <div class="controls">
+      <label for="cat-select" style="color:var(--muted); font-size:.85rem;">Catégorie :</label>
+      <select id="cat-select"></select>
+      <button class="primary" id="restart-quiz">🔄 Recommencer</button>
+    </div>
+
+    <div class="progressbar"><div id="quiz-progress"></div></div>
+
+    <div id="quiz-question-area"></div>
+
+    <div id="quiz-score-area" style="display:none;"></div>
+  </section>
+
+  <!-- ================= FLASHCARD PANEL ================= -->
+  <section id="panel-flash" class="panel">
+    <div class="controls">
+      <label for="flash-cat-select" style="color:var(--muted); font-size:.85rem;">Catégorie :</label>
+      <select id="flash-cat-select"></select>
+      <button class="primary" id="shuffle-flash">🔀 Mélanger</button>
+      <button class="primary" id="reset-flash">🔄 Réinitialiser</button>
+    </div>
+
+    <div class="flashwrap">
+      <div class="flashcard" id="flashcard">
+        <span class="tag" id="flash-tag"></span>
+        <div id="flash-content">Chargement…</div>
+        <span class="hint">clique pour retourner</span>
+      </div>
+    </div>
+    <div class="flashnav">
+      <button class="dontknow" id="btn-dontknow">😵 À revoir</button>
+      <button id="btn-prev-flash">← Précédent</button>
+      <button id="btn-next-flash">Suivant →</button>
+      <button class="know" id="btn-know">✅ Su</button>
+    </div>
+    <div class="counter" id="flash-counter"></div>
+  </section>
+
+  <footer>
+    Contenu généré à partir de "Elaboration de la qualité du fruit" (Génard et al., Innovations Agronomiques, 2010) — usage personnel de révision.
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   DONNÉES — QCM
+   ============================================================ */
+const QUESTIONS = [
+  {
+    cat: "Croissance du fruit",
+    q: "La multiplication cellulaire dans le fruit se déroule principalement...",
+    options: [
+      "Précocement, sur quelques semaines, et détermine le potentiel de croissance du fruit",
+      "Pendant toute la maturation du fruit",
+      "Uniquement après la phase de croissance cellulaire",
+      "Elle est indépendante de la température"
+    ],
+    correct: 0,
+    explain: "La multiplication cellulaire se déroule précocement (quelques semaines) et fixe l'effectif cellulaire définitif, donc le potentiel de croissance du fruit."
+  },
+  {
+    cat: "Croissance du fruit",
+    q: "Chez la tomate, une diminution de la température pendant la phase de division cellulaire entraîne...",
+    options: [
+      "Une diminution du nombre de cellules produites",
+      "Un allongement de la période de division et donc plus de cellules produites",
+      "Aucun effet sur le nombre de cellules",
+      "Un arrêt de la croissance cellulaire"
+    ],
+    correct: 1,
+    explain: "Une baisse de température peut allonger la période de division cellulaire, augmentant ainsi le nombre de cellules produites par fruit (Bertin, 2005)."
+  },
+  {
+    cat: "Croissance du fruit",
+    q: "Le moteur de la croissance cellulaire (augmentation de volume) est...",
+    options: [
+      "La pression de turgescence",
+      "La photosynthèse foliaire uniquement",
+      "La dégradation de l'amidon",
+      "Le flux d'éthylène"
+    ],
+    correct: 0,
+    explain: "La pression de turgescence dans la cellule est le moteur de la croissance cellulaire : l'augmentation de volume dépend de l'approvisionnement en eau et de la richesse en solutés."
+  },
+  {
+    cat: "Croissance du fruit",
+    q: "La taille moyenne des cellules du fruit, par rapport au nombre de cellules, a tendance à...",
+    options: [
+      "Augmenter avec le nombre de cellules",
+      "Diminuer quand le nombre de cellules augmente (effet de compétition)",
+      "Rester parfaitement constante",
+      "N'a aucun lien"
+    ],
+    correct: 1,
+    explain: "La taille moyenne des cellules diminue en général avec le nombre de cellules — un phénomène ressemblant à de la compétition entre cellules, qui limite l'effet positif du nombre de cellules sur la croissance."
+  },
+  {
+    cat: "Croissance du fruit",
+    q: "Les variations de volume du fruit résultent du bilan entre...",
+    options: [
+      "Entrées d'eau/carbone (xylème, phloème) et sorties par transpiration/respiration",
+      "Uniquement la photosynthèse du fruit lui-même",
+      "La seule pression osmotique de la peau",
+      "Le taux d'éthylène émis"
+    ],
+    correct: 0,
+    explain: "Le volume du fruit résulte du bilan entre les entrées d'eau et de carbone (xylème, phloème) et les sorties par transpiration et respiration."
+  },
+  {
+    cat: "Composition : sucres et acides",
+    q: "Chez la tomate cerise, au cours du développement du fruit, la concentration en amidon...",
+    options: [
+      "Augmente continuellement jusqu'à maturité",
+      "Augmente dans les phases précoces (jusqu'à ~14 jours après floraison) puis décroît jusqu'à maturité",
+      "Reste stable tout du long",
+      "Diminue dès le début puis augmente à maturité"
+    ],
+    correct: 1,
+    explain: "L'amidon augmente dans les phases précoces (jusqu'à ~14 jours après floraison) puis décroît jusqu'à maturité, alors que les sucres solubles augmentent."
+  },
+  {
+    cat: "Composition : sucres et acides",
+    q: "Les concentrations en acides citrique et malique au cours du développement du fruit de tomate...",
+    options: [
+      "Augmentent continuellement jusqu'à maturité",
+      "Augmentent pendant la croissance puis diminuent fortement pendant la maturation",
+      "Restent constantes",
+      "Diminuent dès le début de la croissance"
+    ],
+    correct: 1,
+    explain: "Les acides citrique et malique augmentent pendant la croissance du fruit, puis diminuent fortement pendant la maturation (leur dynamique varie selon les génotypes)."
+  },
+  {
+    cat: "Composition : sucres et acides",
+    q: "Quels sont les quatre processus pris en compte pour expliquer la composition du fruit ?",
+    options: [
+      "Transport, synthèse, utilisation (respiration/synthèse d'amidon), dilution dans l'eau",
+      "Photosynthèse, transpiration, floraison, pollinisation",
+      "Division cellulaire, expansion, sénescence, abscission",
+      "Xylème, phloème, cuticule, stomates"
+    ],
+    correct: 0,
+    explain: "Les 4 processus sont : le transport de métabolites depuis d'autres organes, leur synthèse dans le fruit, leur utilisation (respiration, synthèse d'amidon/autres composés), et leur dilution dans l'eau du fruit."
+  },
+  {
+    cat: "Composition : sucres et acides",
+    q: "Plus la quantité d'eau dans le fruit est importante...",
+    options: [
+      "Plus les composés sont concentrés",
+      "Plus les composés sont dilués, donc en plus faible concentration",
+      "Aucun effet sur la concentration",
+      "Plus la vitamine C augmente automatiquement"
+    ],
+    correct: 1,
+    explain: "Plus la quantité d'eau est importante, plus les composés sont dilués et se retrouvent à faible concentration dans le fruit."
+  },
+  {
+    cat: "Vitamine C",
+    q: "L'évolution de la teneur en vitamine C au cours du développement du fruit de tomate est...",
+    options: [
+      "Une augmentation continue depuis l'anthèse",
+      "Une diminution (dilution) en début de développement, puis une augmentation rapide pendant la maturation",
+      "Une valeur constante tout au long du développement",
+      "Une diminution continue jusqu'à la récolte"
+    ],
+    correct: 1,
+    explain: "La vitamine C diminue au cours des premières phases (dilution par accumulation d'eau/composés carbonés), diminue lentement, puis augmente rapidement pendant la maturation, en corrélation (non fonctionnelle) avec l'accumulation des sucres."
+  },
+  {
+    cat: "Vitamine C",
+    q: "L'étude de Massot et al. (2010) a montré que l'augmentation des sucres liée à une réduction de la charge en fruits...",
+    options: [
+      "Induit automatiquement une augmentation de la vitamine C (lien fonctionnel direct)",
+      "N'induit PAS d'augmentation de la vitamine C : la corrélation sucre/vitamine C n'est pas une liaison fonctionnelle",
+      "Fait diminuer la vitamine C",
+      "N'a jamais été étudiée"
+    ],
+    correct: 1,
+    explain: "Bien que sucres et vitamine C soient corrélés lors de la maturation, l'augmentation des sucres due à une réduction de la charge en fruits n'entraînait pas d'augmentation de la vitamine C : ce n'est donc pas une liaison fonctionnelle causale."
+  },
+  {
+    cat: "Vitamine C",
+    q: "Concernant l'ombrage, quel facteur a le plus d'impact sur la teneur en vitamine C du fruit ?",
+    options: [
+      "L'ombrage des feuilles uniquement",
+      "L'ombrage du fruit lui-même (microclimat lumineux du fruit)",
+      "Aucun des deux n'a d'effet",
+      "L'ombrage de la racine"
+    ],
+    correct: 1,
+    explain: "L'ombrage des feuilles diminue légèrement la vitamine C (suggérant un transfert depuis les feuilles), mais l'ombrage du FRUIT a un effet plus marqué : l'essentiel de l'accumulation dépend du microclimat lumineux du fruit lui-même."
+  },
+  {
+    cat: "Métabolites secondaires",
+    q: "Parmi les grandes familles de métabolites secondaires du fruit, on trouve :",
+    options: [
+      "Phénylpropanoïdes (flavonoïdes, polyphénols), alcaloïdes, terpénoïdes, caroténoïdes",
+      "Uniquement les sucres et les acides organiques",
+      "Uniquement la vitamine C",
+      "Amidon, cellulose, lignine"
+    ],
+    correct: 0,
+    explain: "La diversité des métabolites secondaires implique plusieurs voies : phénylpropanoïdes (flavonoïdes, polyphénols), alcaloïdes, terpénoïdes et caroténoïdes."
+  },
+  {
+    cat: "Métabolites secondaires",
+    q: "Où sont majoritairement localisés les flavonoïdes dans le fruit de tomate ?",
+    options: [
+      "Dans les graines uniquement",
+      "Dans la partie externe du fruit (peau et péricarpe)",
+      "Dans le gel entourant les graines",
+      "Répartis uniformément dans tout le fruit"
+    ],
+    correct: 1,
+    explain: "Les flavonoïdes sont majoritairement localisés dans la partie externe du fruit : la peau et le péricarpe."
+  },
+  {
+    cat: "Métabolites secondaires",
+    q: "Les acides hydroxycinnamiques sont plutôt retrouvés...",
+    options: [
+      "Dans la peau uniquement",
+      "Dans la chair, les graines et le gel qui les entoure",
+      "Ils n'existent pas dans la tomate",
+      "Uniquement dans les feuilles"
+    ],
+    correct: 1,
+    explain: "Les acides hydroxycinnamiques (esters formés avec acides caféique, férulique, para-coumarique) sont plus présents dans la chair, les graines et le gel les entourant."
+  },
+  {
+    cat: "Métabolites secondaires",
+    q: "Quel est le composé phénolique le plus abondant du fruit de tomate, et comment évolue-t-il ?",
+    options: [
+      "La rutine, qui diminue au cours de la maturation",
+      "L'acide chlorogénique, concentration maximale au stade vert puis chute au mûrissement",
+      "Le lycopène, qui augmente linéairement",
+      "La vitamine C, stable durant toute la maturation"
+    ],
+    correct: 1,
+    explain: "L'acide chlorogénique est le composé phénolique le plus abondant ; sa concentration est maximale au stade fruit vert et chute pendant le mûrissement. À l'inverse, la rutine et les dérivés de l'acide caféique augmentent dans le fruit mûr."
+  },
+  {
+    cat: "Pratiques culturales",
+    q: "Une diminution de la densité de plantation de tomate a pour effet principal de...",
+    options: [
+      "Réduire la photosynthèse et donc les sucres",
+      "Favoriser la photosynthèse et l'accumulation de matière sèche, sucres, lycopène et vitamine C",
+      "N'avoir aucun effet mesurable",
+      "Diminuer fortement le poids du fruit"
+    ],
+    correct: 1,
+    explain: "Réduire la densité de plantation favorise la photosynthèse par plante et donc l'accumulation de matière sèche, sucres, lycopène et vitamine C dans le fruit (le poids du fruit augmente aussi, +21% dans l'exemple du cours)."
+  },
+  {
+    cat: "Pratiques culturales",
+    q: "Une diminution de la charge en fruits (ablation de fleurs) sur une tomate favorise...",
+    options: [
+      "La dilution des sucres",
+      "L'accumulation de matière sèche et de sucres solubles dans le fruit restant",
+      "Une baisse de la matière sèche",
+      "Uniquement une augmentation du poids sans effet sur les sucres"
+    ],
+    correct: 1,
+    explain: "Moins de fruits sur la plante = plus de ressources par fruit restant, ce qui favorise l'accumulation de matière sèche et de sucres solubles."
+  },
+  {
+    cat: "Pratiques culturales",
+    q: "Une réduction de la fertilisation azotée sur la tomate entraîne globalement :",
+    options: [
+      "Une augmentation des sucres, une diminution des acides, et un ratio sucre/acide fortement augmenté",
+      "Une diminution des sucres et une augmentation des acides",
+      "Aucun changement notable",
+      "Une forte augmentation des caroténoïdes"
+    ],
+    correct: 0,
+    explain: "Réduire l'azote favorise l'accumulation de sucres, réduit les acides : le ratio sucres/acides (indicateur de qualité gustative) augmente fortement. Les polyphénols tendent aussi à augmenter, alors que les caroténoïdes ne sont pas affectés."
+  },
+  {
+    cat: "Pratiques culturales",
+    q: "Une réduction de l'irrigation ou une irrigation avec une eau très conductrice (saline) a pour effet de...",
+    options: [
+      "Augmenter fortement l'entrée d'eau dans le fruit",
+      "Réduire l'entrée d'eau dans le fruit, ce qui limite la dilution des sucres et autres composés",
+      "N'avoir aucun impact sur la dilution",
+      "Diminuer systématiquement les sucres dans tous les cultivars"
+    ],
+    correct: 1,
+    explain: "Réduire l'irrigation ou utiliser une eau très saline limite l'entrée d'eau dans le fruit, réduisant ainsi le phénomène de dilution des sucres et autres composés d'intérêt."
+  },
+  {
+    cat: "Environnement",
+    q: "Une augmentation de la température du fruit de 27 à 32°C a pour effet de...",
+    options: [
+      "Réduire la concentration en dérivés de l'acide caféique et accroître la rutine et les glucosides de l'acide caféique",
+      "N'avoir aucun effet sur les composés phénoliques",
+      "Augmenter uniquement la vitamine C",
+      "Réduire tous les composés phénoliques sans exception"
+    ],
+    correct: 0,
+    explain: "L'augmentation de température du fruit (27→32°C) réduit la concentration en dérivés de l'acide caféique et accroît la concentration en rutine et glucosides de l'acide caféique."
+  },
+  {
+    cat: "Environnement",
+    q: "Concernant l'effet saison, les tomates produites en été (par rapport à l'hiver) sont...",
+    options: [
+      "Plus riches en sucres, acides, vitamine C et rutine, mais plus pauvres en lycopène",
+      "Plus riches en lycopène uniquement",
+      "Identiques en tout point aux tomates d'hiver",
+      "Plus pauvres en sucres et acides"
+    ],
+    correct: 0,
+    explain: "Les tomates d'été sont plus riches en sucres, acides, vitamine C et rutine, alors que la concentration en lycopène (dont la synthèse est inhibée à forte température) est plus élevée en hiver."
+  },
+  {
+    cat: "Modèle Fruit Virtuel",
+    q: "Le modèle 'Fruit Virtuel' regroupe combien de sous-modèles décrivant le fonctionnement du fruit ?",
+    options: [
+      "Trois",
+      "Sept",
+      "Douze",
+      "Un seul modèle global"
+    ],
+    correct: 1,
+    explain: "Le 'Fruit Virtuel' regroupe sept sous-modèles (carbone, sucres, eau, conductance de la peau, respiration, éthylène, citrate) décrivant les principaux aspects du fonctionnement du fruit."
+  },
+  {
+    cat: "Modèle Fruit Virtuel",
+    q: "Dans le schéma du Fruit Virtuel, les variables d'entrée et les variables prédites (sorties) sont respectivement indiquées en quelle couleur ?",
+    options: [
+      "Rouge pour les entrées, bleu pour les sorties/variables prédites",
+      "Bleu pour les entrées, rouge pour les sorties",
+      "Vert pour les entrées, jaune pour les sorties",
+      "Toutes en noir sans distinction"
+    ],
+    correct: 0,
+    explain: "Dans la Figure 5, les variables d'entrée du modèle sont en rouge, et les variables prédites (sorties) sont en bleu."
+  },
+  {
+    cat: "Modèle Fruit Virtuel",
+    q: "L'utilisation du Fruit Virtuel a montré qu'un stress hydrique appliqué après une bonne irrigation, comparé à un stress continu, avait pour effet...",
+    options: [
+      "De diminuer fortement la croissance, alors que les fruits stressés en continu croissent malgré tout — suggérant une capacité d'adaptation au stress",
+      "Aucune différence entre les deux situations",
+      "D'accélérer la croissance dans les deux cas",
+      "De tuer systématiquement le fruit"
+    ],
+    correct: 0,
+    explain: "Un stress hydrique après une période de bonne irrigation diminue fortement la croissance, tandis que les fruits de plantes stressées en continu ont une croissance continue — ce qui suggère que les fruits peuvent s'adapter aux situations de stress."
+  }
+];
+
+/* ============================================================
+   DONNÉES — FLASHCARDS (format simple Q / R)
+   ============================================================ */
+const FLASHCARDS = [
+  {cat:"Croissance", q:"Quels sont les 2 processus qui composent la croissance du fruit ?", a:"La multiplication cellulaire (précoce, fixe le nombre de cellules) et la croissance cellulaire (expansion, moteur = pression de turgescence)."},
+  {cat:"Croissance", q:"Qu'est-ce qui est le moteur de la croissance cellulaire ?", a:"La pression de turgescence, dépendante de l'approvisionnement en eau et de la richesse en solutés."},
+  {cat:"Croissance", q:"Une baisse de température pendant la division cellulaire chez la tomate a quel effet ?", a:"Elle allonge la période de division → augmentation du nombre de cellules produites par fruit."},
+  {cat:"Croissance", q:"De quoi résultent les variations de volume du fruit (bilan de flux) ?", a:"Du bilan entrées (eau/carbone via xylème et phloème) moins sorties (transpiration et respiration)."},
+  {cat:"Composition", q:"Quels sont les 4 processus déterminant la composition du fruit ?", a:"1) Transport depuis d'autres organes, 2) synthèse dans le fruit, 3) utilisation (respiration / synthèse d'amidon ou autres composés), 4) dilution dans l'eau."},
+  {cat:"Composition", q:"Comment évolue l'amidon chez la tomate cerise au cours du développement ?", a:"Il augmente dans les phases précoces (jusqu'à ~14 jours après floraison) puis décroît jusqu'à maturité."},
+  {cat:"Composition", q:"Comment évoluent les acides citrique et malique pendant le développement du fruit ?", a:"Ils augmentent pendant la croissance puis diminuent fortement pendant la maturation."},
+  {cat:"Composition", q:"Plus il y a d'eau dans le fruit, que se passe-t-il pour la concentration des composés ?", a:"Elle diminue : c'est le phénomène de dilution."},
+  {cat:"Vitamine C", q:"Comment évolue la vitamine C au cours du développement du fruit de tomate ?", a:"Elle diminue en début de développement (dilution), diminue lentement, puis augmente rapidement pendant la maturation."},
+  {cat:"Vitamine C", q:"Que montre l'étude de Massot et al. (2010) sur le lien sucre/vitamine C ?", a:"La corrélation observée n'est pas une liaison fonctionnelle : augmenter les sucres (via réduction de charge en fruits) n'augmente pas la vitamine C."},
+  {cat:"Vitamine C", q:"Ombrage des feuilles vs ombrage du fruit : lequel a le plus d'impact sur la vitamine C du fruit ?", a:"L'ombrage du FRUIT a l'effet le plus marqué (microclimat lumineux du fruit) ; l'ombrage des feuilles ne fait que légèrement la diminuer."},
+  {cat:"Métabolites secondaires", q:"Cite les 4 grandes familles de voies de métabolisme secondaire mentionnées.", a:"Phénylpropanoïdes (flavonoïdes, polyphénols), alcaloïdes, terpénoïdes, caroténoïdes."},
+  {cat:"Métabolites secondaires", q:"Où se trouvent majoritairement les flavonoïdes dans le fruit ?", a:"Dans la partie externe : peau et péricarpe."},
+  {cat:"Métabolites secondaires", q:"Où se trouvent majoritairement les acides hydroxycinnamiques ?", a:"Dans la chair, les graines, et le gel qui les entoure."},
+  {cat:"Métabolites secondaires", q:"Quel est le composé phénolique le plus abondant de la tomate, et son évolution ?", a:"L'acide chlorogénique — concentration maximale au stade vert, chute pendant le mûrissement."},
+  {cat:"Métabolites secondaires", q:"Quels composés phénoliques augmentent au contraire dans le fruit mûr ?", a:"La rutine et les dérivés de l'acide caféique."},
+  {cat:"Pratiques culturales", q:"Effet d'une densité de plantation plus faible sur le fruit ?", a:"Favorise la photosynthèse et augmente matière sèche, sucres, lycopène et vitamine C (poids du fruit aussi en hausse)."},
+  {cat:"Pratiques culturales", q:"Effet d'une réduction de la charge en fruits (ablation de fleurs) ?", a:"Favorise l'accumulation de matière sèche et de sucres solubles dans les fruits restants."},
+  {cat:"Pratiques culturales", q:"Effet d'une réduction de la fertilisation azotée sur sucres/acides ?", a:"Sucres augmentent, acides diminuent → ratio sucres/acides (qualité gustative) fortement augmenté ; polyphénols tendent à augmenter, caroténoïdes inchangés."},
+  {cat:"Pratiques culturales", q:"Effet d'une réduction d'irrigation ou d'une eau très saline sur la composition ?", a:"Réduit l'entrée d'eau dans le fruit → limite la dilution → sucres et autres composés plus concentrés."},
+  {cat:"Environnement", q:"Effet d'une hausse de température du fruit de 27 à 32°C sur les phénols ?", a:"Réduit les dérivés de l'acide caféique, augmente la rutine et les glucosides de l'acide caféique."},
+  {cat:"Environnement", q:"Comment la composition diffère-t-elle entre tomates d'été et d'hiver ?", a:"Été : + sucres, acides, vitamine C, rutine. Hiver : + lycopène (sa synthèse est inhibée par forte température)."},
+  {cat:"Modèle Fruit Virtuel", q:"Combien de sous-modèles regroupe le 'Fruit Virtuel' ?", a:"Sept (carbone, sucres, eau, conductance de la peau, respiration, éthylène, citrate)."},
+  {cat:"Modèle Fruit Virtuel", q:"Dans le schéma du Fruit Virtuel, que représentent le rouge et le bleu ?", a:"Rouge = variables d'entrée ; Bleu = variables prédites (sorties) du modèle."},
+  {cat:"Modèle Fruit Virtuel", q:"Que montre la comparaison stress hydrique ponctuel vs continu avec le Fruit Virtuel ?", a:"Un stress après bonne irrigation diminue fortement la croissance, alors qu'un stress continu permet une croissance continue → les fruits peuvent s'adapter au stress."}
+];
+
+/* ============================================================
+   ÉTAT
+   ============================================================ */
+let quizPool = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+let flashPool = [];
+let flashIndex = 0;
+let flashFlipped = false;
+let flashKnown = new Set();
+
+const catsFromQuestions = [...new Set(QUESTIONS.map(q => q.cat))];
+const catsFromFlash = [...new Set(FLASHCARDS.map(f => f.cat))];
+
+/* ============================================================
+   TABS
+   ============================================================ */
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============================================================
+   QUIZ LOGIC
+   ============================================================ */
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function populateCatSelect(){
+  const sel = document.getElementById('cat-select');
+  sel.innerHTML = '<option value="all">Toutes les catégories (' + QUESTIONS.length + ')</option>' +
+    catsFromQuestions.map(c => {
+      const n = QUESTIONS.filter(q=>q.cat===c).length;
+      return `<option value="${c}">${c} (${n})</option>`;
+    }).join('');
+
+  const fsel = document.getElementById('flash-cat-select');
+  fsel.innerHTML = '<option value="all">Toutes les catégories (' + FLASHCARDS.length + ')</option>' +
+    catsFromFlash.map(c => {
+      const n = FLASHCARDS.filter(f=>f.cat===c).length;
+      return `<option value="${c}">${c} (${n})</option>`;
+    }).join('');
+}
+
+function startQuiz(){
+  const cat = document.getElementById('cat-select').value;
+  const source = cat === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.cat === cat);
+  quizPool = shuffle(source);
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  document.getElementById('quiz-score-area').style.display = 'none';
+  document.getElementById('quiz-question-area').style.display = 'block';
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const area = document.getElementById('quiz-question-area');
+  if(quizPool.length === 0){
+    area.innerHTML = '<p style="text-align:center;color:var(--muted)">Aucune question dans cette catégorie.</p>';
+    return;
+  }
+  const item = quizPool[quizIndex];
+  quizAnswered = false;
+
+  document.getElementById('quiz-progress').style.width =
+    Math.round((quizIndex / quizPool.length) * 100) + '%';
+
+  const optOrder = shuffle(item.options.map((text, i) => ({text, isCorrect: i === item.correct})));
+
+  area.innerHTML = `
+    <div class="card">
+      <div class="qmeta"><span>${item.cat}</span><span>Question ${quizIndex+1} / ${quizPool.length}</span></div>
+      <div class="qtext">${item.q}</div>
+      <div class="opts">
+        ${optOrder.map((o,i) => `<button class="opt" data-correct="${o.isCorrect}" data-idx="${i}">${o.text}</button>`).join('')}
+      </div>
+      <div class="explain" id="quiz-explain">${item.explain}</div>
+      <div class="navbtns">
+        <button class="ghost" id="quiz-prev" ${quizIndex===0 ? 'disabled':''}>← Précédent</button>
+        <button id="quiz-next" disabled>Suivant →</button>
+      </div>
+    </div>
+  `;
+
+  document.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const correct = btn.dataset.correct === 'true';
+      if(correct) quizScore++;
+      document.querySelectorAll('.opt').forEach(b => {
+        b.disabled = true;
+        if(b.dataset.correct === 'true') b.classList.add('correct');
+        else if(b === btn) b.classList.add('incorrect');
+      });
+      document.getElementById('quiz-explain').classList.add('show');
+      document.getElementById('quiz-next').disabled = false;
+    });
+  });
+
+  document.getElementById('quiz-prev').addEventListener('click', () => {
+    if(quizIndex>0){ quizIndex--; renderQuizQuestion(); }
+  });
+  document.getElementById('quiz-next').addEventListener('click', () => {
+    if(quizIndex < quizPool.length - 1){
+      quizIndex++;
+      renderQuizQuestion();
+    } else {
+      showQuizScore();
+    }
+  });
+}
+
+function showQuizScore(){
+  document.getElementById('quiz-progress').style.width = '100%';
+  document.getElementById('quiz-question-area').style.display = 'none';
+  const area = document.getElementById('quiz-score-area');
+  area.style.display = 'block';
+  const pct = Math.round((quizScore/quizPool.length)*100);
+  let msg = "Continue à réviser 💪";
+  if(pct >= 80) msg = "Excellent, tu maîtrises bien ! 🎉";
+  else if(pct >= 60) msg = "Pas mal, encore quelques révisions 👍";
+  area.innerHTML = `
+    <div class="card scorebox">
+      <div class="sub">Score final</div>
+      <div class="big">${quizScore} / ${quizPool.length}</div>
+      <div class="sub">${pct}% — ${msg}</div>
+      <button class="primary" id="quiz-retry">🔄 Refaire le quiz</button>
+    </div>
+  `;
+  document.getElementById('quiz-retry').addEventListener('click', startQuiz);
+}
+
+document.getElementById('restart-quiz').addEventListener('click', startQuiz);
+document.getElementById('cat-select').addEventListener('change', startQuiz);
+
+/* ============================================================
+   FLASHCARDS LOGIC
+   ============================================================ */
+function startFlash(){
+  const cat = document.getElementById('flash-cat-select').value;
+  const source = cat === 'all' ? FLASHCARDS : FLASHCARDS.filter(f => f.cat === cat);
+  flashPool = [...source];
+  flashIndex = 0;
+  flashFlipped = false;
+  renderFlash();
+}
+
+function renderFlash(){
+  const card = document.getElementById('flashcard');
+  const tag = document.getElementById('flash-tag');
+  const content = document.getElementById('flash-content');
+  const counter = document.getElementById('flash-counter');
+
+  if(flashPool.length === 0){
+    tag.textContent = '';
+    content.innerHTML = 'Aucune carte dans cette catégorie.';
+    counter.textContent = '';
+    return;
+  }
+
+  const item = flashPool[flashIndex];
+  tag.textContent = item.cat;
+  content.innerHTML = flashFlipped
+    ? `<span class="flash-answer">${item.a}</span>`
+    : item.q;
+  counter.textContent = `Carte ${flashIndex+1} / ${flashPool.length} — su : ${flashKnown.size}`;
+}
+
+document.getElementById('flashcard').addEventListener('click', () => {
+  flashFlipped = !flashFlipped;
+  renderFlash();
+});
+
+document.getElementById('btn-next-flash').addEventListener('click', () => {
+  if(flashPool.length === 0) return;
+  flashFlipped = false;
+  flashIndex = (flashIndex + 1) % flashPool.length;
+  renderFlash();
+});
+document.getElementById('btn-prev-flash').addEventListener('click', () => {
+  if(flashPool.length === 0) return;
+  flashFlipped = false;
+  flashIndex = (flashIndex - 1 + flashPool.length) % flashPool.length;
+  renderFlash();
+});
+document.getElementById('btn-know').addEventListener('click', () => {
+  if(flashPool.length === 0) return;
+  flashKnown.add(flashPool[flashIndex].q);
+  document.getElementById('btn-next-flash').click();
+});
+document.getElementById('btn-dontknow').addEventListener('click', () => {
+  document.getElementById('btn-next-flash').click();
+});
+document.getElementById('shuffle-flash').addEventListener('click', () => {
+  flashPool = shuffle(flashPool);
+  flashIndex = 0;
+  flashFlipped = false;
+  renderFlash();
+});
+document.getElementById('reset-flash').addEventListener('click', () => {
+  flashKnown.clear();
+  startFlash();
+});
+document.getElementById('flash-cat-select').addEventListener('change', startFlash);
+
+/* ============================================================
+   INIT
+   ============================================================ */
+populateCatSelect();
+startQuiz();
+startFlash();
+</script>
+</body>
+</html>
