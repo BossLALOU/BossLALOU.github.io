@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Protéines — Révision interactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,660;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --paper:#F1F3EE;
+  --paper-2:#E8EBE3;
+  --ink:#1B2420;
+  --ink-soft:#525C54;
+  --line:#CBD1C5;
+  --card:#FFFFFF;
+  --bond:#1F6F54;
+  --bond-soft:#DCEAE3;
+  --blue:#3D5F9E;
+  --blue-soft:#DDE5F2;
+  --violet:#6C3FA0;
+  --violet-soft:#EBE1F5;
+  --rust:#AD4530;
+  --rust-soft:#F5E1DB;
+  --gold:#B78A2E;
+  --radius:10px;
+  --maxw:760px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px;}
+
+h1,h2,h3{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  line-height:1.15;
+  margin:0 0 .4em;
+  color:var(--ink);
+}
+h2{font-size:1.5rem; letter-spacing:-.01em;}
+h3{font-size:1.08rem; font-weight:660;}
+p{margin:0 0 1em;}
+p:last-child{margin-bottom:0;}
+.lede{color:var(--ink-soft); font-size:1rem; max-width:58ch;}
+.kicker{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.72rem;
+  color:var(--bond);
+  letter-spacing:.02em;
+  margin-bottom:.5em;
+  display:block;
+}
+strong{font-weight:600;}
+.mono{font-family:'IBM Plex Mono', monospace;}
+
+/* --- nav --- */
+nav.top{
+  position:sticky; top:0; z-index:50;
+  background:rgba(241,243,238,.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+nav.top .wrap{
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:12px; padding-bottom:12px; gap:12px;
+}
+nav.top .brand{
+  font-family:'Fraunces', serif; font-weight:660; font-size:1rem;
+}
+nav.top .links{display:flex; gap:14px; overflow-x:auto; scrollbar-width:none;}
+nav.top .links::-webkit-scrollbar{display:none;}
+nav.top a{
+  color:var(--ink-soft); text-decoration:none; font-size:.8rem;
+  white-space:nowrap; padding:4px 0; border-bottom:2px solid transparent;
+}
+nav.top a:hover{color:var(--ink); border-color:var(--bond);}
+.score-badge{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.72rem;
+  background:var(--bond); color:#fff;
+  padding:4px 9px; border-radius:20px;
+  white-space:nowrap;
+}
+
+/* --- hero --- */
+header.hero{padding:56px 0 30px;}
+header.hero h1{font-size:clamp(2.1rem, 5vw, 2.9rem);}
+.necklace{display:flex; flex-wrap:wrap; gap:6px; margin:26px 0 8px;}
+.necklace span{
+  width:30px; height:30px; border-radius:50%;
+  background:var(--card); border:2px solid var(--bond);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono', monospace; font-size:.72rem; font-weight:600;
+  flex:none;
+}
+.necklace-caption{font-size:.76rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
+
+/* --- section rhythm --- */
+section{padding:40px 0;}
+.divider{display:flex; align-items:center; gap:8px; margin:0 0 28px; color:var(--line);}
+.divider .dash{flex:1; height:1px; background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px);}
+.divider .node{width:6px; height:6px; border-radius:50%; background:var(--bond);}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px;}
+.ref-box{
+  background:var(--paper-2); border-left:3px solid var(--bond);
+  border-radius:6px; padding:12px 16px; font-size:.84rem; color:var(--ink-soft);
+  margin-bottom:18px;
+}
+.ref-box b{color:var(--ink); font-weight:600;}
+.ref-box ul{margin:6px 0 0; padding-left:18px;}
+.ref-box li{margin-bottom:2px;}
+
+/* --- buttons / chips --- */
+button{font-family:'IBM Plex Sans', sans-serif; cursor:pointer; border:none;}
+.btn{background:var(--ink); color:#fff; padding:9px 16px; border-radius:8px; font-size:.85rem; font-weight:500;}
+.btn:hover{background:var(--bond);}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line);}
+.btn.ghost:hover{border-color:var(--bond); color:var(--bond);}
+.btn.ghost.active{background:var(--bond); color:#fff; border-color:var(--bond);}
+.btn:disabled{opacity:.4; cursor:default;}
+.btn:disabled:hover{background:var(--ink);}
+
+.chip{
+  display:inline-flex; align-items:center;
+  background:var(--paper-2); border:1px solid var(--line);
+  padding:7px 13px; border-radius:20px;
+  font-size:.85rem; margin:4px 6px 4px 0;
+  cursor:pointer; user-select:none;
+}
+.chip:hover{border-color:var(--bond);}
+.chip.selected{background:var(--bond); color:#fff; border-color:var(--bond);}
+.chip.correct{background:var(--violet); color:#fff; border-color:var(--violet);}
+.chip.wrong{background:var(--rust); color:#fff; border-color:var(--rust); animation:shake .3s;}
+.chip.locked{cursor:default; opacity:.55;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+
+.size-feedback{min-height:1.4em; font-size:.88rem; font-weight:500;}
+.size-feedback.ok{color:var(--bond);}
+.size-feedback.no{color:var(--rust);}
+
+/* --- calculator --- */
+.calc-row{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:14px 0;}
+.calc-row input[type=number]{
+  width:130px; padding:8px 10px; border:1px solid var(--line); border-radius:8px;
+  font-family:'IBM Plex Mono', monospace; font-size:.9rem;
+}
+.calc-example{font-size:.92rem; margin-bottom:4px;}
+.calc-example b{color:var(--bond);}
+
+/* --- sorter (reused for colorimetry + super-secondary) --- */
+.sorter-pool{min-height:52px; padding:10px 0; border-bottom:1px dashed var(--line); margin-bottom:20px;}
+.cat-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media(max-width:560px){.cat-grid{grid-template-columns:1fr;}}
+.cat-grid.cols-3{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:640px){.cat-grid.cols-3{grid-template-columns:1fr;}}
+.cat-box{border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; min-height:64px; background:var(--card); transition:border-color .15s ease;}
+.cat-box.target{border-color:var(--bond); background:var(--bond-soft);}
+.cat-box h4{margin:0 0 8px; font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--ink-soft); font-weight:600;}
+.cat-box .placed{display:flex; flex-wrap:wrap; gap:5px;}
+.cat-box .placed .chip{margin:0; font-size:.75rem; padding:4px 9px;}
+.sorter-status{font-size:.85rem; color:var(--ink-soft); margin-top:14px;}
+.sorter-explain{
+  font-size:.87rem; color:var(--ink); background:var(--violet-soft);
+  border-left:3px solid var(--violet); border-radius:6px;
+  padding:11px 14px; margin-top:16px; display:none;
+}
+.sorter-explain.show{display:block;}
+.sorter-explain b{font-family:'Fraunces', serif; font-weight:660;}
+
+/* --- sequencing puzzle --- */
+.seq-slots{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:16px 0;}
+.slot{
+  width:64px; height:44px; border:2px dashed var(--line); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono', monospace; font-size:.85rem; font-weight:600;
+  cursor:pointer; background:var(--paper-2); flex:none;
+}
+.slot.filled{border-style:solid; background:var(--card);}
+.slot.correct{border-color:var(--violet); background:var(--violet-soft); color:var(--violet);}
+.slot.wrong{border-color:var(--rust); background:var(--rust-soft); color:var(--rust);}
+.slot-arrow{color:var(--ink-soft); font-size:.9rem;}
+.puzzle-pool{margin:6px 0 16px;}
+
+/* --- cleave exercise --- */
+.seq-row{display:flex; flex-wrap:wrap; align-items:center; margin:18px 0;}
+.res-chip{
+  font-family:'IBM Plex Mono', monospace; font-size:.82rem; font-weight:600;
+  background:var(--paper-2); border:1px solid var(--line);
+  padding:6px 10px; border-radius:6px;
+}
+.gap{width:16px; height:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative;}
+.gap::after{content:""; width:2px; height:14px; background:var(--line); border-radius:1px;}
+.gap:hover::after{background:var(--bond);}
+.gap.picked::after{background:var(--blue); width:4px;}
+.gap.correct::after{background:var(--violet); width:4px;}
+.gap.wrong::after{background:var(--rust); width:4px;}
+.enzyme-toggle{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+
+/* --- ramachandran diagram --- */
+.diag-question{font-size:1.02rem; font-weight:500; margin-bottom:6px;}
+.diagram-wrap{width:100%; margin:10px 0 4px;}
+#ramaSvg{width:100%; max-width:420px; height:auto; display:block; margin:0 auto; touch-action:manipulation;}
+#ramaSvg .rgrid{stroke:var(--line); stroke-width:1;}
+#ramaSvg .raxis{stroke:var(--ink-soft); stroke-width:1.4;}
+#ramaSvg .rlabel{font-family:'IBM Plex Mono', monospace; font-size:9px; fill:var(--ink-soft);}
+#ramaSvg .rtitle{font-family:'IBM Plex Mono', monospace; font-size:11px; fill:var(--ink); font-weight:600;}
+#ramaSvg .rpoint{fill:var(--ink); cursor:pointer;}
+#ramaSvg .rhit{fill:transparent; cursor:pointer;}
+#ramaSvg .rhit:hover ~ .rpoint, #ramaSvg .rpoint:hover{fill:var(--bond);}
+#ramaSvg .rpoint.correct{fill:var(--violet);}
+#ramaSvg .rpoint.wrong{fill:var(--rust);}
+.quiz-meta{display:flex; justify-content:space-between; font-size:.78rem; color:var(--ink-soft); margin-bottom:14px; font-family:'IBM Plex Mono', monospace;}
+.diag-feedback{min-height:1.4em; font-size:.85rem; font-weight:500; margin-top:8px;}
+.diag-feedback.ok{color:var(--violet);}
+.diag-feedback.no{color:var(--rust);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+
+/* --- quiz --- */
+.quiz-progress{height:4px; background:var(--paper-2); border-radius:2px; overflow:hidden; margin-bottom:18px;}
+.quiz-progress .bar{height:100%; background:var(--bond); width:0%; transition:width .3s ease;}
+.q-text{font-size:1.05rem; font-weight:500; margin-bottom:16px;}
+.q-opt{display:block; width:100%; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:11px 14px; margin-bottom:9px; font-size:.92rem;}
+.q-opt:hover{border-color:var(--bond);}
+.q-opt.correct{background:var(--violet-soft); border-color:var(--violet); color:var(--violet);}
+.q-opt.wrong{background:var(--rust-soft); border-color:var(--rust); color:var(--rust);}
+.q-opt:disabled{cursor:default;}
+.q-explain{font-size:.85rem; color:var(--ink-soft); background:var(--paper-2); border-radius:8px; padding:12px 14px; margin-top:6px; display:none;}
+.q-explain.show{display:block;}
+.quiz-result{text-align:center; padding:10px 0;}
+.quiz-result .num{font-family:'Fraunces', serif; font-weight:660; font-size:2.6rem; color:var(--bond);}
+
+/* --- flashcards --- */
+.fc-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media(max-width:560px){.fc-grid{grid-template-columns:1fr;}}
+.fc{perspective:1000px; height:160px; cursor:pointer;}
+.fc-inner{position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .5s;}
+.fc.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute; inset:0; backface-visibility:hidden; border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; display:flex; align-items:center; font-size:.85rem; overflow:auto;}
+.fc-front{background:var(--card); font-family:'Fraunces', serif; font-weight:560; font-size:.98rem;}
+.fc-back{background:var(--ink); color:var(--paper); transform:rotateY(180deg);}
+.fc-hint{position:absolute; bottom:8px; right:10px; font-size:.65rem; font-family:'IBM Plex Mono',monospace; color:var(--ink-soft);}
+
+footer{padding:36px 0 60px; color:var(--ink-soft); font-size:.8rem;}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important; scroll-behavior:auto !important;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <span class="brand">Les Protéines</span>
+    <div class="links">
+      <a href="#masse">Masse</a>
+      <a href="#colorimetrie">Colorimétrie</a>
+      <a href="#sequencage">Séquençage</a>
+      <a href="#coupure">Coupure</a>
+      <a href="#ramachandran">Ramachandran</a>
+      <a href="#supersecondaire">Motifs</a>
+      <a href="#qcm">QCM</a>
+      <a href="#fiches">Fiches</a>
+    </div>
+    <span class="score-badge" id="scoreBadge">meilleur QCM : —</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Biochimie structurale · Chapitre 2</span>
+    <h1>Les protéines</h1>
+    <p class="lede">Un outil de révision pour la structure primaire, les méthodes de séquençage, le diagramme de Ramachandran et les architectures secondaires des protéines — de l’histidine du lysozyme à la triple hélice du collagène.</p>
+
+    <div class="necklace" id="necklace"></div>
+    <div class="necklace-caption">Structure primaire — chaîne A de l’insuline (Fig. 2.11, Coumoul et al., 2022)</div>
+  </div>
+</header>
+
+<!-- ===================== MASSE ===================== -->
+<section id="masse">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">01 · Structure primaire</span>
+    <h2>La méthode chimique de masse molaire</h2>
+    <p class="lede">On dose avec précision l’acide aminé présent au taux le plus faible, puis on calcule la masse molaire minimale de la protéine.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <p class="mono" style="font-size:.92rem; text-align:center; margin-bottom:16px;">M<sub>min</sub> = (M<sub>aa</sub> × 100) / % massique de l’aa</p>
+      <div class="calc-example" id="massExample"></div>
+      <div class="calc-row">
+        <label>M<sub>min</sub> (g/mol) ≈ <input type="number" id="massGuess" placeholder="ta réponse"></label>
+        <button class="btn" id="massCheck">Vérifier</button>
+        <button class="btn ghost" id="massNew">Nouvel exemple</button>
+      </div>
+      <div class="size-feedback" id="massFeedback"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COLORIMETRIE ===================== -->
+<section id="colorimetrie">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">02 · Identification des acides aminés</span>
+    <h2>Réactions colorimétriques spécifiques</h2>
+    <p class="lede">Clique un acide aminé, puis clique le réactif qui lui correspond.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="sorter-pool" id="colorPool"></div>
+      <div class="cat-grid" id="colorGrid"></div>
+      <div class="sorter-explain" id="colorExplain"></div>
+      <div class="sorter-status" id="colorStatus">0 / 5 placés · 0 erreur</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SEQUENCAGE ===================== -->
+<section id="sequencage">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">03 · Détermination de la séquence</span>
+    <h2>Reconstitue l’hexapeptide du cours</h2>
+    <p class="lede">À partir des mêmes indices que le poly, replace les 6 résidus dans le bon ordre. Clique un résidu du pool puis un emplacement.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="ref-box">
+        <b>Indices</b>
+        <ul>
+          <li>Composition : Ala (1), Gly (2), Asp (1), Ser (1), Val (1)</li>
+          <li>Méthode de Sanger → DNP-Ala (l’alanine est en N-terminal)</li>
+          <li>La carboxypeptidase libère une glycine (une Gly est en C-terminal)</li>
+          <li>Hydrolyse partielle → dipeptides : Ala-Asp · Asp-Gly · Val-Ser · Ser-Gly</li>
+          <li>… et tripeptides : Asp-Gly-Val · Gly-Val-Ser</li>
+        </ul>
+      </div>
+      <div class="puzzle-pool" id="puzzlePool"></div>
+      <div class="seq-slots" id="puzzleSlots"></div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn" id="puzzleCheck">Vérifier</button>
+        <button class="btn ghost" id="puzzleReset">Réinitialiser</button>
+        <span class="size-feedback" id="puzzleFeedback"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COUPURE ===================== -->
+<section id="coupure">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">04 · Digestion partielle</span>
+    <h2>Où coupent les réactifs de la digestion partielle ?</h2>
+    <p class="lede">Choisis une enzyme ou un réactif chimique, puis clique entre les résidus où tu penses qu’il coupe.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="enzyme-toggle" id="enzymeToggle"></div>
+      <div class="seq-row" id="seqRow"></div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button class="btn" id="checkCut">Vérifier</button>
+        <button class="btn ghost" id="resetCut">Réinitialiser</button>
+        <span class="size-feedback" id="cutFeedback"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RAMACHANDRAN ===================== -->
+<section id="ramachandran">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">05 · Structure secondaire</span>
+    <h2>Le diagramme de Ramachandran</h2>
+    <p class="lede">Une structure est nommée avec ses angles (φ, ψ) : clique le point correspondant sur le diagramme.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="diag-question" id="ramaQuestion"></div>
+      <div class="diagram-wrap">
+        <svg id="ramaSvg" viewBox="0 0 520 560" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="quiz-meta"><span id="ramaCounter"></span><span id="ramaScore"></span></div>
+      <div class="diag-feedback" id="ramaFeedback"></div>
+      <div class="quiz-nav"><button class="btn" id="ramaNext" disabled>Suivant</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SUPER-SECONDAIRE ===================== -->
+<section id="supersecondaire">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">06 · Structures super-secondaires</span>
+    <h2>Trie les motifs</h2>
+    <p class="lede">Clique un motif, puis clique la famille à laquelle il appartient.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="sorter-pool" id="motifPool"></div>
+      <div class="cat-grid cols-3" id="motifGrid"></div>
+      <div class="sorter-explain" id="motifExplain"></div>
+      <div class="sorter-status" id="motifStatus">0 / 13 placés · 0 erreur</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QCM ===================== -->
+<section id="qcm">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">07 · Auto-évaluation</span>
+    <h2>QCM final</h2>
+    <p class="lede">28 questions couvrant tout le chapitre. Ton meilleur score reste enregistré sur cet appareil.</p>
+
+    <div class="card" style="margin-top:20px;">
+      <div id="quizArea"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FICHES ===================== -->
+<section id="fiches">
+  <div class="wrap">
+    <div class="divider"><span class="node"></span><span class="dash"></span></div>
+    <span class="kicker">08 · À retenir</span>
+    <h2>Fiches flash</h2>
+    <p class="lede">Clique une carte pour la retourner.</p>
+
+    <div class="fc-grid" id="fcGrid" style="margin-top:20px;"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    D’après le cours « Biochimie Structurale — Chapitre 2 : Les Protéines », G. Prévot, Université de Guyane, 2026-2027.
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   HERO — insulin chain A necklace
+   ============================================================ */
+(function(){
+  const seq = ['G','I','V','E','Q','C','C','T','S','I','C','S','L','Y','Q','L','E','N','Y','C','N'];
+  const el = document.getElementById('necklace');
+  seq.forEach(l=>{
+    const s = document.createElement('span');
+    s.textContent = l;
+    el.appendChild(s);
+  });
+})();
+
+/* ============================================================
+   01. MASSE — minimum molar mass calculator
+   ============================================================ */
+(function(){
+  const AA_MASS = {
+    Glycine:75, Alanine:89, Sérine:105, Proline:115, Valine:117, Thréonine:119,
+    Cystéine:121, Leucine:131, Isoleucine:131, Asparagine:132, Aspartate:133,
+    Glutamine:146, Lysine:146, Glutamate:147, Méthionine:149, Histidine:155,
+    Phénylalanine:165, Arginine:174, Tyrosine:181, Tryptophane:204
+  };
+  const names = Object.keys(AA_MASS);
+  const exEl = document.getElementById('massExample');
+  const guess = document.getElementById('massGuess');
+  const fb = document.getElementById('massFeedback');
+  let correct, protName;
+  const PROTS = ['la myoglobine','le lysozyme','la ribonucléase','la chymotrypsine','l’ovalbumine'];
+
+  function loadCourseExample(){
+    const aa = 'Histidine', pct = 1.05, m = AA_MASS[aa];
+    correct = Math.round(m*100/pct);
+    exEl.innerHTML = 'Dans le <b>lysozyme</b>, on dose <b>1,05 %</b> d’<b>histidine</b> (M = ' + m + ' g/mol).';
+    guess.value=''; fb.textContent=''; fb.className='size-feedback';
+  }
+  function loadRandom(){
+    const aa = names[Math.floor(Math.random()*names.length)];
+    const m = AA_MASS[aa];
+    const pct = (0.3 + Math.random()*3.2).toFixed(2);
+    protName = PROTS[Math.floor(Math.random()*PROTS.length)];
+    correct = Math.round(m*100/parseFloat(pct));
+    exEl.innerHTML = 'Dans ' + protName + ', on dose <b>' + pct + ' %</b> de <b>' + aa + '</b> (M = ' + m + ' g/mol).';
+    guess.value=''; fb.textContent=''; fb.className='size-feedback';
+  }
+
+  document.getElementById('massCheck').addEventListener('click', ()=>{
+    const v = parseFloat(guess.value);
+    if(isNaN(v)){ fb.textContent='Entre une valeur numérique.'; fb.className='size-feedback no'; return; }
+    const tol = correct*0.05;
+    if(Math.abs(v-correct)<=tol){
+      fb.textContent = 'Exact — M_min ≈ ' + correct + ' g/mol.';
+      fb.className = 'size-feedback ok';
+    } else {
+      fb.textContent = 'Pas tout à fait — M_min ≈ ' + correct + ' g/mol (formule : M_aa × 100 / %).';
+      fb.className = 'size-feedback no';
+    }
+  });
+  document.getElementById('massNew').addEventListener('click', loadRandom);
+  loadCourseExample();
+})();
+
+/* ============================================================
+   02. COLORIMETRIE — sorter
+   ============================================================ */
+(function(){
+  const categories = [
+    {key:'sakaguchi', label:'Sakaguchi (rouge)'},
+    {key:'ehrlich', label:'Ehrlich (positif)'},
+    {key:'udenfriend', label:'Udenfriend & Cooper (rouge)'},
+    {key:'ninhydrine', label:'Ninhydrine (jaune)'},
+    {key:'pauly', label:'Pauly (rouge)'}
+  ];
+  const items = [
+    {name:'Arginine', cat:'sakaguchi', info:'Coloration rouge avec le réactif de Sakaguchi.'},
+    {name:'Tryptophane', cat:'ehrlich', info:'Réaction positive avec le réactif d’Ehrlich.'},
+    {name:'Tyrosine', cat:'udenfriend', info:'Coloration rouge avec la réaction de Udenfriend et Cooper.'},
+    {name:'Proline', cat:'ninhydrine', info:'Coloration jaune avec la ninhydrine (les autres aa donnent une coloration violette avec la ninhydrine).'},
+    {name:'Histidine', cat:'pauly', info:'Coloration rouge avec le réactif de Pauly.'}
+  ];
+  buildSorter('colorPool','colorGrid','colorStatus','colorExplain',categories,items);
+})();
+
+/* ============================================================
+   06. SUPER-SECONDAIRE — sorter
+   ============================================================ */
+(function(){
+  const categories = [
+    {key:'brin', label:'Structures à brin β'},
+    {key:'helice', label:'Structures à hélices α'},
+    {key:'mixte', label:'Structures mixtes (α + β)'}
+  ];
+  const items = [
+    {name:'Méandres β', cat:'brin', info:'Larges feuillets β regroupant jusqu’à une dizaine de brins, le plus souvent antiparallèles 2 à 2, reliés par des épingles à cheveux β.'},
+    {name:'Clé grecque', cat:'brin', info:'Association de 4 segments plissés β antiparallèles 2 à 2, analogue aux motifs de l’Antiquité grecque.'},
+    {name:'Barriques β', cat:'brin', info:'Cordons de segments plissés β antiparallèles enroulés en tonneau (ex. TOM, VDAC de la membrane mitochondriale).'},
+    {name:'Hélices β', cat:'brin', info:'Empilement hélicoïdal de brins β antiparallèles 2 à 2, formant une structure en ressort (protéines antigel).'},
+    {name:'Motif αα (angle à hélices)', cat:'helice', info:'2 hélices α successives connectées par un coude ou une boucle, presque perpendiculaires l’une à l’autre.'},
+    {name:'Hélice-coude-hélice (HTH)', cat:'helice', info:'Motif αα avec un coude β comme élément de connexion ; fréquent dans les facteurs de transcription procaryotes liant l’ADN.'},
+    {name:'Hélice-boucle-hélice (HLH)', cat:'helice', info:'Motif αα avec une boucle comme connexion ; fréquent dans les facteurs de transcription eucaryotes.'},
+    {name:'Fermeture à leucine', cat:'helice', info:'2 hélices α riches en leucines (périodicité de 7) qui s’enroulent en super-hélice gauche ; interactions hydrophobes entre protéines.'},
+    {name:'Motif EF-hand', cat:'helice', info:'2 hélices α connectées par une boucle de 12 résidus qui loge un ion Ca²⁺ ; présent dans la calmoduline (4 motifs).'},
+    {name:'Structure tétrahélicoïdale', cat:'helice', info:'Association de 4 hélices α.'},
+    {name:'Motif βαβ', cat:'mixte', info:'2 brins β reliés par une hélice α.'},
+    {name:'Pli de Rossmann', cat:'mixte', info:'Association de 2 motifs βαβ superposés ; fixe un dinucléotide (NAD⁺) ; présent dans de nombreuses déshydrogénases et kinases.'},
+    {name:'Module pepsine', cat:'mixte', info:'2 brins β en épingle — boucle — hélice α — 2 brins β en épingle.'}
+  ];
+  buildSorter('motifPool','motifGrid','motifStatus','motifExplain',categories,items);
+})();
+
+/* ============================================================
+   generic sorter builder (used by colorimetry + super-secondary)
+   ============================================================ */
+function buildSorter(poolId, gridId, statusId, explainId, categories, items){
+  const pool = document.getElementById(poolId);
+  const grid = document.getElementById(gridId);
+  const status = document.getElementById(statusId);
+  const explainEl = document.getElementById(explainId);
+  let placed = 0, errors = 0, selected = null;
+
+  function shuffled(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+  function selectHandler(e){
+    const chip = e.currentTarget;
+    if(chip.classList.contains('locked')) return;
+    if(selected) selected.classList.remove('selected');
+    if(selected===chip){ selected=null; return; }
+    selected = chip;
+    chip.classList.add('selected');
+  }
+
+  function renderCats(){
+    grid.innerHTML = '';
+    categories.forEach(c=>{
+      const box = document.createElement('div');
+      box.className = 'cat-box';
+      box.dataset.cat = c.key;
+      box.innerHTML = '<h4>'+c.label+'</h4><div class="placed"></div>';
+      box.addEventListener('click', ()=>{
+        if(!selected) return;
+        const correct = selected.dataset.cat === c.key;
+        if(correct){
+          const item = items.find(it=>it.name===selected.textContent);
+          selected.classList.remove('selected');
+          selected.classList.add('correct','locked');
+          selected.removeEventListener('click', selectHandler);
+          box.querySelector('.placed').appendChild(selected);
+          placed++;
+          selected = null;
+          renderStatus();
+          if(item){
+            explainEl.innerHTML = '<b>'+item.name+'</b> — ' + item.info;
+            explainEl.classList.add('show');
+          }
+          if(placed===items.length){
+            status.textContent = 'Terminé — ' + items.length + ' / ' + items.length + ' placés · ' + errors + ' erreur' + (errors===1?'':'s') + '. Bravo.';
+          }
+        } else {
+          box.classList.add('target');
+          selected.classList.add('wrong');
+          errors++;
+          setTimeout(()=>{ selected.classList.remove('wrong'); box.classList.remove('target'); }, 350);
+          renderStatus();
+        }
+      });
+      grid.appendChild(box);
+    });
+  }
+
+  function renderPool(){
+    pool.innerHTML = '';
+    shuffled(items).forEach(it=>{
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = it.name;
+      chip.dataset.cat = it.cat;
+      chip.addEventListener('click', selectHandler);
+      pool.appendChild(chip);
+    });
+  }
+
+  function renderStatus(){
+    status.textContent = placed + ' / ' + items.length + ' placés · ' + errors + ' erreur' + (errors===1?'':'s');
+  }
+
+  renderPool();
+  renderCats();
+  renderStatus();
+}
+
+/* ============================================================
+   03. SEQUENCAGE — reconstruct the hexapeptide puzzle
+   ============================================================ */
+(function(){
+  const correctSeq = ['Ala','Asp','Gly','Val','Ser','Gly'];
+  const poolBase = ['Ala','Gly','Gly','Asp','Ser','Val'];
+  let poolItems = []; // {id, name, placed}
+  let slots = new Array(6).fill(null); // holds item id or null
+  let selectedId = null;
+
+  const poolEl = document.getElementById('puzzlePool');
+  const slotsEl = document.getElementById('puzzleSlots');
+  const fbEl = document.getElementById('puzzleFeedback');
+
+  function initItems(){
+    poolItems = poolBase.map((name,i)=>({id:'p'+i, name}));
+    slots = new Array(6).fill(null);
+    selectedId = null;
+  }
+
+  function render(){
+    // pool
+    poolEl.innerHTML = '';
+    const inSlots = new Set(slots.filter(Boolean));
+    poolItems.filter(it=>!inSlots.has(it.id)).forEach(it=>{
+      const chip = document.createElement('span');
+      chip.className = 'chip' + (selectedId===it.id?' selected':'');
+      chip.textContent = it.name;
+      chip.addEventListener('click', ()=>{
+        selectedId = (selectedId===it.id) ? null : it.id;
+        render();
+      });
+      poolEl.appendChild(chip);
+    });
+    if(poolEl.children.length===0){
+      const done = document.createElement('span');
+      done.className = 'mono';
+      done.style.fontSize = '.8rem';
+      done.style.color = 'var(--ink-soft)';
+      done.textContent = 'tous les résidus sont placés';
+      poolEl.appendChild(done);
+    }
+    // slots
+    slotsEl.innerHTML = '<span class="mono" style="font-size:.78rem; color:var(--ink-soft);">N-ter</span>';
+    slots.forEach((id,i)=>{
+      const s = document.createElement('span');
+      const it = id ? poolItems.find(p=>p.id===id) : null;
+      s.className = 'slot' + (it?' filled':'');
+      s.textContent = it ? it.name : '?';
+      s.addEventListener('click', ()=>{
+        if(it){
+          slots[i] = null; // return to pool
+        } else if(selectedId){
+          slots[i] = selectedId; selectedId = null;
+        }
+        render();
+      });
+      slotsEl.appendChild(s);
+      if(i<slots.length-1){
+        const arrow = document.createElement('span');
+        arrow.className = 'slot-arrow'; arrow.textContent = '–';
+        slotsEl.appendChild(arrow);
+      }
+    });
+    const cterm = document.createElement('span');
+    cterm.className = 'mono';
+    cterm.style.fontSize = '.78rem'; cterm.style.color = 'var(--ink-soft)';
+    cterm.textContent = 'C-ter';
+    slotsEl.appendChild(cterm);
+  }
+
+  document.getElementById('puzzleCheck').addEventListener('click', ()=>{
+    if(slots.some(s=>s===null)){
+      fbEl.textContent = 'Complète les 6 emplacements avant de vérifier.';
+      fbEl.className = 'size-feedback no';
+      return;
+    }
+    const names = slots.map(id=>poolItems.find(p=>p.id===id).name);
+    let good = 0;
+    [...slotsEl.querySelectorAll('.slot')].forEach((el,i)=>{
+      if(names[i]===correctSeq[i]){ el.classList.add('correct'); good++; }
+      else el.classList.add('wrong');
+    });
+    fbEl.textContent = (good===6)
+      ? 'Exact — Ala-Asp-Gly-Val-Ser-Gly. Un Asp après l’alanine, une Gly après Asp, une valine avant la sérine.'
+      : good + ' / 6 résidus bien placés.';
+    fbEl.className = 'size-feedback ' + (good===6?'ok':'no');
+  });
+
+  document.getElementById('puzzleReset').addEventListener('click', ()=>{
+    initItems();
+    fbEl.textContent=''; fbEl.className='size-feedback';
+    render();
+  });
+
+  initItems();
+  render();
+})();
+
+/* ============================================================
+   04. COUPURE — enzymes + reagents (random peptide)
+   ============================================================ */
+(function(){
+  const AA_FILLER = ['Ala','Ser','Gly','Val','Leu','Ile','Asn','Gln','Thr','Cys','Asp','His'];
+  const AA_SPECIAL = ['Phe','Trp','Tyr','Lys','Arg','Glu','Pro','Met'];
+
+  const RULES = {
+    pepsine:      {label:'Pepsine',            desc:'coupe avant un acide aminé aromatique (Phe, Trp, Tyr).', test:(aa)=>['Phe','Trp','Tyr'].includes(aa), before:true},
+    trypsine:     {label:'Trypsine',           desc:'coupe après une lysine ou une arginine.',                test:(aa)=>['Lys','Arg'].includes(aa), before:false},
+    chymotrypsine:{label:'Chymotrypsine',      desc:'coupe après un acide aminé aromatique.',                 test:(aa)=>['Phe','Trp','Tyr'].includes(aa), before:false},
+    staphylocoque:{label:'Protéinase Staph.',  desc:'coupe après un acide glutamique.',                       test:(aa)=>aa==='Glu', before:false},
+    lysyl:        {label:'Lysyl-endopeptidase',desc:'coupe après une lysine.',                                test:(aa)=>aa==='Lys', before:false},
+    prolyl:       {label:'Prolyl-endopeptidase',desc:'coupe après une proline.',                              test:(aa)=>aa==='Pro', before:false},
+    brcn:         {label:'BrCN',               desc:'coupe chimiquement après une méthionine.',               test:(aa)=>aa==='Met', before:false},
+    nbs:          {label:'NBS',                desc:'coupe chimiquement après un tryptophane.',               test:(aa)=>aa==='Trp', before:false}
+  };
+
+  function randomSeq(){
+    const len = 10 + Math.floor(Math.random()*3);
+    const out = [];
+    for(let i=0;i<len;i++){
+      out.push(Math.random()<0.4 ? AA_SPECIAL[Math.floor(Math.random()*AA_SPECIAL.length)] : AA_FILLER[Math.floor(Math.random()*AA_FILLER.length)]);
+    }
+    return out;
+  }
+
+  function correctGaps(seq, key){
+    const rule = RULES[key];
+    const gaps = [];
+    seq.forEach((aa,i)=>{
+      if(rule.before){
+        if(i>0 && rule.test(aa)) gaps.push(i-1);
+      } else {
+        if(i<seq.length-1 && rule.test(aa)) gaps.push(i);
+      }
+    });
+    return gaps;
+  }
+
+  let seq = randomSeq();
+  let enzyme = 'trypsine';
+  let picked = new Set();
+  let checked = false;
+
+  const toggleEl = document.getElementById('enzymeToggle');
+  const seqEl = document.getElementById('seqRow');
+  const fbEl = document.getElementById('cutFeedback');
+
+  Object.keys(RULES).forEach(key=>{
+    const b = document.createElement('button');
+    b.className = 'btn ghost' + (key===enzyme?' active':'');
+    b.textContent = RULES[key].label;
+    b.addEventListener('click', ()=>{
+      enzyme = key; picked = new Set(); checked=false; fbEl.textContent='';
+      [...toggleEl.children].forEach(c=>c.classList.remove('active'));
+      b.classList.add('active');
+      render();
+    });
+    toggleEl.appendChild(b);
+  });
+
+  function render(){
+    seqEl.innerHTML = '';
+    seq.forEach((aa,i)=>{
+      const chip = document.createElement('span');
+      chip.className = 'res-chip'; chip.textContent = aa;
+      seqEl.appendChild(chip);
+      if(i<seq.length-1){
+        const gap = document.createElement('span');
+        gap.className = 'gap' + (picked.has(i)?' picked':'');
+        gap.dataset.idx = i;
+        if(!checked){
+          gap.addEventListener('click', ()=>{
+            picked.has(i) ? picked.delete(i) : picked.add(i);
+            render();
+          });
+        }
+        seqEl.appendChild(gap);
+      }
+    });
+  }
+
+  document.getElementById('checkCut').addEventListener('click', ()=>{
+    checked = true;
+    const correctSet = new Set(correctGaps(seq, enzyme));
+    render();
+    [...seqEl.querySelectorAll('.gap')].forEach(g=>{
+      const i = parseInt(g.dataset.idx,10);
+      if(correctSet.has(i)) g.classList.add('correct');
+      else if(picked.has(i)) g.classList.add('wrong');
+    });
+    let good = 0;
+    picked.forEach(i=>{ if(correctSet.has(i)) good++; });
+    const allCorrect = good===correctSet.size && picked.size===correctSet.size;
+    const rule = RULES[enzyme].desc;
+    fbEl.textContent = correctSet.size===0
+      ? 'Aucune coupure possible ici : ' + rule
+      : (allCorrect ? 'Exact — ' + rule : correctSet.size + ' coupure(s) attendue(s), ' + good + ' correcte(s). Rappel : ' + rule);
+    fbEl.className = 'size-feedback ' + (allCorrect?'ok':'no');
+  });
+
+  document.getElementById('resetCut').addEventListener('click', ()=>{
+    seq = randomSeq();
+    picked = new Set(); checked = false; fbEl.textContent=''; render();
+  });
+
+  render();
+})();
+
+/* ============================================================
+   05. RAMACHANDRAN — click-quiz on real course angle values
+   ============================================================ */
+(function(){
+  const points = [
+    {name:'Feuillet β antiparallèle', phi:-139, psi:135},
+    {name:'Feuillet β parallèle', phi:-119, psi:113},
+    {name:'Hélice α droite', phi:-57, psi:-47},
+    {name:'Hélice 3₁₀', phi:-49, psi:-26},
+    {name:'Hélice π', phi:-57, psi:-70},
+    {name:'PolyPro I', phi:-83, psi:158},
+    {name:'PolyPro II', phi:-78, psi:149},
+    {name:'PolyGly II', phi:-80, psi:150}
+  ];
+  const plotLeft=60, plotRight=460, plotTop=40, plotBottom=440;
+  function toXY(phi,psi){
+    return {
+      x: plotLeft + (phi+180)/360*(plotRight-plotLeft),
+      y: plotBottom - (psi+180)/360*(plotBottom-plotTop)
+    };
+  }
+
+  function buildSvg(){
+    let s = '';
+    // grid lines every 90deg
+    [-180,-90,0,90,180].forEach(v=>{
+      const x = toXY(v,0).x, y = toXY(0,v).y;
+      s += '<line class="rgrid" x1="'+x+'" y1="'+plotTop+'" x2="'+x+'" y2="'+plotBottom+'"></line>';
+      s += '<line class="rgrid" x1="'+plotLeft+'" y1="'+y+'" x2="'+plotRight+'" y2="'+y+'"></line>';
+      s += '<text class="rlabel" x="'+x+'" y="'+(plotBottom+16)+'" text-anchor="middle">'+v+'</text>';
+      s += '<text class="rlabel" x="'+(plotLeft-10)+'" y="'+(y+3)+'" text-anchor="end">'+v+'</text>';
+    });
+    s += '<line class="raxis" x1="'+plotLeft+'" y1="'+plotTop+'" x2="'+plotLeft+'" y2="'+plotBottom+'"></line>';
+    s += '<line class="raxis" x1="'+plotLeft+'" y1="'+plotBottom+'" x2="'+plotRight+'" y2="'+plotBottom+'"></line>';
+    s += '<text class="rtitle" x="'+((plotLeft+plotRight)/2)+'" y="'+(plotBottom+40)+'" text-anchor="middle">φ (phi)</text>';
+    s += '<text class="rtitle" x="18" y="'+((plotTop+plotBottom)/2)+'" text-anchor="middle" transform="rotate(-90 18 '+((plotTop+plotBottom)/2)+')">ψ (psi)</text>';
+    points.forEach((p,i)=>{
+      const xy = toXY(p.phi,p.psi);
+      s += '<circle class="rhit" data-idx="'+i+'" cx="'+xy.x+'" cy="'+xy.y+'" r="20"></circle>';
+      s += '<circle class="rpoint" data-idx="'+i+'" cx="'+xy.x+'" cy="'+xy.y+'" r="8"></circle>';
+    });
+    document.getElementById('ramaSvg').innerHTML = s;
+  }
+
+  let order = [], qi = 0, score = 0, answered = false;
+  const qEl = document.getElementById('ramaQuestion');
+  const fbEl = document.getElementById('ramaFeedback');
+  const nextBtn = document.getElementById('ramaNext');
+  const counterEl = document.getElementById('ramaCounter');
+  const scoreEl = document.getElementById('ramaScore');
+
+  function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+  function clearStates(){
+    document.querySelectorAll('#ramaSvg .rpoint').forEach(el=>el.classList.remove('correct','wrong'));
+  }
+
+  function loadQuestion(){
+    if(qi>=order.length){
+      qEl.textContent = 'Série terminée — ' + score + ' / ' + order.length + ' bonnes réponses.';
+      fbEl.textContent=''; fbEl.className='diag-feedback';
+      counterEl.textContent=''; scoreEl.textContent='';
+      nextBtn.textContent = 'Recommencer';
+      nextBtn.disabled = false;
+      nextBtn.onclick = ()=>{ nextBtn.textContent='Suivant'; startSeries(); };
+      return;
+    }
+    answered = false;
+    clearStates();
+    const p = points[order[qi]];
+    qEl.textContent = 'Clique le point correspondant à : ' + p.name + ' (φ ≈ ' + p.phi + '°, ψ ≈ ' + p.psi + '°).';
+    fbEl.textContent=''; fbEl.className='diag-feedback';
+    counterEl.textContent = 'Question ' + (qi+1) + ' / ' + order.length;
+    scoreEl.textContent = 'score : ' + score;
+    nextBtn.disabled = true;
+    nextBtn.onclick = ()=>{ qi++; loadQuestion(); };
+  }
+
+  function startSeries(){
+    order = shuffle(points.map((_,i)=>i));
+    qi = 0; score = 0;
+    buildSvg();
+    attachClicks();
+    loadQuestion();
+  }
+
+  function attachClicks(){
+    document.querySelectorAll('#ramaSvg .rhit, #ramaSvg .rpoint').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        if(answered || qi>=order.length) return;
+        answered = true;
+        const idx = parseInt(el.dataset.idx,10);
+        const good = idx===order[qi];
+        if(good) score++;
+        const correctDot = document.querySelector('#ramaSvg .rpoint[data-idx="'+order[qi]+'"]');
+        if(correctDot) correctDot.classList.add('correct');
+        if(!good){
+          const clicked = document.querySelector('#ramaSvg .rpoint[data-idx="'+idx+'"]');
+          if(clicked) clicked.classList.add('wrong');
+        }
+        fbEl.textContent = good ? 'Exact.' : 'Pas celui-ci — le bon point est mis en évidence.';
+        fbEl.className = 'diag-feedback ' + (good?'ok':'no');
+        scoreEl.textContent = 'score : ' + score;
+        nextBtn.disabled = false;
+      });
+    });
+  }
+
+  startSeries();
+})();
+
+/* ============================================================
+   07. QCM
+   ============================================================ */
+(function(){
+  const questions = [
+    {q:"Qui a mis en évidence, en 1944, que les protéines sont des chaînes d'acides aminés reliées par des liaisons peptidiques ?", o:["Pauling","Sanger","Ramachandran","Edman"], c:1, e:"La structure des protéines a été mise en évidence par Sanger en 1944."},
+    {q:"Par hydrolyse totale d'une protéine, on obtient :", o:["des peptides", "des acides aminés", "des domaines", "des sous-unités"], c:1, e:"Hydrolyse partielle → petits peptides. Hydrolyse totale → acides aminés."},
+    {q:"1 Dalton (Da) correspond à :", o:["la masse d'une mole de protéine", "1/12 de la masse d'un atome de carbone 12", "1/100 de la masse d'un atome d'azote", "la masse d'un acide aminé moyen"], c:1, e:"Le Dalton équivaut au douzième de la masse d'un atome de C12, soit la masse d'un atome d'hydrogène."},
+    {q:"La structure secondaire d'une protéine résulte :", o:["d'interactions entre acides aminés éloignés", "d'une juxtaposition de sous-unités", "d'interactions entre acides aminés proches entraînant un repliement local", "uniquement de ponts disulfure"], c:2, e:"La structure secondaire vient des interactions entre aa proches dans la séquence."},
+    {q:"La structure quaternaire correspond à :", o:["la séquence en acides aminés", "une juxtaposition de sous-unités protéiques (monomères)", "le repliement local de la chaîne", "l'organisation des domaines d'une seule chaîne"], c:1, e:"Structure quaternaire = association de plusieurs chaînes (sous-unités)."},
+    {q:"Dans la méthode chimique de détermination de la masse molaire, on dose avec précision :", o:["l'acide aminé le plus abondant", "l'acide aminé présent au taux le plus faible", "tous les acides aminés aromatiques", "uniquement la cystéine"], c:1, e:"On suppose 1 seul résidu de cet acide aminé rare par molécule pour calculer une masse molaire minimale."},
+    {q:"Les conditions typiques d'une hydrolyse acide totale sont :", o:["NaOH 1M, 25°C, 1h", "HCl 6N, 110°C, 24h", "H2O2, 37°C, 48h", "HCl 1N, 4°C, 72h"], c:1, e:"Hydrolyse acide énergique : HCl 6M à chaud (110-125°C), sous vide, 24 à 72h."},
+    {q:"Lors de l'hydrolyse acide, l'asparagine (Asn) et la glutamine (Gln) sont toujours transformées en :", o:["Asp et Glu", "Ala et Gly", "Lys et Arg", "Ser et Thr"], c:0, e:"Asn → Asp, Gln → Glu lors de l'hydrolyse acide."},
+    {q:"Quel acide aminé est détruit par l'hydrolyse acide sauf protection préalable ?", o:["la glycine", "le tryptophane", "l'alanine", "la valine"], c:1, e:"Le tryptophane est détruit sauf protection par des groupements thiols ou phénol."},
+    {q:"L'acide performique transforme la cystéine en :", o:["cystine", "acide cystéique (Cya)", "méthionine", "homocystéine"], c:1, e:"L'acide performique oxyde -SH en -SO3H, donnant l'acide cystéique."},
+    {q:"Quel réactif donne une coloration rouge spécifique de l'arginine ?", o:["Ehrlich", "Pauly", "Sakaguchi", "Ninhydrine"], c:2, e:"Arginine → coloration rouge avec le réactif de Sakaguchi."},
+    {q:"La proline donne quelle coloration avec la ninhydrine ?", o:["violette", "jaune", "bleue", "incolore"], c:1, e:"Contrairement aux autres acides aminés (violet), la proline donne une coloration jaune avec la ninhydrine."},
+    {q:"La méthode de Sanger (DNFB) permet d'identifier :", o:["toute la séquence en une seule fois", "uniquement le premier acide aminé N-terminal", "uniquement le dernier acide aminé C-terminal", "la composition globale en acides aminés"], c:1, e:"Le reste de la chaîne étant hydrolysé, seul l'acide aminé N-terminal (lié au DNFB) est identifiable."},
+    {q:"La dégradation d'Edman utilise comme réactif :", o:["le DNFB", "l'hydrazine", "l'isothiocyanate de phényle (PITC)", "la ninhydrine"], c:2, e:"Edman utilise le PITC, ce qui permet de séquencer toute la chaîne résidu par résidu."},
+    {q:"En routine, la méthode d'Edman automatisée permet de séquencer environ :", o:["5 acides aminés", "20 acides aminés", "100 acides aminés", "500 acides aminés"], c:1, e:"Ce procédé automatisé autorise en routine des séquençages d'environ 20 acides aminés."},
+    {q:"Quelle enzyme détache l'acide aminé N-terminal de façon récurrente (sauf s'il s'agit d'une proline) ?", o:["la carboxypeptidase", "la leucine aminopeptidase", "la trypsine", "la chymotrypsine"], c:1, e:"La leucine aminopeptidase (rein) détache le premier aa, avec une action récurrente (3 à 4 premiers résidus)."},
+    {q:"Les carboxypeptidases A et B sont utilisées pour identifier :", o:["l'acide aminé N-terminal", "l'acide aminé C-terminal", "les acides aminés aromatiques", "les ponts disulfure"], c:1, e:"Les carboxypeptidases A et B (pancréas) détachent l'acide aminé C-terminal."},
+    {q:"Le bromure de cyanogène (BrCN) coupe chimiquement après :", o:["une méthionine", "un tryptophane", "une lysine", "une proline"], c:0, e:"BrCN coupe spécifiquement après une méthionine."},
+    {q:"Le N-bromosuccinimide (NBS) coupe après :", o:["une arginine", "un tryptophane", "un acide glutamique", "une sérine"], c:1, e:"NBS coupe après un tryptophane."},
+    {q:"La protéinase de Staphylocoque coupe après :", o:["une lysine", "une proline", "un acide glutamique", "un tryptophane"], c:2, e:"Cette endopeptidase coupe spécifiquement après un acide glutamique."},
+    {q:"L'angle ω (oméga) décrit la rotation autour :", o:["de la liaison N–Cα", "de la liaison Cα–C", "de la liaison peptidique C–N elle-même", "de la chaîne latérale"], c:2, e:"ω décrit la rotation de la liaison peptidique C–N ; elle est très limitée (≈180° trans, ≈0° cis)."},
+    {q:"La configuration cis (ω ≈ 0°) de la liaison peptidique est surtout rencontrée :", o:["entre deux glycines", "avant un résidu de proline", "en fin de chaîne", "dans les feuillets β"], c:1, e:"La configuration cis, rare, est principalement rencontrée avant les résidus de proline."},
+    {q:"L'angle φ (phi) décrit la rotation autour de la liaison :", o:["N–Cα", "Cα–C", "C–N", "Cα–Cβ"], c:0, e:"φ : rotation autour de N–Cα. ψ : rotation autour de Cα–C."},
+    {q:"Sur le diagramme de Ramachandran, l'hélice α droite correspond approximativement à :", o:["φ ≈ -139°, ψ ≈ +135°", "φ ≈ -57°, ψ ≈ -47°", "φ ≈ +57°, ψ ≈ +47°", "φ ≈ -78°, ψ ≈ +149°"], c:1, e:"L'hélice α droite correspond à φ ≈ -57°, ψ ≈ -47°."},
+    {q:"L'hélice α compte environ combien de résidus par tour ?", o:["2,0", "3,6", "5,0", "7,2"], c:1, e:"3,6 résidus par tour, soit une translation de 5,41 Å par tour."},
+    {q:"Dans l'hélice α, la liaison hydrogène relie le C=O du résidu n avec le N-H du résidu :", o:["n+1", "n+2", "n+4", "n+8"], c:2, e:"La liaison H se fait avec l'acide aminé situé à 4 positions plus loin dans la chaîne (sens N→C)."},
+    {q:"Entre feuillets β parallèles et antiparallèles, lesquels sont les plus stables ?", o:["les parallèles", "les antiparallèles", "ils sont équivalents", "cela dépend de la longueur des brins"], c:1, e:"Les feuillets β antiparallèles sont intrinsèquement plus stables que les parallèles."},
+    {q:"Le pli de Rossmann est formé par :", o:["4 hélices α", "2 motifs βαβ superposés", "un tonneau de brins β", "une triple hélice"], c:1, e:"Le pli de Rossmann associe 2 motifs βαβ et fixe un dinucléotide comme le NAD⁺."},
+    {q:"Dans la fermeture à leucine (leucine zipper), les leucines sont espacées avec une périodicité de :", o:["3", "5", "7", "10"], c:2, e:"Les leucines sont disposées avec une périodicité de 7 le long de la séquence."},
+    {q:"Le motif EF-hand est impliqué dans la liaison de quel ion ?", o:["Na⁺", "Ca²⁺", "Fe²⁺", "Zn²⁺"], c:1, e:"Le motif EF-hand loge un ion Ca²⁺ ; on le retrouve par exemple dans la calmoduline."},
+    {q:"Un domaine protéique peut être défini d'un point de vue :", o:["uniquement cristallographique", "cristallographique, fonctionnel ou antigénique", "uniquement génétique", "uniquement thermodynamique"], c:1, e:"Les domaines sont définis d'un point de vue cristallographique, fonctionnel ou antigénique."},
+    {q:"Le motif répété principal de la fibroïne du ver à soie (Bombyx mori) est :", o:["(Gly-Xaa-Yaa)n", "(Gly-Ala-Gly-Ala-Gly-Ser)n", "(Ala-Ala-Gly)n", "(Cys-Cys-Gly)n"], c:1, e:"Ce motif, souvent abrégé GAGAGS, forme des feuillets β empilés."},
+    {q:"La dureté de l'α-kératine dépend directement de sa teneur en :", o:["proline", "cystéine (ponts disulfure)", "glycine", "leucine"], c:1, e:"Plus il y a de ponts S-S (kératine riche en cystéine), plus la structure est dure (cheveux, ongles, cornes)."},
+    {q:"Le collagène est composé de triades répétées du type :", o:["Ala-Xaa-Yaa", "Gly-Xaa-Yaa", "Pro-Xaa-Yaa", "Cys-Xaa-Yaa"], c:1, e:"Les triades Gly-Xaa-Yaa se répètent, Xaa et Yaa étant très souvent des prolines."},
+    {q:"Dans le collagène, les prolines et lysines de ces positions sont souvent hydroxylées en :", o:["hydroxyproline (Hyp) et hydroxylysine (Hyl)", "méthylproline et méthyllysine", "phosphoproline et phospholysine", "acétylproline et acétyllysine"], c:0, e:"Réaction post-traductionnelle donnant Hyp et Hyl, caractéristique du collagène."},
+    {q:"L'hémoglobine, exemple classique de structure quaternaire, est composée de :", o:["2 chaînes identiques", "4 chaînes polypeptidiques (α2β2)", "une seule chaîne repliée", "6 chaînes identiques"], c:1, e:"Hémoglobine = 4 chaînes polypeptidiques, α2β2."}
+  ];
+
+  let order = [...questions.keys()];
+  let idx = 0, score = 0, answered = false;
+  const area = document.getElementById('quizArea');
+  const scoreBadge = document.getElementById('scoreBadge');
+
+  function bestScore(){ return localStorage.getItem('proteines_qcm_best'); }
+  function refreshBadge(){
+    const b = bestScore();
+    scoreBadge.textContent = 'meilleur QCM : ' + (b ? b + ' / ' + questions.length : '—');
+  }
+
+  function shuffle(){ order = [...questions.keys()].sort(()=>Math.random()-0.5); idx=0; score=0; answered=false; render(); }
+
+  function render(){
+    if(idx>=order.length){ renderResult(); return; }
+    const q = questions[order[idx]];
+    answered = false;
+    area.innerHTML =
+      '<div class="quiz-progress"><div class="bar" style="width:'+(idx/order.length*100)+'%"></div></div>' +
+      '<div class="quiz-meta"><span>Question '+(idx+1)+' / '+order.length+'</span><span>score : '+score+'</span></div>' +
+      '<div class="q-text">'+q.q+'</div>' +
+      '<div id="qopts"></div>' +
+      '<div class="q-explain" id="qexp">'+q.e+'</div>' +
+      '<div class="quiz-nav"><button class="btn" id="nextBtn" disabled>Suivant</button></div>';
+
+    const optsWrap = document.getElementById('qopts');
+    q.o.forEach((opt,i)=>{
+      const b = document.createElement('button');
+      b.className = 'q-opt';
+      b.textContent = opt;
+      b.addEventListener('click', ()=>{
+        if(answered) return;
+        answered = true;
+        const opts = optsWrap.querySelectorAll('.q-opt');
+        opts.forEach((o,j)=>{
+          o.disabled = true;
+          if(j===q.c) o.classList.add('correct');
+          else if(j===i) o.classList.add('wrong');
+        });
+        if(i===q.c) score++;
+        document.getElementById('qexp').classList.add('show');
+        document.getElementById('nextBtn').disabled = false;
+      });
+      optsWrap.appendChild(b);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ idx++; render(); });
+  }
+
+  function renderResult(){
+    const best = bestScore();
+    if(!best || score>parseInt(best,10)){ localStorage.setItem('proteines_qcm_best', score); }
+    refreshBadge();
+    area.innerHTML =
+      '<div class="quiz-result">' +
+        '<div class="num">'+score+' / '+order.length+'</div>' +
+        '<p class="lede" style="margin:8px auto 18px;">'+(score/order.length>=0.8?'Excellent niveau sur ce chapitre.':score/order.length>=0.5?'Bonne base — revois les points ratés.':'Reprends les fiches et refais le QCM.')+'</p>' +
+        '<button class="btn" id="restartBtn">Recommencer</button>' +
+      '</div>';
+    document.getElementById('restartBtn').addEventListener('click', shuffle);
+  }
+
+  refreshBadge();
+  shuffle();
+})();
+
+/* ============================================================
+   08. FICHES — flashcards
+   ============================================================ */
+(function(){
+  const cards = [
+    {f:"Sanger, 1944", b:"A mis en évidence que les protéines sont des chaînes d’acides aminés reliées par liaisons peptidiques (hydrolyse partielle → peptides ; hydrolyse totale → acides aminés)."},
+    {f:"Le Dalton", b:"1 Da = 1/12 de la masse d’un atome de carbone 12 = masse d’un atome d’hydrogène = 1,66×10⁻²⁷ kg. 1 Da × NA = 1 g/mol."},
+    {f:"Les 4 niveaux de structure", b:"Primaire : séquence des aa. Secondaire : repliement local (aa proches). Tertiaire : organisation 3D globale (aa éloignés). Quaternaire : association de plusieurs sous-unités."},
+    {f:"Méthode chimique de masse molaire", b:"M_min = (M de l’aa le plus rare × 100) / % massique de cet aa. Exemple : histidine du lysozyme (1,05 %, M=155) → M_min ≈ 14 762 g/mol."},
+    {f:"Réactions colorimétriques des aa", b:"Arginine → Sakaguchi (rouge). Tryptophane → Ehrlich (positif). Tyrosine → Udenfriend & Cooper (rouge). Proline → ninhydrine (jaune). Histidine → Pauly (rouge)."},
+    {f:"Sanger vs Edman", b:"Sanger (DNFB) : identifie seulement le 1er aa (le reste est hydrolysé). Edman (PITC) : permet de séquencer toute la chaîne, résidu par résidu, en routine jusqu’à environ 20 aa."},
+    {f:"Identification du C-terminal", b:"Réaction à l’hydrazine (tous les COOH sauf le C-terminal deviennent -CO-NH-NH2) ou carboxypeptidases A et B (méthode enzymatique)."},
+    {f:"Coupures chimiques spécifiques", b:"Bromure de cyanogène (BrCN) : coupe après une méthionine. N-bromosuccinimide (NBS) : coupe après un tryptophane."},
+    {f:"Angles φ, ψ, ω", b:"φ : rotation N–Cα. ψ : rotation Cα–C. ω : rotation de la liaison peptidique C–N elle-même (≈180° trans très majoritaire, ≈0° cis rare, surtout avant une proline)."},
+    {f:"Hélice α", b:"3,6 résidus par tour, translation 5,41 Å/tour. Liaison H entre le C=O du résidu n et le N-H du résidu n+4. Ne contient pas de proline."},
+    {f:"Feuillet β", b:"Union de plusieurs chaînes par liaisons H perpendiculaires à l’axe ; chaînes en zig-zag, chaînes latérales R alternées haut/bas. Les formes antiparallèles sont plus stables que les parallèles."},
+    {f:"Paradoxe de Levinthal", b:"Une protéine ne peut pas explorer au hasard toutes ses conformations possibles (environ 8¹⁰⁰ pour 100 résidus) avant de se replier : le repliement est donc guidé, pas aléatoire."},
+    {f:"Motifs super-secondaires à retenir", b:"À brins β : méandres, clé grecque, barriques, hélices β. À hélices α : motif αα, HTH, HLH, leucine zipper, EF-hand. Mixtes : motif βαβ, pli de Rossmann, module pepsine."},
+    {f:"Protéines fibreuses", b:"Fibroïne (soie) : motif répété (Gly-Ala-Gly-Ala-Gly-Ser)n = GAGAGS, feuillets β. Kératine : superhélice de 2 hélices α, dureté liée à la teneur en cystéine. Collagène : triple hélice, triades Gly-Xaa-Yaa, Hyp et Hyl."}
+  ];
+  const grid = document.getElementById('fcGrid');
+  cards.forEach(c=>{
+    const el = document.createElement('div');
+    el.className = 'fc';
+    el.innerHTML =
+      '<div class="fc-inner">' +
+        '<div class="fc-face fc-front">'+c.f+'<span class="fc-hint">clique</span></div>' +
+        '<div class="fc-face fc-back">'+c.b+'</div>' +
+      '</div>';
+    el.addEventListener('click', ()=>el.classList.toggle('flipped'));
+    grid.appendChild(el);
+  });
+})();
+</script>
+</body>
+</html>
