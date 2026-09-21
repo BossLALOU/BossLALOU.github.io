@@ -1,91 +1,465 @@
 <!DOCTYPE html>
+<!--
+  Biologie des organismes – Végétaux (C. Hotin) · Révisions interactives
+  Fichier unique, sans dépendance : à déposer tel quel sur GitHub (Pages).
+  La progression est enregistrée dans le navigateur (localStorage).
+-->
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mes exercices</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biologie des organismes – Végétaux · Révisions</title>
 <style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #f4f6f8;
-    color: #1a1a1a;
-    margin: 0;
-    padding: 40px 20px;
-  }
-  .container {
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  h1 {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-  }
-  .matiere {
-    background: white;
-    border-radius: 10px;
-    padding: 20px 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  }
-  .matiere h2 {
-    font-size: 1.2rem;
-    margin: 0 0 12px 0;
-    color: #2d3e50;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  li {
-    margin-bottom: 8px;
-  }
-  a {
-    text-decoration: none;
-    color: #2563eb;
-    font-size: 0.95rem;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
+:root{--bg:#f4f6f2;--card:#fff;--card2:#eef2ea;--ink:#1c2921;--muted:#5b6a60;--line:#71847a;--bd:#d7dfd4;--accent:#2f7d5b;--ok:#2e9e5b;--ko:#d64545}
+@media(prefers-color-scheme:dark){:root{--bg:#121815;--card:#1c2621;--card2:#26332c;--ink:#e9f0ea;--muted:#a0b1a6;--line:#93a79b;--bd:#31413a;--accent:#5fc793;--ok:#4cc77e;--ko:#f07070}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+[hidden]{display:none!important}
+header{background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+.top{max-width:980px;margin:auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+h1{font-size:1.05rem;margin:0;cursor:pointer}
+.tb{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.85rem;color:var(--muted);align-items:center}
+select{font:inherit;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--ink);max-width:230px}
+main{max-width:980px;margin:auto;padding:16px}
+h2{font-size:1.2rem;margin:.2em 0 .6em}
+h3{margin:.2em 0 .5em}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-bottom:16px}
+.center{text-align:center}
+.big{font-size:2.4rem;font-weight:700;margin:.2em 0}
+.big small{font-size:1rem;font-weight:400;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:1px 10px;margin-bottom:6px}
+.hint{color:var(--muted);font-size:.88rem;margin:.2em 0 .8em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;display:flex;flex-direction:column;gap:4px}
+.tile:hover{border-color:var(--accent)}
+.tile .ic{font-size:1.6rem}
+.tile small{color:var(--muted)}
+.btn{font:inherit;padding:9px 16px;border-radius:10px;border:1px solid var(--bd);background:var(--card2);color:var(--ink);cursor:pointer}
+.btn:hover:not(:disabled){border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.ko{background:var(--ko);border-color:var(--ko);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;font:inherit;padding:10px 12px;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--ink);cursor:pointer}
+.opt b{min-width:1.6em;height:1.6em;border-radius:50%;background:var(--card2);display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+.opt.sel{border-color:var(--accent);background:var(--card2)}
+.opt.good{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.opt.bad{border-color:var(--ko);background:color-mix(in srgb,var(--ko) 16%,var(--card))}
+.opt.miss{border-color:var(--ok);border-style:dashed}
+.fb{margin-top:14px;padding:10px 14px;border-radius:12px;background:var(--card2);border-left:5px solid var(--muted);white-space:pre-line}
+.fb.ok{border-left-color:var(--ok)}
+.fb.ko{border-left-color:var(--ko)}
+.ans{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--card2);border-left:5px solid var(--accent);white-space:pre-line}
+.prog{display:flex;align-items:center;gap:12px;font-size:.85rem;color:var(--muted);margin-bottom:12px}
+.bar{flex:1;height:8px;background:var(--card2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.dgw{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:6px}
+.dg{width:100%;height:auto;min-width:700px;display:block;user-select:none}
+.ln{stroke:var(--line);stroke-width:2;fill:none}
+.tx{fill:var(--ink);font:14px system-ui,sans-serif}
+.tsm{fill:var(--muted);font:12px system-ui,sans-serif}
+.ah{fill:var(--line)}
+.dot{fill:var(--accent)}
+.sb{fill:var(--card2);stroke:var(--line);stroke-width:1.5}
+.gl{stroke:var(--line);opacity:.3;stroke-dasharray:4 4}
+.lead{stroke:var(--accent);stroke-width:1.5;fill:none}
+.lendp{fill:var(--accent)}
+.bl{cursor:pointer}
+.bl rect{fill:var(--card);stroke:var(--accent);stroke-width:2;stroke-dasharray:5 3}
+.bl text{fill:var(--muted);font-family:system-ui,sans-serif;font-size:13px;pointer-events:none}
+.bl.fill rect{stroke-dasharray:none;fill:var(--card2)}
+.bl.fill text{fill:var(--ink);font-weight:600}
+.bl.sel rect{stroke-width:4}
+.bl.good rect{stroke:var(--ok);fill:color-mix(in srgb,var(--ok) 20%,var(--card))}
+.bl.bad rect{stroke:var(--ko);fill:color-mix(in srgb,var(--ko) 20%,var(--card))}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font:inherit;font-size:.9rem;padding:6px 12px;border-radius:99px;border:1px solid var(--accent);background:var(--card);color:var(--ink);cursor:pointer}
+.chip.sel{background:var(--accent);color:#fff}
+.chip.used{opacity:.3;pointer-events:none}
+ul{margin:.4em 0;padding-left:1.2em;text-align:left}
+.chl{display:flex;flex-direction:column;gap:6px}
+.chl button{font:inherit;text-align:left;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.chl button.on{border-color:var(--accent);background:var(--card2)}
+.chl small{color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:99px;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+#toast.on{opacity:1}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Mes exercices</h1>
+<header><div class="top">
+  <h1 id="ttl">🌿 Biologie des organismes · Végétaux</h1>
+  <div class="tb">
+    <label>Chapitre <select id="fc"></select></label>
+    <label>Session <select id="ln"><option value="10">10</option><option value="20" selected>20</option><option value="0">Tout</option></select></label>
+    <label><input type="checkbox" id="pr" checked> Prioriser mes erreurs</label>
+  </div>
+</div></header>
+<main id="app"><noscript>Cette page a besoin de JavaScript.</noscript></main>
+<div id="toast"></div>
 
-  <div class="matiere">
-    <h2>Biochimie Structurale</h2>
-    <ul>
-     <li><a href="biochimie/peptides-revision.html">Exercice 1 — Peptides (révision)</a></li>
-     <li><a href="biochimie/proteines-revision.html">Exercice 2 — Protéines (révision)</a></li> 
-    </ul>
+<script>
+'use strict';
+const KEY='bioveg-hotin-v1';
+const CH={rappels:'Rappels : cellule, mitose, méiose',classif:'Classification & phylogénie',evol:'Évolution des végétaux',regne:'Règne végétal',bryo:'Bryophytes',ptero:'Ptéridophytes',prespe:'Pré-spermaphytes',sperma:'Spermaphytes'};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const H=s=>{let h=5381;for(const c of s)h=((h<<5)+h+c.charCodeAt(0))|0;return (h>>>0).toString(36)};
+let store={q:{},f:{},d:{}};
+try{store=Object.assign({q:{},f:{},d:{}},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
+
+/* ============================ QCM ============================ */
+/* [chapitre, question, options, indices des bonnes réponses, explication] */
+const QCM=[
+['rappels','Parmi ces propositions sur les cellules procaryotes, lesquelles sont exactes ?',['Absence de noyau','Division cellulaire par scissiparité','Présence de plastes','Paroi glycoprotéique','Division par mitose et méiose'],[0,1,3],'Pas de noyau ni d’organites (donc pas de plastes), division par scissiparité, paroi glycoprotéique. Mitose et méiose sont propres aux eucaryotes.'],
+['rappels','Quelle est la composition de la paroi des cellules végétales ?',['Glycoprotéique','Pecto-cellulosique','Uniquement lipidique','Il n’y a pas de paroi'],[1],'Paroi pecto-cellulosique chez les végétaux (eucaryotes) ; glycoprotéique chez les procaryotes.'],
+['rappels','Lequel de ces organismes est un procaryote ?',['Une cyanobactérie','Une algue unicellulaire','Une algue pluricellulaire','Une mousse'],[0],'Les cyanobactéries sont procaryotes ; les algues (uni- ou pluricellulaires) sont eucaryotes.'],
+['rappels','Quelle structure traverse les parois de deux cellules végétales voisines ?',['Le plasmodesme','Le tonoplaste','Le ribosome','Le plaste'],[0],'Les plasmodesmes relient les cellules voisines à travers leurs parois.'],
+['rappels','Comment s’appelle la membrane qui entoure la vacuole ?',['Le tonoplaste','L’enveloppe nucléaire','Le plasmodesme','La paroi'],[0],'La vacuole est délimitée par le tonoplaste.'],
+['rappels','À propos de la totipotence, quelles propositions sont exactes ?',['C’est la capacité de régénérer un individu complet','Elle passe par une dédifférenciation (formation d’un cal) puis une nouvelle différenciation','Elle permet d’obtenir des plantes génétiquement identiques','Elle nécessite une méiose'],[0,1,2],'Explant tissulaire → dédifférenciation (cal) → régénération → nouvelle différenciation → repiquage : plantes génétiquement identiques. Aucune méiose.'],
+['rappels','Quelle phase de la mitose voit les chromosomes dupliqués s’aligner sur la plaque équatoriale ?',['Prophase','Métaphase','Anaphase','Télophase'],[1],'Prophase : condensation ; métaphase : alignement ; anaphase : séparation des chromatides ; télophase : deux cellules filles.'],
+['rappels','Que se passe-t-il pendant l’anaphase de la mitose ?',['Les 2 chromatides de chaque chromosome se séparent et migrent vers les pôles','La chromatine se condense et l’enveloppe nucléaire disparaît','Les chromosomes homologues se séparent','Deux cellules filles se constituent'],[0],'La séparation des homologues appartient à la méiose (phase réductionnelle).'],
+['rappels','Une cellule 2n = 6 subit une méiose. Quel est le résultat ?',['2 cellules à n = 6','2 cellules à n = 3','4 cellules à n = 3','4 cellules à 2n = 6'],[2],'La méiose donne 4 cellules haploïdes (n = 3).'],
+['rappels','À propos de la méiose, quelles propositions sont exactes ?',['La phase réductionnelle sépare les chromosomes homologues','La phase équationnelle sépare les chromatides','Un crossing-over a lieu','Elle donne 2 cellules identiques à la cellule mère'],[0,1,2],'La méiose comporte une phase réductionnelle puis une phase équationnelle et donne 4 cellules haploïdes ; les cellules identiques sont le résultat de la mitose.'],
+['rappels','Chez les végétaux, quelles structures sont haploïdes (n) ?',['Le gamétophyte','Le sporophyte','Les spores','Le zygote','Les gamètes'],[0,2,4],'Le sporophyte et le zygote sont diploïdes (2n).'],
+['rappels','Dans l’alternance de générations, où intervient la méiose ?',['Sporophyte (2n) → spores (n)','Zygote (2n) → sporophyte (2n)','Gamétophyte (n) → gamètes (n)','Gamètes (n) → zygote (2n)'],[0],'Sporophyte → méiose → spores (n) → gamétophyte → gamètes → fécondation → zygote (2n) → sporophyte.'],
+
+['classif','Quelle est l’étymologie de « taxonomie » ?',['taxis (ordre, rangement) + nomos (loi)','taxis (arbre) + logos (science)','phylon (tribu) + genesis (origine)','nomos (nom) + graphein (écrire)'],[0],'Du grec taxis = ordre, rangement ; nomos = loi.'],
+['classif','Quel est l’ordre hiérarchique correct des rangs, du plus large au plus précis ?',['Embranchement – classe – ordre – famille – genre – espèce','Classe – embranchement – famille – ordre – espèce – genre','Embranchement – ordre – classe – genre – famille – espèce','Espèce – genre – famille – ordre – classe – embranchement'],[0],'Embranchement, classe, ordre, famille, genre, espèce (variété en dessous).'],
+['classif','Papayer (Carica papaya) : quel est son genre et sa famille d’après le cours ?',['Genre Carica, famille Caricaceae','Genre papaya, famille Carica','Genre Caricaceae, famille Carica','Genre Malvales, famille Caricaceae'],[0],'Espèce papaya ; genre Carica ; famille Caricaceae.'],
+['classif','Qui a établi la cladistique, et quand ?',['Willi Hennig, en 1950','Carl von Linné, en 1735','Charles Darwin, en 1859','Robert Whittaker, en 1969'],[0],'Méthode établie en 1950 par Willi Hennig ; elle révolutionne la systématique à partir de la fin des années 1960.'],
+['classif','Le critère fondamental de la classification phylogénétique est qu’elle doit :',['Refléter strictement la phylogénie (généalogie du vivant)','Regrouper selon les seules ressemblances morphologiques','Suivre l’ordre alphabétique des noms latins','Se baser uniquement sur l’ADN'],[0],'Elle repose sur la théorie de l’évolution et prend en compte tous les types de caractères à valeur égale (anatomie, embryologie, biologie moléculaire, paléontologie).'],
+['classif','Un clade est :',['Un groupe monophylétique','Un groupe polyphylétique','Un rang taxonomique comme la classe','Un synonyme d’espèce'],[0],'Clade = groupe monophylétique.'],
+['classif','Quelles sont des synapomorphies des embryophytes ?',['Embryon pluricellulaire différencié','Cuticule','Gamètes formés dans des gamétanges pluricellulaires (archégone, anthéridie)','Paroi des spores contenant de la sporopollénine','Graines'],[0,1,2,3],'Les graines ne concernent que les spermatophytes.'],
+['classif','Pourquoi appelle-t-on aussi les embryophytes des « archégoniates » ?',['Présence d’organes sexuels femelles sous forme d’archégone','Présence de graines','Absence de racines','Présence de gamètes flagellés'],[0],'Archégoniates : présence d’archégones (gamétanges femelles).'],
+['classif','Que sont devenues les anciennes « bryophytes » (groupe polyphylétique) ?',['Séparées en deux clades monophylétiques : Marchantiophytes (hépatiques) et Bryophytes (mousses s.s.)','Fusionnées avec les ptéridophytes','Classées parmi les algues','Rien : le groupe est resté inchangé'],[0],'Révision de la classification depuis le milieu des années 1990.'],
+['classif','Quelles propositions caractérisent la classification traditionnelle (par opposition à la phylogénétique) ?',['Critères morphologiques ou anatomiques','Regroupement selon les ressemblances (présence/absence de tel caractère)','Regroupement selon la généalogie','Formation de clades','Utilisation de séquences d’ADN'],[0,1],'Phylogénétique : critères morpho-anatomiques + biochimiques + moléculaires, regroupement selon la généalogie, clades.'],
+['classif','Quels sont les trois grands groupes de la classification scientifique universelle vus en cours ?',['Animaux (métazoaires), champignons (eumycètes), plantes (embryophytes)','Procaryotes, eucaryotes, virus','Algues, mousses, fougères','Thallophytes, cormophytes, trachéophytes'],[0],'Animaux, champignons et plantes = végétaux = embryophytes.'],
+
+['evol','Quelles associations période ↔ groupe sont exactes ?',['Milieu du Silurien : algues vertes → bryophytes','Début du Dévonien : plantes vasculaires (ptéridophytes)','Fin du Dévonien : plantes à graines (gymnospermes)','Début du Crétacé : angiospermes (plantes à fleurs)','Silurien : angiospermes'],[0,1,2,3],'Silurien (bryophytes) → début Dévonien (ptéridophytes) → fin Dévonien (gymnospermes) → début Crétacé (angiospermes).'],
+['evol','Quel est l’ordre d’apparition correct (du plus ancien au plus récent) ?',['Bryophytes – ptéridophytes – gymnospermes – angiospermes','Ptéridophytes – bryophytes – angiospermes – gymnospermes','Angiospermes – gymnospermes – ptéridophytes – bryophytes','Bryophytes – gymnospermes – ptéridophytes – angiospermes'],[0],'On passe de l’invasculaire au vasculaire, puis aux graines, puis aux fleurs.'],
+['evol','Cooksonia est :',['La plus ancienne plante vasculaire connue (~ 400 MA)','Le premier angiosperme','Une mousse actuelle','Une algue verte ancestrale'],[0],'Fossile de plante vasculaire d’environ 400 millions d’années.'],
+['evol','Quelle est l’origine des végétaux terrestres selon l’arbre évolutif du cours ?',['Les algues vertes ancestrales','Les cyanobactéries','Les champignons','Les fougères'],[0],'Algues vertes ancestrales → origine des végétaux.'],
+
+['regne','Un thallophyte est une plante :',['Dont tige, feuilles et racines ne sont pas différenciées','Pourvue d’une tige portant des « feuilles »','Qui produit des graines','Vascularisée'],[0],'Cormophyte = plante pourvue d’une tige portant des « feuilles ».'],
+['regne','Quelles propositions sont exactes ?',['Cryptogames : organes de reproduction non visibles','Phanérogames : organes de reproduction apparents','Trachéophytes : plantes vascularisées','Spermaphytes : plantes à graines','Cormophytes : plantes sans tige'],[0,1,2,3],'Les cormophytes sont au contraire pourvus d’une tige.'],
+['regne','Quels groupes sont des cryptogames dans la classification du cours ?',['Bryophytes','Ptéridophytes','Lichens','Spermaphytes','Préspermaphytes'],[0,1,2],'Phanérogames = préspermaphytes et spermaphytes.'],
+['regne','Quelles sont les plantes invasculaires ?',['Les bryophytes','Les ptéridophytes','Les gymnospermes','Les angiospermes'],[0],'Invasculaires : pas de vaisseaux conducteurs. Vasculaires : ptéridophytes et spermatophytes.'],
+['regne','Les spermatophytes se divisent en :',['Gymnospermes et angiospermes','Mousses et fougères','Thallophytes et cormophytes','Monocotylédones et gymnospermes'],[0],'Gymnospermes (conifères et formes apparentées) et angiospermes (plantes à fleurs).'],
+['regne','Les angiospermes se divisent en :',['Monocotylédones et dicotylédones','Conifères et cycadophytes','Hépatiques et mousses','Eusporangiés et leptosporangiés'],[0],'Angiospermes : monocotylédones et dicotylédones.'],
+['regne','Les ptéridophytes regroupent :',['Lycopodes, prêles, fougères','Mousses, hépatiques, anthocérotes','Conifères, ginkgos','Algues, champignons, lichens'],[0],'Lycopodes, prêles et fougères.'],
+
+['bryo','Chez les bryophytes, la génération prédominante est :',['Le gamétophyte haploïde','Le sporophyte diploïde','Le zygote','Les deux à égalité'],[0],'Prédominance du gamétophyte haploïde sur le sporophyte diploïde.'],
+['bryo','Quelles caractéristiques s’appliquent aux bryophytes ?',['Pas de vrais tissus conducteurs','Absorption par toute la surface','Gamètes mâles nageurs (eau indispensable à la reproduction)','Racines véritables','Présence de lignine'],[0,1,2],'Ni racines, ni lignine, ni vraies feuilles.'],
+['bryo','Pourquoi les bryophytes ne peuvent-elles pas croître en hauteur ?',['Pas de vaisseaux conducteurs et pas de lignine','Elles n’ont pas de chlorophylle','Elles vivent dans l’eau','Elles sont diploïdes'],[0],'Pas de vaisseaux conducteurs, pas de lignine : pas de tiges rigides.'],
+['bryo','Pourquoi les bryophytes sont-elles confinées aux milieux humides ?',['Pas de protection contre le dessèchement et gamètes mâles aquatiques','Elles n’ont pas de spores','Elles ont besoin de sel','Elles sont carnivores'],[0],'Absence de protection contre le dessèchement + gamètes mâles aquatiques.'],
+['bryo','Chez les mousses, le gamétophyte est :',['Un cormus formé de filaments pluricellulaires ramifiés (protonéma) avec appendices foliacés et rhizoïdes','Un ruban prostré thalloïde','Un prothalle cordiforme','Un grain de pollen'],[0],'Le cormus thalloïde/fucoïde (ruban chlorophyllien prostré) concerne les hépatiques et anthocérotes.'],
+['bryo','À propos du sporophyte des mousses :',['Il est ancré par un suçoir dans les tissus du gamétophyte femelle','Il est haploïde (n)','Il est autonome, avec des racines','Il est le stade dominant'],[0],'Sporophyte 2n, axe unique non chlorophyllien, dépendant du gamétophyte.'],
+['bryo','Quelles propositions sur les gamétanges sont exactes ?',['Anthéridie : petit sac ovoïde (gamétange mâle)','Archégone : petite bouteille avec un ventre renflé (gamète femelle) et un col','Anthéridie : gamétange femelle','Archégone : produit les anthérozoïdes'],[0,1],'Anthéridie = ♂, archégone = ♀.'],
+['bryo','Comment les gamètes se rejoignent-ils chez les mousses ?',['Anthérozoïdes biflagellés nageant dans l’eau de pluie ou de rosée, attirés par chimiotactisme','Transport du pollen par le vent','Transport par les insectes','Tube pollinique'],[0],'Les anthérozoïdes rejoignent l’oosphère, puis fusion des gamètes = zygote.'],
+['bryo','Que devient le zygote chez les mousses ?',['Mitoses → sporophyte → sporange → méiose → spores → protonéma','Méiose → gamètes','Prothalle → gamétophyte','Grain de pollen'],[0],'Le zygote donne le sporophyte par mitose ; les spores se forment par méiose dans le sporange.'],
+['bryo','Modes de multiplication végétative des bryophytes :',['Fragmentation du gamétophyte','Propagules (petits massifs cellulaires)','Graines','Bulbes'],[0,1],'Fragmentation du gamétophyte ou propagules.'],
+['bryo','Où se situent les sporanges ?',['Mousses : à l’extrémité du pédicelle du sporophyte ; hépatiques et anthocérotes : sous les « chapeaux » femelles','Sur la face inférieure des feuilles','Dans l’ovule','Sur le protonéma uniquement'],[0],'Position variable selon les groupes.'],
+['bryo','Quel groupe de bryophytes est le moins riche en espèces ?',['Anthocérotes (100 à 350)','Hépatiques (6 500 à 9 000)','Mousses (10 000 à 13 500)','Ils sont équivalents'],[0],'Mousses : 10 000 à 13 500 ; hépatiques : 6 500 à 9 000 ; anthocérotes : 100 à 350.'],
+
+['ptero','Quelles caractéristiques s’appliquent aux ptéridophytes ?',['Vaisseaux conducteurs véritables','Racines et feuilles véritables','Tissus ligneux','Reproduction encore par gamètes aquatiques','Graines'],[0,1,2,3],'Pas de graines : elles apparaissent chez les spermatophytes.'],
+['ptero','Chez les ptéridophytes, la génération prédominante est :',['Le sporophyte diploïde','Le gamétophyte haploïde','Le gamète','La spore'],[0],'Inversion par rapport aux bryophytes.'],
+['ptero','Pourquoi les ptéridophytes doivent-elles vivre en milieu humide (au moins pour se reproduire) ?',['Gamètes mâles nageurs : la fécondation nécessite la présence d’eau','Elles n’ont pas de vaisseaux','Elles n’ont pas de racines','Elles n’ont pas de chlorophylle'],[0],'Peuvent former de hautes structures arborescentes mais restent dépendantes de l’eau pour la reproduction.'],
+['ptero','Quelles correspondances sont exactes ?',['Articulées → prêles','Filicinées → fougères','Lycopodinées → prêles','Psilophytinées → fougères'],[0,1],'Divisions : psilophytinées, lycopodinées, articulées (prêles), filicinées (fougères).'],
+['ptero','Le gamétophyte des fougères est :',['Un prothalle (lame cordiforme) à rhizoïdes et archégones, sans feuilles, tiges, racines ni tissus conducteurs','Une plante à rhizome et à feuilles','Un grain de pollen','Un protonéma filamenteux'],[0],'Organisation thallophytique ; il porte les organes de reproduction sexuée.'],
+['ptero','Où sont regroupés les sporanges chez les fougères ?',['Face inférieure des feuilles','Sur le prothalle','À l’extrémité d’un pédicelle issu du gamétophyte','Dans les racines'],[0],'Face inférieure des feuilles du sporophyte.'],
+['ptero','Quelles propositions sur les sporanges sont exactes ?',['Eusporangiés : enveloppe de plusieurs assises de cellules','Leptosporangiés : enveloppe d’une seule couche de cellules','Eusporangiés : enveloppe d’une seule couche','Il n’existe qu’un seul type de sporange'],[0,1],'Eu- = plusieurs assises ; lepto- = une seule couche.'],
+['ptero','Dans un cycle homosporé :',['Les spores sont identiques entre elles','Il existe des micro- et des macrospores','Le prothalle porte anthéridies et archégones','Le sporophyte se développe sur le gamétophyte, qui dégénère ensuite'],[0,2,3],'Sporange → méiose → spores → prothalle → gamètes → zygote → sporophyte.'],
+['ptero','Dans un cycle hétérosporé (ex. sélaginelle) :',['Microsporanges → microspores → microprothalle mâle','Macrosporanges → macrospores → macroprothalle femelle','Toutes les spores sont identiques','Il n’y a pas de méiose'],[0,1],'Deux sortes de sporanges : micro- (♂) et macrosporanges (♀).'],
+['ptero','Comment se multiplient végétativement les ptéridophytes ?',['Par fragmentation du cormus','Par graines','Par méiose','Par pollen'],[0],'Multiplication végétative : fragmentation du cormus.'],
+
+['prespe','Les pré-spermaphytes comprennent :',['Ptéridospermes (cycadophytes) et cordaïtes (ginkgophytes)','Mousses et hépatiques','Prêles et lycopodes','Monocotylédones et dicotylédones'],[0],'Le Ginkgo est un exemple de cordaïte.'],
+['prespe','Caractères distinctifs des pré-spermaphytes :',['Miniaturisation du gamétophyte, intégré dans des structures protectrices','Ovule','Étamines et grains de pollen','Gamétophyte dominant et autonome'],[0,1,2],'Le gamétophyte est miniaturisé et protégé, contrairement aux bryophytes.'],
+['prespe','Dans l’ovule, quelles correspondances sont exactes ?',['Macrosporophylle → tégument','Macrosporange → nucelle (tissu nourricier)','Gamétophyte femelle → endosperme','Macrosporophylle → étamine'],[0,1,2],'Ovule de Ginkgo biloba : tégument, nucelle, endosperme, 2 archégones.'],
+['prespe','Une étamine est constituée :',['D’un fin pédicelle (filet) et de 2 sacs polliniques','D’un ovule et d’un tégument','D’un archégone et d’une anthéridie','D’un prothalle'],[0],'Les « fleurs mâles » sont uniquement composées d’étamines.'],
+['prespe','Le grain de pollen correspond :',['Au gamétophyte mâle','Au gamétophyte femelle','Au sporophyte','À la graine'],[0],'Il libère les gamètes mâles.'],
+['prespe','Chez les pré-spermaphytes, mode de reproduction « archaïque » :',['Les gamètes mâles sont mobiles dans l’eau (anthérozoïdes libérés dans la chambre pollinique)','Les gamètes mâles sont immobiles et portés par un tube pollinique','Il n’y a pas de gamètes mâles','Les gamètes mâles sont diploïdes'],[0],'Le grain de pollen atterrit sur l’ovule ; l’ovule assure protection et nutrition de l’embryon.'],
+['prespe','Combien d’archégones compte l’ovule du Ginkgo ?',['2','1','5','0'],[0],'Schéma du cours : 2 archégones.'],
+
+['sperma','Quelles données chiffrées sont exactes ?',['Gymnospermes : environ 600 espèces vivantes','Angiospermes : plus de 250 000 espèces vivantes','Chlamydospermes (gnétophytes) : 3 genres','Gymnospermes : plus de 250 000 espèces'],[0,1,2],'Les angiospermes dominent largement la flore actuelle.']
+].map(r=>({id:H(r[1]),c:r[0],q:r[1],o:r[2],a:r[3],e:r[4]||''}));
+
+/* ============================ FICHES Q/R ============================ */
+/* [chapitre, question, réponse] */
+const FICHES=[
+['rappels','Différences entre une cellule procaryote et une cellule eucaryote ?','Procaryote : pas de noyau, division par scissiparité, pas d’organites, paroi glycoprotéique.\nEucaryote : noyau, division par mitose et méiose, nombreux organites (mitochondries, réticulum, plastes chez les végétaux), paroi pecto-cellulosique chez les végétaux.'],
+['rappels','Donne un exemple de procaryote et des exemples d’eucaryotes chlorophylliens.','Procaryote : cyanobactérie. Eucaryotes : algues unicellulaires et algues pluricellulaires.'],
+['rappels','Quelles structures repérer sur un schéma de cellule végétale ?','Paroi, chloroplaste, mitochondrie, vacuole (délimitée par le tonoplaste), noyau, ribosomes, plasmodesmes.'],
+['rappels','Définis la totipotence.','Capacité de régénérer un individu complet, via dédifférenciation puis nouvelle différenciation.'],
+['rappels','Étapes de la régénération de plantes génétiquement identiques ?','Explant tissulaire → dédifférenciation (cal) → régénération → nouvelle différenciation → repiquage.'],
+['rappels','Les 4 phases de la mitose ?','Prophase : condensation de la chromatine, disparition de l’enveloppe nucléaire en fin de prophase.\nMétaphase : alignement des chromosomes dupliqués sur la plaque équatoriale.\nAnaphase : séparation des 2 chromatides, migration vers les pôles.\nTélophase : constitution des 2 cellules filles.'],
+['rappels','Phase réductionnelle et phase équationnelle de la méiose ?','Réductionnelle : séparation des chromosomes homologues (crossing-over). Équationnelle : séparation des chromatides. Exemple : 2n = 6 → 4 cellules à n = 3.'],
+['rappels','Alternance de générations chez les végétaux ?','Sporophyte (2n) → méiose → spores (n) → gamétophyte (n) → gamètes (n) → fécondation → zygote (2n) → sporophyte (2n).'],
+['rappels','Principe de la multiplication végétative ?','Repose sur la totipotence ; concerne des organismes peu différenciés (fragmentation, propagules…).'],
+['classif','Taxonomie, classification, systématique : différences ?','Taxonomie (taxis = ordre ; nomos = loi) = science de la classification des êtres vivants. Classification = arrangement en groupes (taxons) d’après l’étude comparative des caractères. Systématique = terme plus large, incluant les aspects évolutifs.'],
+['classif','Les rangs taxonomiques, du plus large au plus précis ?','Embranchement, classe, ordre, famille, genre, espèce (variété).'],
+['classif','Classification du papayer d’après le cours ?','Embranchement : Spermaphyte ; classe : Dicotylédones ; ordre : Malvales ; famille : Caricaceae ; genre : Carica ; espèce : papaya.'],
+['classif','Les 3 grands groupes de la classification universelle ?','Animaux (métazoaires), champignons (eumycètes), plantes = végétaux (embryophytes).'],
+['classif','Que sont les embryophytes ?','Groupe monophylétique de l’ensemble des végétaux terrestres, aussi appelés archégoniates (organes sexuels femelles = archégones).'],
+['classif','Principe de la classification phylogénétique et de la cladistique ?','Doit refléter strictement la phylogénie (généalogie du vivant), conséquence de la théorie de l’évolution. Cladistique : méthode de Willi Hennig (1950) ; caractères anatomiques, embryologiques, moléculaires et paléontologiques à valeur égale ; groupes monophylétiques (clades).'],
+['classif','Synapomorphies des embryophytes ?','Embryon pluricellulaire différencié ; cuticule ; gamètes formés dans des gamétanges pluricellulaires (archégone ♀, anthéridie ♂) ; paroi des spores contenant de la sporopollénine.'],
+['classif','Classification traditionnelle vs phylogénétique ?','Traditionnelle : critères morphologiques ou anatomiques, regroupement selon les ressemblances.\nPhylogénétique : critères morpho-anatomiques, biochimiques et moléculaires (ADN), regroupement selon la généalogie, groupes monophylétiques (clades).'],
+['classif','Ce qu’est devenu le groupe des « bryophytes » ?','Polyphylétique, il a été séparé en deux clades monophylétiques : Marchantiophytes (hépatiques) et Bryophytes (mousses s.s.).'],
+['evol','Les 4 grandes étapes de l’évolution des végétaux ?','Milieu du Silurien : algues vertes → bryophytes.\nDébut du Dévonien : plantes vasculaires (ptéridophytes).\nFin du Dévonien : plantes à graines (gymnospermes).\nDébut du Crétacé : angiospermes (plantes à fleurs).'],
+['evol','Qu’est-ce que Cooksonia ?','La plus ancienne plante vasculaire connue (~ 400 MA).'],
+['regne','Thallophytes vs cormophytes ?','Thallophytes : tige, feuilles, racines non différenciées. Cormophytes : plantes pourvues d’une tige portant des « feuilles ».'],
+['regne','Cryptogames vs phanérogames ?','Cryptogames : organes de reproduction non visibles (algues, champignons, lichens, bryophytes, ptéridophytes). Phanérogames : organes de reproduction apparents (préspermaphytes, spermaphytes).'],
+['regne','Invasculaires vs vasculaires ?','Invasculaires : pas de vaisseaux conducteurs (bryophytes). Vasculaires (trachéophytes) : ptéridophytes (lycopodes, prêles, fougères) et spermatophytes (gymnospermes, angiospermes ; monocotylédones et dicotylédones).'],
+['bryo','Caractères des bryophytes ?','Gamétophyte prédominant (n) ; sporophyte : axe unique non chlorophyllien ; pas de tissus conducteurs, ni racines, ni lignine, ni vraies feuilles ; absorption par toute la surface ; gamètes mâles nageurs ; donc petite taille et milieux humides.'],
+['bryo','Divisions des bryophytes et nombre d’espèces ?','Mousses (10 000 à 13 500) ; hépatiques (6 500 à 9 000) ; anthocérotes (100 à 350).'],
+['bryo','Cycle de reproduction des mousses ?','Gamétophyte (n) → gamétanges (anthéridie ♂, archégone ♀) → anthérozoïdes biflagellés nagent (eau de pluie ou de rosée, chimiotactisme) vers l’oosphère → fécondation → zygote (2n) → sporophyte (2n) → sporange (capsule) → méiose → spores (n) → protonéma (n) → gamétophyte.'],
+['bryo','Anthéridie et archégone (bryophytes) ?','Anthéridie : gamétange mâle, petit sac ovoïde sur un court pédicelle. Archégone : gamétange femelle en forme de petite bouteille, ventre renflé contenant le gamète femelle, prolongé par un col.'],
+['ptero','Caractères des ptéridophytes ?','Vaisseaux conducteurs, racines et feuilles véritables, tissus ligneux ; sporophyte prédominant ; gamètes mâles nageurs (eau nécessaire à la fécondation). Divisions : psilophytinées, lycopodinées, articulées (prêles), filicinées (fougères).'],
+['ptero','Sporophyte et gamétophyte des fougères ?','Sporophyte : tiges (rhizome souterrain horizontal ou tige aérienne verticale), tissus différenciés, système racinaire. Gamétophyte : prothalle (organisation thallophytique) à rhizoïdes, sans tiges, feuilles, racines ni tissus conducteurs, portant les organes de reproduction sexuée.'],
+['ptero','Eusporangiés vs leptosporangiés ?','Eusporangiés : enveloppe de plusieurs assises de cellules. Leptosporangiés : enveloppe d’une seule couche de cellules.'],
+['ptero','Cycle homosporé ?','Sporange → méiose → spores identiques (n) → prothalle (anthéridies + archégones) → anthérozoïdes nagent vers l’archégone → fécondation de l’oosphère → zygote dans l’archégone → sporophyte (croît en parasite sur le gamétophyte) → dégénérescence du gamétophyte.'],
+['ptero','Cycle hétérosporé (ex. sélaginelle) ?','Deux sortes de sporanges : microsporanges → microspores → microprothalle mâle (anthérozoïdes) ; macrosporanges → macrospores → macroprothalle femelle. Fécondation → sporophyte.'],
+['prespe','Que sont les pré-spermaphytes ?','Ptéridospermes (cycadophytes) et cordaïtes (ginkgophytes, ex. Ginkgo : appareil végétatif arborescent, petites feuilles bien différenciées). Caractères : gamétophyte miniaturisé et intégré dans des structures protectrices ; ovule, étamines, grains de pollen.'],
+['prespe','Composition de l’ovule (Ginkgo) ?','Macrosporophylle → tégument ; macrosporange → nucelle (tissu nourricier) ; gamétophyte femelle = endosperme (2 archégones chez Ginkgo). Rôle : protection et nutrition de l’embryon.'],
+['prespe','Étamine et grain de pollen ?','Étamine : fin pédicelle (filet) + 2 sacs polliniques. Grain de pollen = gamétophyte mâle (cellules végétative, gamétogène, pied, basale) qui libère les gamètes mâles.'],
+['sperma','Effectifs des spermaphytes ?','Gymnospermes : ~ 600 espèces vivantes ; chlamydospermes (gnétophytes) : 3 genres ; angiospermes : plus de 250 000 espèces vivantes.'],
+['sperma','Plan des embranchements du cours ?','Bryophytes → ptéridophytes → cordaïtes → gymnospermes → gnétophytes (chlamydospermes) → angiospermes.']
+].map(r=>({id:H(r[1]),c:r[0],q:r[1],a:r[2]}));
+
+/* ============================ SCHÉMAS ============================ */
+const T=(x,y,t,c='tx',a='middle')=>`<text x="${x}" y="${y}" class="${c}" text-anchor="${a}">${t}</text>`;
+const L=(x1,y1,x2,y2,a)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ln"${a?' marker-end="url(#ah)"':''}/>`;
+const P=(p,a)=>`<polyline points="${p}" class="ln"${a?' marker-end="url(#ah)"':''}/>`;
+const R=(x,y,w,h,t)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" class="sb"/>${T(x+w/2,y+h/2+5,t)}`;
+const D=(x,y)=>`<circle cx="${x}" cy="${y}" r="6" class="dot"/>`;
+const LD=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="lead"/><circle cx="${x2}" cy="${y2}" r="4" class="lendp"/>`;
+
+const leaves=[['Marchantiophytes',28],['Bryophytes',62],['Lycophytes',105],['Filicophytes',190],['Equisetophytes',225],['Cycadophytes',300],['Ginkgophytes',335],['Coniferophytes',370],['Gnetophytes',405],['Angiospermes',440]];
+const ticks=[0,100,200,300,400,500].map(m=>{const y=Math.round(40+.86*m);return L(165,y,175,y)+T(158,y+4,m,'tsm','end')}).join('');
+const cellSvg=`<rect x="250" y="40" width="400" height="420" rx="30" fill="#e9f3e0" stroke="#2f7d6d" stroke-width="12"/>
+<rect x="643" y="197" width="14" height="16" fill="#c9dcb8"/><line x1="628" y1="205" x2="680" y2="205" stroke="#2f7d6d" stroke-width="2"/>
+<ellipse cx="390" cy="290" rx="95" ry="75" fill="#9cc3f4" stroke="#3b6fb6" stroke-width="3"/>
+<circle cx="560" cy="330" r="52" fill="#e6e0f0" stroke="#6b5b95" stroke-width="3"/><circle cx="568" cy="338" r="16" fill="#4a3d6b"/>
+<path d="M470 205 Q525 235 500 300" fill="none" stroke="#8a8a8a" stroke-width="2"/>
+<circle cx="470" cy="205" r="3.5"/><circle cx="492" cy="222" r="3.5"/><circle cx="505" cy="244" r="3.5"/><circle cx="508" cy="270" r="3.5"/><circle cx="500" cy="300" r="3.5"/>
+<ellipse cx="330" cy="110" rx="42" ry="24" fill="#bfe08a" stroke="#6aa32e" stroke-width="2"/><path d="M300 110h60M305 100h50M305 120h50" stroke="#6aa32e" stroke-width="2"/>
+<ellipse cx="540" cy="110" rx="42" ry="24" fill="#bfe08a" stroke="#6aa32e" stroke-width="2"/><path d="M510 110h60M515 100h50M515 120h50" stroke="#6aa32e" stroke-width="2"/>
+<ellipse cx="330" cy="400" rx="32" ry="14" fill="#eea3c8" stroke="#b8437f" stroke-width="2"/>
+<ellipse cx="470" cy="415" rx="30" ry="13" fill="#eea3c8" stroke="#b8437f" stroke-width="2"/>
+<ellipse cx="590" cy="200" rx="26" ry="11" fill="#eea3c8" stroke="#b8437f" stroke-width="2"/>`;
+const ovuleSvg=`<ellipse cx="280" cy="260" rx="130" ry="170" fill="#efd9a7" stroke="#a4772b" stroke-width="3"/>
+<ellipse cx="280" cy="285" rx="95" ry="118" fill="#f7e9c6" stroke="#c7a34d" stroke-width="2"/>
+<rect x="264" y="84" width="32" height="60" style="fill:var(--card)"/>
+<ellipse cx="280" cy="158" rx="30" ry="16" style="fill:var(--card)" stroke="#a4772b" stroke-width="2" stroke-dasharray="4 3"/>
+<ellipse cx="280" cy="305" rx="65" ry="80" fill="#cfe6b1" stroke="#6aa32e" stroke-width="2"/>
+<ellipse cx="256" cy="258" rx="11" ry="18" fill="#f4b7d3" stroke="#b8437f" stroke-width="2"/><ellipse cx="304" cy="258" rx="11" ry="18" fill="#f4b7d3" stroke="#b8437f" stroke-width="2"/>
+<line x1="790" y1="440" x2="790" y2="255" stroke="#6a8f3a" stroke-width="9" stroke-linecap="round"/>
+<ellipse cx="762" cy="205" rx="26" ry="52" fill="#f6df7a" stroke="#b59a1d" stroke-width="3"/><ellipse cx="818" cy="205" rx="26" ry="52" fill="#f6df7a" stroke="#b59a1d" stroke-width="3"/>`;
+const ranks=['Embranchement','Classe','Ordre','Famille','Genre','Espèce'],taxa=['Spermaphyte','Dicotylédones','Malvales','Caricaceae','Carica','papaya'];
+
+const DIAG=[
+{id:'alt',c:'rappels',title:'Alternance de générations (schéma général)',w:760,h:470,
+ body:L(230,57,520,57,1)+L(615,74,615,190,1)+T(632,138,'germination','tsm','start')+L(615,224,615,340,1)+T(632,286,'mitose','tsm','start')+L(520,357,230,357,1)+L(135,340,135,74,1)+T(150,215,'mitose (embryon)','tsm','start')+T(40,452,'2n = diploïde · n = haploïde','tsm','start'),
+ blanks:[[40,40,190,'Sporophyte (2n)',34],[300,18,150,'Méiose',30],[520,40,190,'Spores (n)',34],[520,190,190,'Gamétophyte (n)',34],[520,340,190,'Gamètes (n)',34],[300,318,150,'Fécondation',30],[40,340,190,'Zygote (2n)',34]],
+ extra:['Cal','Propagule']},
+{id:'mousse',c:'bryo',title:'Cycle de reproduction des mousses',w:760,h:470,
+ body:L(190,55,280,55,1)+L(190,145,280,145,1)+P('440,55 485,55 485,95 530,95',1)+P('440,145 485,145 485,110 530,110',1)+L(605,115,605,170,1)+L(605,200,605,250,1)+L(605,280,605,340,1)+L(530,355,440,355,1)+L(280,355,190,355,1)+L(115,340,115,270,1)+L(115,240,115,160,1)+P('40,255 18,255 18,55 40,55',1)+T(115,32,'gamétange ♂','tsm')+T(115,122,'gamétange ♀','tsm')+T(360,32,'gamètes ♂ (biflagellés)','tsm')+T(360,122,'gamète ♀','tsm')+T(605,388,'(capsule)','tsm')+T(40,455,'Gamétophyte dominant (n) · sporophyte (2n) dépendant','tsm','start'),
+ blanks:[[40,40,150,'Anthéridie'],[40,130,150,'Archégone'],[280,40,160,'Anthérozoïdes'],[280,130,160,'Oosphère'],[530,85,150,'Fécondation'],[530,170,150,'Zygote (2n)'],[530,250,150,'Sporophyte (2n)'],[530,340,150,'Sporange'],[410,303,115,'Méiose'],[280,340,160,'Spores (n)'],[40,340,150,'Protonéma (n)'],[40,240,150,'Gamétophyte (n)']],
+ extra:['Prothalle','Cal','Grain de pollen']},
+{id:'fougere',c:'ptero',title:'Cycle homosporé d’une fougère',w:780,h:500,
+ body:L(210,57,520,57,1)+T(365,47,'sur la face inférieure des feuilles','tsm')+L(615,74,615,170,1)+L(615,204,615,290,1)+T(630,252,'germination','tsm','start')+T(615,342,'(gamétophyte)','tsm')+L(575,324,470,390,1)+L(655,324,690,390,1)+T(392,410,'♂','tx','end')+T(756,410,'♀','tx','start')+L(460,420,510,450,1)+L(690,420,570,450,1)+L(470,465,210,465,1)+L(125,450,125,74,1)+T(140,250,'le zygote se développe sur le prothalle','tsm','start')+T(140,268,'(le gamétophyte dégénère ensuite)','tsm','start'),
+ blanks:[[40,40,170,'Sporophyte (2n)',34],[520,40,190,'Sporange',34],[628,108,120,'Méiose',30],[520,170,190,'Spores (n)',34],[520,290,190,'Prothalle (n)',34],[400,390,120,'Anthéridie',30],[630,390,120,'Archégone',30],[470,450,140,'Fécondation',30],[40,450,170,'Zygote (2n)',30]],
+ extra:['Protonéma','Microspore','Propagule']},
+{id:'evol',c:'evol',title:'Évolution des végétaux (arbre et temps géologiques)',w:800,h:520,
+ body:`<line x1="20" y1="97" x2="770" y2="97" class="gl"/><line x1="20" y1="257" x2="770" y2="257" class="gl"/>`+L(170,40,170,480)+ticks+T(20,24,'Millions d’années (Ma)','tsm','start')+L(350,485,350,405)+P('350,405 300,375 300,92')+P('350,405 430,365 430,92')+P('430,354 560,314 560,92')+P('560,156 690,116 690,92')+T(365,450,'origine des végétaux','tsm','start')+T(575,178,'lignée des plantes à fleurs','tsm','start')+T(655,382,'(premières plantes à graines)','tsm'),
+ blanks:[[20,53,125,'Cénozoïque'],[20,162,125,'Mésozoïque'],[20,348,125,'Paléozoïque'],[240,60,120,'Bryophytes'],[370,60,120,'Ptéridophytes'],[500,60,120,'Gymnospermes'],[630,60,120,'Angiospermes'],[450,395,190,'Premières vasculaires'],[580,335,150,'Spermatophytes'],[250,485,200,'Algues vertes ancestrales']],
+ extra:['Cyanobactéries','Champignons']},
+{id:'phylo',c:'classif',title:'Arbre phylogénétique des embryophytes',w:1000,h:470,
+ body:leaves.map(([n,y])=>T(698,y+5,n,'tx','start')).join('')+L(70,28,70,150)+L(70,28,690,28)+L(70,62,690,62)+L(70,150,460,150)+L(460,105,690,105)+L(460,105,460,250)+L(460,250,540,250)+L(540,207,540,370)+L(540,207,600,207)+L(600,190,600,225)+L(600,190,690,190)+L(600,225,690,225)+L(540,370,690,370)+L(630,300,630,440)+L(630,300,690,300)+L(630,335,690,335)+L(630,405,690,405)+L(630,440,690,440)+P('842,185 850,185 850,230 842,230')+P('842,295 850,295 850,445 842,445')+LD(70,156,70,172)+LD(330,156,330,172)+LD(460,156,452,212)+LD(540,256,525,268)+LD(585,376,575,392)+D(70,150)+D(200,150)+D(330,150)+D(460,150)+D(540,250)+D(585,370),
+ blanks:[[8,172,130,'Embryophytes'],[125,112,150,'Polysporangiophytes'],[265,172,130,'Trachéophytes'],[325,212,130,'Eutrachéophytes'],[385,268,140,'Euphyllophytes'],[862,195,130,'Moniliformopses'],[500,392,125,'Lignophytes'],[862,355,130,'Spermatophytes']],
+ extra:['Thallophytes','Cryptogames','Cormophytes']},
+{id:'cellule',c:'rappels',title:'La cellule végétale : légender le schéma',w:900,h:500,
+ body:cellSvg+LD(190,110,292,110)+LD(190,270,400,270)+LD(190,350,297,298)+LD(190,420,300,400)+LD(710,130,652,130)+LD(710,205,657,205)+LD(710,270,508,270)+LD(710,350,600,328)+T(450,488,'cellule végétale','tsm'),
+ blanks:[[20,95,170,'Chloroplaste'],[20,255,170,'Vacuole'],[20,335,170,'Tonoplaste'],[20,405,170,'Mitochondrie'],[710,115,170,'Paroi'],[710,190,170,'Plasmodesme'],[710,255,170,'Ribosome'],[710,335,170,'Noyau']],
+ extra:['Flagelle','Centrosome']},
+{id:'ovule',c:'prespe',title:'Ovule (Ginkgo) et étamine',w:900,h:480,
+ body:ovuleSvg+T(280,40,'Ovule d’un pré-spermaphyte (Ginkgo)','tx')+T(790,40,'Étamine','tx')+LD(140,205,168,270)+LD(140,300,200,300)+LD(140,395,250,345)+LD(430,240,313,258)+LD(430,135,306,155)+LD(815,365,795,365)+LD(770,125,764,165),
+ blanks:[[10,190,130,'Tégument'],[10,285,130,'Nucelle'],[10,380,130,'Endosperme'],[430,225,130,'Archégone'],[430,120,160,'Chambre pollinique'],[815,350,80,'Filet'],[700,95,170,'Sac pollinique']],
+ extra:['Macrospore','Pistil']},
+{id:'papaye',c:'classif',title:'Classification du papayer (Carica papaya)',w:640,h:350,
+ body:ranks.map((r,i)=>R(40,30+i*50,170,34,r)+L(210,47+i*50,300,47+i*50,1)).join('')+T(320,335,'Rangs taxonomiques du cours, du plus large au plus précis','tsm'),
+ blanks:taxa.map((t,i)=>[300,30+i*50,220,t,34]),
+ extra:['Monocotylédones','Gymnosperme','Malvaceae','Rosaceae']}
+];
+
+/* ============================ APPLICATION ============================ */
+const app=$('#app');
+let filter='all',len=20,prio=true,run=null,view='home';
+const pool=a=>filter==='all'?a:a.filter(x=>x.c===filter);
+const pr=(t,id)=>{const s=store[t][id];return s?(s.ko-.5*s.ok):.25};
+function pick(items,t,n){let a=shuffle(items);if(prio)a.sort((x,y)=>pr(t,y.id)-pr(t,x.id));return shuffle(n?a.slice(0,n):a)}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1600)}
+async function copy(txt){try{await navigator.clipboard.writeText(txt);toast('Copié ✔')}catch(e){const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');toast('Copié ✔')}catch(_){toast('Copie impossible')}t.remove()}}
+
+function home(){
+  view='home';run=null;
+  const qs=pool(QCM),fs=pool(FICHES),ds=pool(DIAG);
+  const m=(a,t)=>a.filter(x=>{const s=store[t][x.id];return s&&s.ok>s.ko}).length;
+  app.innerHTML=`<div class="grid">
+   <button class="tile" data-go="q"><span class="ic">📝</span><b>QCM</b><small>${qs.length} questions · ${m(qs,'q')} maîtrisées</small></button>
+   <button class="tile" data-go="f"><span class="ic">🃏</span><b>Questions / Réponses</b><small>${fs.length} fiches · ${m(fs,'f')} maîtrisées</small></button>
+   <button class="tile" data-go="d"><span class="ic">🧩</span><b>Schémas à compléter</b><small>${ds.length} schémas · ${m(ds,'d')} réussis</small></button>
+   <button class="tile" data-go="mix"><span class="ic">🎲</span><b>Session mixte</b><small>QCM + fiches + schémas mélangés</small></button>
   </div>
-  <div class="matiere">
-    <h2>Enzymologie</h2>
-    <ul>
-      <li><a href="enzymologie/enzymologie-concepts.html">Exercice 1 - Cours 1</a></li>
-    </ul>
-  </div> 
-  <div class="matiere">
-    <h2>Géologie</h2>
-    <ul>
-      <li><a href="https://djerrab-geologie-guelma.e-monsite.com/quiz/">Exercice géo</a></li>
-    </ul>
-  </div>
-  <div class="matiere">
-    <h2>biologie des organismes</h2>
-    <ul>
-      <li><a href="biologie des organismes/enzymologie-concepts.html">Exercice 1 - Cours 1</a></li>
-    </ul>
-  </div>  <div class="matiere">
-    <h2>Physiologie</h2>
-    <ul>
-      <li><a href="physiologie/quiz-metabolites-fruit.html">Exercice 1 - Cours 1</a></li>
-    </ul>
-  </div> 
-  <div class="matiere">
-</div>
+  <div class="card"><h3>Chapitres</h3><p class="hint">Touche un chapitre pour limiter les exercices à celui-ci.</p><div class="chl">
+   <button data-ch="all" class="${filter==='all'?'on':''}"><span>Tout le cours</span><small>${QCM.length} QCM · ${FICHES.length} fiches · ${DIAG.length} schémas</small></button>
+   ${Object.entries(CH).map(([k,v])=>`<button data-ch="${k}" class="${filter===k?'on':''}"><span>${v}</span><small>${QCM.filter(x=>x.c===k).length} QCM · ${FICHES.filter(x=>x.c===k).length} fiches · ${DIAG.filter(x=>x.c===k).length} schémas</small></button>`).join('')}
+  </div></div>
+  <div class="card"><h3>Exporter les fiches</h3><p class="hint">Copie les fiches (${fs.length}, selon le chapitre choisi) pour les coller dans ton application de flashcards.</p>
+   <div class="row"><button class="btn" data-go="cp1">Copier en texte (Q / R)</button><button class="btn" data-go="cp2">Copier en tableau (tabulation)</button><button class="btn" data-go="reset">Réinitialiser ma progression</button></div></div>`;
+}
+
+function go(k){
+  if(k==='home')return home();
+  if(k==='q'||k==='f'){const items=pick(pool(k==='q'?QCM:FICHES),k,len);if(!items.length)return toast('Rien dans ce chapitre');return start(k,items)}
+  if(k==='d')return dlist();
+  if(k==='mix'){
+    const a=[...pick(pool(QCM),'q',10).map(x=>({t:'q',x})),...pick(pool(FICHES),'f',6).map(x=>({t:'f',x})),...pick(pool(DIAG),'d',2).map(x=>({t:'d',x}))];
+    if(!a.length)return toast('Rien dans ce chapitre');
+    run={q:shuffle(a),i:0,ok:0,ko:0,bad:[],single:false};return step();
+  }
+  if(k==='redo'){const b=run.bad;run={q:shuffle(b),i:0,ok:0,ko:0,bad:[],single:false};return step()}
+  if(k==='cp1')return copy(pool(FICHES).map(f=>`Q : ${f.q}\nR : ${f.a}`).join('\n\n'));
+  if(k==='cp2')return copy(pool(FICHES).map(f=>`${f.q}\t${f.a.replace(/\n/g,'<br>')}`).join('\n'));
+  if(k==='reset'){if(confirm('Effacer toute ta progression enregistrée ?')){store={q:{},f:{},d:{}};save();home()}}
+}
+function start(t,items){run={q:items.map(x=>({t,x})),i:0,ok:0,ko:0,bad:[],single:false};step()}
+function step(){
+  if(run.i>=run.q.length)return end();
+  view='run';const e=run.q[run.i];
+  app.innerHTML=`<div class="prog"><span>${run.i+1} / ${run.q.length}</span><div class="bar"><i style="width:${run.i/run.q.length*100}%"></i></div><span>✔ ${run.ok} · ✘ ${run.ko}</span></div><div id="stage"></div>`;
+  ({q:showQ,f:showF,d:showD})[e.t](e,$('#stage'));
+}
+function rec(e,ok){const s=store[e.t][e.x.id]=store[e.t][e.x.id]||{ok:0,ko:0};ok?s.ok++:s.ko++;save();ok?run.ok++:run.ko++;if(!ok)run.bad.push(e)}
+const next=()=>{run.i++;step()};
+const nextLabel=()=>run.i+1>=run.q.length?'Terminer':'Suivant';
+function end(){
+  if(run.single)return dlist();
+  view='end';
+  const n=run.ok+run.ko,p=n?Math.round(100*run.ok/n):0;
+  app.innerHTML=`<div class="card center"><h2>Session terminée</h2><p class="big">${run.ok} / ${n} <small>(${p} %)</small></p>
+  ${run.bad.length?`<details open><summary>À revoir (${run.bad.length})</summary><ul>${run.bad.map(e=>`<li>${esc(e.t==='d'?e.x.title:e.x.q)}</li>`).join('')}</ul></details>`:'<p>Sans faute 🎉</p>'}
+  <div class="row" style="justify-content:center">${run.bad.length?'<button class="btn primary" data-go="redo">Refaire mes erreurs</button>':''}<button class="btn" data-go="home">Accueil</button></div></div>`;
+}
+
+function showQ(e,host){
+  const x=e.x,order=shuffle(x.o.map((_,i)=>i)),multi=x.a.length>1,sel=new Set();let done=false;
+  host.innerHTML=`<div class="card"><div class="tag">${CH[x.c]}</div><h2>${esc(x.q)}</h2><p class="hint">${multi?'Plusieurs réponses possibles.':'Une seule réponse.'}</p>
+  <div class="opts">${order.map((i,k)=>`<button class="opt" data-i="${i}"><b>${'ABCDE'[k]}</b><span>${esc(x.o[i])}</span></button>`).join('')}</div><div id="fb"></div>
+  <div class="row"><button class="btn primary" id="go" disabled>Valider</button></div></div>`;
+  const opts=$$('.opt'),go=$('#go');
+  opts.forEach(b=>b.onclick=()=>{
+    if(done)return;const i=+b.dataset.i;
+    if(!multi){sel.clear();opts.forEach(o=>o.classList.remove('sel'));sel.add(i)}else sel.has(i)?sel.delete(i):sel.add(i);
+    b.classList.toggle('sel',sel.has(i));go.disabled=!sel.size;
+  });
+  go.onclick=()=>{
+    if(done)return next();
+    done=true;const ok=sel.size===x.a.length&&x.a.every(i=>sel.has(i));
+    opts.forEach(o=>{const i=+o.dataset.i,A=x.a.includes(i),S=sel.has(i);o.classList.remove('sel');const c=A?(S?'good':'miss'):(S?'bad':'');if(c)o.classList.add(c)});
+    $('#fb').innerHTML=`<div class="fb ${ok?'ok':'ko'}"><b>${ok?'Correct ✔':'Incorrect ✘'}</b>${x.e?'\n'+esc(x.e):''}</div>`;
+    rec(e,ok);go.textContent=nextLabel();
+  };
+}
+function showF(e,host){
+  const x=e.x;
+  host.innerHTML=`<div class="card"><div class="tag">${CH[x.c]}</div><h2>${esc(x.q)}</h2><div id="ans" class="ans" hidden>${esc(x.a)}</div>
+  <div class="row" id="r1"><button class="btn primary" id="show">Afficher la réponse</button></div>
+  <div class="row" id="r2" hidden><button class="btn ok" id="k">✅ Je savais (1)</button><button class="btn ko" id="n">🔁 À revoir (2)</button></div></div>`;
+  $('#show').onclick=()=>{$('#ans').hidden=false;$('#r1').hidden=true;$('#r2').hidden=false};
+  $('#k').onclick=()=>{rec(e,true);next()};
+  $('#n').onclick=()=>{rec(e,false);next()};
+}
+function showD(e,host){
+  const d=e.x,bank=shuffle([...d.blanks.map(b=>b[3]),...(d.extra||[])]);
+  let st={},sc=null,sb=null,chk=false,recorded=false;
+  host.innerHTML=`<div class="card"><div class="tag">${CH[d.c]}</div><h2>${d.title}</h2><p class="hint">Touche un mot de la banque puis une case numérotée (ou l’inverse). Touche une case remplie pour la vider.</p>
+  <div class="dgw"><svg class="dg" viewBox="0 0 ${d.w} ${d.h}"></svg></div><div class="bank"></div><div id="fb"></div>
+  <div class="row"><button class="btn primary" id="chk">Vérifier</button><button class="btn" id="sol">Solution</button><button class="btn" id="rst">Recommencer</button><button class="btn primary" id="go" hidden>Suivant</button></div></div>`;
+  const svg=$('.dg'),bankEl=$('.bank'),fb=$('#fb');
+  function draw(){
+    const used=new Set(Object.values(st));let g='';
+    d.blanks.forEach((b,i)=>{
+      const [x,y,w,ans]=b,h=b[4]||30,v=st[i],txt=v!==undefined?bank[v]:'';
+      let cls='bl';if(v!==undefined)cls+=' fill';if(sb===i)cls+=' sel';
+      if(chk)cls+=(v!==undefined&&txt===ans)?' good':' bad';
+      const fs=txt?Math.min(14,(w-10)/(txt.length*.56)):13;
+      g+=`<g class="${cls}" data-b="${i}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7"/><text x="${x+w/2}" y="${y+h/2+5}" text-anchor="middle" style="font-size:${fs}px">${txt?esc(txt):i+1}</text></g>`;
+    });
+    svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="ah"/></marker></defs>${d.body}${g}`;
+    bankEl.innerHTML=bank.map((t,i)=>`<button class="chip${used.has(i)?' used':''}${sc===i?' sel':''}" data-i="${i}">${esc(t)}</button>`).join('');
+  }
+  function place(b,c){for(const k in st)if(st[k]===c)delete st[k];st[b]=c;sc=sb=null;draw()}
+  svg.onclick=ev=>{
+    if(chk)return;const g=ev.target.closest('.bl');if(!g)return;const i=+g.dataset.b;
+    if(sc!==null)return place(i,sc);
+    if(st[i]!==undefined){delete st[i];sb=null;return draw()}
+    sb=sb===i?null:i;draw();
+  };
+  bankEl.onclick=ev=>{
+    if(chk)return;const c=ev.target.closest('.chip');if(!c)return;const i=+c.dataset.i;
+    if(sb!==null)return place(sb,i);
+    sc=sc===i?null:i;draw();
+  };
+  $('#chk').onclick=()=>{
+    chk=true;sc=sb=null;
+    const n=d.blanks.filter((b,i)=>st[i]!==undefined&&bank[st[i]]===b[3]).length,tot=d.blanks.length;
+    if(!recorded){recorded=true;rec(e,n===tot);const s=store.d[d.id];s.best=Math.max(s.best||0,n);save()}
+    draw();fb.innerHTML=`<div class="fb ${n===tot?'ok':'ko'}"><b>${n} / ${tot} correct${n===tot?' — bravo ✔':''}</b>${n<tot?'\nLes cases rouges sont à corriger : « Recommencer » pour réessayer ou « Solution » pour voir la correction.':''}</div>`;
+    $('#chk').hidden=true;$('#go').hidden=false;$('#go').textContent=nextLabel();
+  };
+  $('#sol').onclick=()=>{
+    if(!recorded){recorded=true;rec(e,false)}
+    chk=true;sc=sb=null;st={};d.blanks.forEach((b,i)=>{st[i]=bank.indexOf(b[3])});draw();
+    fb.innerHTML='<div class="fb"><b>Solution affichée.</b></div>';$('#chk').hidden=true;$('#go').hidden=false;$('#go').textContent=nextLabel();
+  };
+  $('#rst').onclick=()=>{st={};sc=sb=null;chk=false;fb.innerHTML='';$('#chk').hidden=false;$('#go').hidden=true;draw()};
+  $('#go').onclick=next;
+  draw();
+}
+function dlist(){
+  view='dlist';run=null;
+  const ds=pool(DIAG);
+  app.innerHTML=`<h2>Schémas à compléter</h2><p class="hint">Chaque schéma est une carte à remplir avec une banque de mots (avec quelques intrus).</p>
+  <div class="grid">${ds.map(d=>{const s=store.d[d.id];return `<button class="tile" data-d="${d.id}"><b>${d.title}</b><small>${CH[d.c]} · ${d.blanks.length} cases${s&&s.best!==undefined?` · meilleur : ${s.best}/${d.blanks.length}`:''}</small></button>`}).join('')||'<p>Aucun schéma pour ce chapitre.</p>'}</div>
+  <button class="btn" data-go="home">← Accueil</button>`;
+}
+
+/* ---------- événements ---------- */
+app.onclick=ev=>{
+  const g=ev.target.closest('[data-go]');if(g)return go(g.dataset.go);
+  const d=ev.target.closest('[data-d]');if(d){run={q:[{t:'d',x:DIAG.find(z=>z.id===d.dataset.d)}],i:0,ok:0,ko:0,bad:[],single:true};return step()}
+  const c=ev.target.closest('[data-ch]');if(c){filter=c.dataset.ch;$('#fc').value=filter;home()}
+};
+$('#ttl').onclick=home;
+$('#fc').innerHTML='<option value="all">Tout le cours</option>'+Object.entries(CH).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+$('#fc').onchange=e=>{filter=e.target.value;if(!run)view==='dlist'?dlist():home()};
+$('#ln').onchange=e=>{len=+e.target.value};
+$('#pr').onchange=e=>{prio=e.target.checked};
+document.addEventListener('keydown',ev=>{
+  if(ev.target.matches&&ev.target.matches('select,input,textarea'))return;
+  const k=ev.key;
+  if(k==='Enter'){const b=$('#go:not([disabled]):not([hidden]),#show,#chk:not([hidden])');if(b){ev.preventDefault();b.click()}}
+  else if(/^[1-5]$/.test(k)){
+    const o=$$('.opt');
+    if(o.length){o[+k-1]&&o[+k-1].click()}
+    else if($('#r2')&&!$('#r2').hidden){$(k==='1'?'#k':'#n').click()}
+  }
+});
+home();
+</script>
 </body>
 </html>
