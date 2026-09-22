@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physio végétale – Séance 2</title>
+<style>
+:root{
+  --bg:#f4f7f2; --card:#ffffff; --ink:#1d2a1f; --muted:#5d6b5f; --line:#dde5da;
+  --accent:#2f7d46; --accent-soft:#e3f1e6; --ok:#1f8a4c; --ok-soft:#dff3e6;
+  --ko:#c0392b; --ko-soft:#fbe4e1; --warn:#b7791f; --shadow:0 2px 10px rgba(20,40,25,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111712; --card:#1a221c; --ink:#e6eee7; --muted:#9aab9d; --line:#2c382f;
+    --accent:#5cc07a; --accent-soft:#1f3326; --ok:#5cc07a; --ok-soft:#1c3324;
+    --ko:#ef7a6c; --ko-soft:#3a1f1c; --warn:#e0b060; --shadow:0 2px 10px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111712; --card:#1a221c; --ink:#e6eee7; --muted:#9aab9d; --line:#2c382f;
+  --accent:#5cc07a; --accent-soft:#1f3326; --ok:#5cc07a; --ok-soft:#1c3324;
+  --ko:#ef7a6c; --ko-soft:#3a1f1c; --warn:#e0b060; --shadow:0 2px 10px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+h1{font-size:1.4rem;margin:0}
+.sub{color:var(--muted);font-size:.92rem;margin:0 0 16px}
+.themebtn{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer}
+nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none}
+nav button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;font-size:.95rem}
+nav button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{font-size:.8rem;color:var(--muted);background:var(--accent-soft);padding:3px 10px;border-radius:999px}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:10px 0 14px}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.q{font-weight:600;font-size:1.05rem;margin:4px 0 12px}
+.hint{color:var(--muted);font-size:.85rem;margin:-6px 0 10px}
+.opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:1.5px solid var(--line);background:transparent;color:var(--ink);padding:10px 12px;border-radius:10px;margin:7px 0;cursor:pointer;font-size:.97rem}
+.opt b{flex:0 0 22px;height:22px;border-radius:6px;border:1.5px solid var(--muted);display:inline-flex;align-items:center;justify-content:center;font-size:.8rem}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel b{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt.good{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--ko);background:var(--ko-soft)}
+.opt.miss{border-color:var(--ok);border-style:dashed}
+.opt:disabled{cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:none;background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:.95rem;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:disabled{opacity:.45;cursor:default}
+.expl{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);font-size:.93rem;display:none}
+.expl.show{display:block}
+.verdict{font-weight:700;margin-bottom:4px}
+.verdict.ok{color:var(--ok)} .verdict.ko{color:var(--ko)}
+.big{font-size:2.2rem;font-weight:800;margin:4px 0}
+.vf{display:flex;gap:10px;margin-top:6px}
+.vf .btn{flex:1;padding:14px}
+.vf .btn.f{background:var(--ko)}
+.gap{margin:12px 0;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.gap:last-child{border-bottom:none}
+.gap input{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:.95rem;width:150px;margin:2px 2px}
+.gap input.good{border-color:var(--ok);background:var(--ok-soft)}
+.gap input.bad{border-color:var(--ko);background:var(--ko-soft)}
+.sol{color:var(--ok);font-size:.85rem;font-weight:600}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match .col{display:flex;flex-direction:column;gap:8px}
+.tile{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:10px;text-align:left;cursor:pointer;font-size:.9rem;min-height:48px}
+.tile.sel{border-color:var(--accent);background:var(--accent-soft)}
+.tile.done{border-color:var(--ok);background:var(--ok-soft);cursor:default;opacity:.75}
+.tile.shake{border-color:var(--ko);background:var(--ko-soft);animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.flip{perspective:1000px;cursor:pointer;min-height:220px}
+.flip .in{position:relative;min-height:220px;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;border:1px solid var(--line);background:var(--card);padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;box-shadow:var(--shadow)}
+.face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.face small{color:var(--muted);position:absolute;top:10px;left:14px;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.face p{margin:0;font-size:1.05rem}
+textarea{width:100%;min-height:160px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:10px;font:13px/1.4 ui-monospace,monospace}
+.review li{margin-bottom:8px}
+.hidden{display:none!important}
+footer{color:var(--muted);font-size:.8rem;text-align:center;margin-top:30px}
+@media (max-width:520px){ .match{grid-template-columns:1fr 1fr;gap:6px} .tile{font-size:.82rem;padding:8px} h1{font-size:1.2rem} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🌿 Physiologie végétale – Séance 2</h1>
+    <button class="themebtn" id="themeBtn" aria-label="Changer de thème">🌓</button>
+  </header>
+  <p class="sub">Croissance, développement & organisation des tissus végétaux · d'après le cours de C. Hotin</p>
+
+  <nav id="tabs">
+    <button data-t="qcm" class="on">QCM</button>
+    <button data-t="vf">Vrai / Faux</button>
+    <button data-t="trous">Textes à trous</button>
+    <button data-t="assoc">Associations</button>
+    <button data-t="flash">Flashcards</button>
+  </nav>
+
+  <!-- QCM -->
+  <section id="qcm"></section>
+  <!-- VRAI/FAUX -->
+  <section id="vf" class="hidden"></section>
+  <!-- TROUS -->
+  <section id="trous" class="hidden"></section>
+  <!-- ASSOCIATIONS -->
+  <section id="assoc" class="hidden"></section>
+  <!-- FLASHCARDS -->
+  <section id="flash" class="hidden"></section>
+
+  <footer>Exercices générés à partir du cours « Physiologie végétale – Séance 2 » (2024-2025).</footer>
+</div>
+
+<script>
+/* =========================================================
+   CONTENU — tout est tiré du cours. Pour ajouter des questions,
+   il suffit de compléter ces tableaux.
+   ========================================================= */
+
+// QCM : a = indices des bonnes réponses (0 = A, 1 = B...)
+const QCM = [
+{q:"À propos de la physiologie végétale :",o:[
+ "C'est l'étude des mécanismes qui régissent le fonctionnement et le développement des végétaux",
+ "Elle aborde le cycle du végétal : croissance, développement, formation des tissus",
+ "La nutrition correspond à l'acquisition des éléments indispensables à la vie et à leur intégration dans la matière organique",
+ "Les mécanismes de la reproduction ne font pas partie de ses principes",
+ "Elle se limite à l'échelle de la plante entière, sans approche moléculaire"],
+ a:[0,1,2],e:"3 principes : 1/ cycle du végétal (croissance, développement, tissus), 2/ nutrition et métabolisme, 3/ mécanismes de la reproduction. L'étude est à la fois physiologique ET moléculaire."},
+{q:"À propos de la croissance :",o:[
+ "C'est un aspect qualitatif",
+ "On peut la représenter par une masse fraîche ou une masse sèche",
+ "La masse fraîche est peu fiable car la quantité d'eau d'une plante est variable",
+ "La masse sèche permet un suivi temporel du même individu",
+ "Au niveau cellulaire, elle résulte de l'augmentation du nombre ET de la taille des cellules"],
+ a:[1,2,4],e:"La croissance = augmentation des dimensions, aspect QUANTITATIF. La masse sèche nécessite un passage au four : l'individu est perdu, donc pas de suivi temporel possible."},
+{q:"À propos du développement :",o:[
+ "Il inclut la croissance",
+ "C'est un aspect qualitatif",
+ "C'est l'ensemble des modifications réversibles du végétal",
+ "Il comprend l'organogenèse, l'histogenèse et la morphogenèse",
+ "Il faut environ 40 types de cellules pour fabriquer un végétal"],
+ a:[0,1,3,4],e:"Le développement végétal est l'ensemble des modifications IRRÉVERSIBLES. Il inclut la croissance + la différenciation (organes, tissus, forme, fonction)."},
+{q:"Le développement d'un organisme végétal dépend de trois processus cellulaires :",o:[
+ "Mérèse, auxèse, différenciation",
+ "Mérèse, méiose, différenciation",
+ "Auxèse, histogenèse, caulogenèse",
+ "Mitose, cytokinèse, lignification",
+ "Organogenèse, morphogenèse, rhizogenèse"],
+ a:[0],e:"Mérèse (dans les méristèmes), auxèse (zones d'élongation proches des méristèmes), différenciation cellulaire."},
+{q:"À propos de la mérèse, de l'auxèse et de la différenciation :",o:[
+ "La mérèse est une multiplication cellulaire par mitose",
+ "La mérèse n'intervient que dans les méristèmes",
+ "L'auxèse correspond à l'agrandissement de la cellule et suit la mérèse",
+ "La différenciation précède la mérèse",
+ "Les zones de différenciation se trouvent après les zones d'auxèse, elles-mêmes après les zones de mérèse"],
+ a:[0,1,2,4],e:"Ordre : mérèse → auxèse → différenciation. La différenciation = spécialisation cellulaire (réserve, photosynthèse, soutien…)."},
+{q:"Les cellules méristématiques sont :",o:[
+ "Indifférenciées",
+ "Totipotentes",
+ "Histogènes",
+ "Capables de divisions asymétriques donnant une nouvelle cellule souche + une cellule spécialisée",
+ "Des cellules mortes à maturité"],
+ a:[0,1,2,3],e:"Elles sont l'équivalent des cellules souches animales : indifférenciées, totipotentes, à fort pouvoir mitotique, potentiellement à l'origine de tous les tissus (histogènes)."},
+{q:"Quel est le seul méristème capable d'organogenèse ?",o:[
+ "Le méristème apical racinaire (MAR)",
+ "Le méristème apical caulinaire (MAC)",
+ "Le cambium",
+ "Le méristème intercalaire",
+ "Les zones génératrices latérales"],
+ a:[1],e:"Il n'y a qu'un méristème capable d'organogenèse : le MAC. La croissance des parties aériennes résulte des mitoses dans le MAC."},
+{q:"À propos de l'histogenèse, de l'organogenèse et de la morphogenèse :",o:[
+ "L'histogenèse est la formation des tissus",
+ "L'organogenèse est la formation des organes",
+ "La rhizogenèse et la caulogenèse sont des exemples d'organogenèse",
+ "La morphogenèse est l'ensemble de ces développements",
+ "L'histogenèse correspond à la formation des organes"],
+ a:[0,1,2,3],e:"Tissus = ensembles de cellules spécialisées ; organes = ensembles de tissus spécialisés. Morphogenèse = élaboration de nouvelles structures morphologiques et fonctionnelles."},
+{q:"À propos des croissances primaire et secondaire :",o:[
+ "La croissance primaire est une élongation",
+ "La croissance primaire a lieu au niveau des méristèmes apicaux, organogènes",
+ "La croissance secondaire est une augmentation en épaisseur",
+ "La croissance secondaire existe chez tous les végétaux",
+ "Le port herbacé correspond à la croissance primaire"],
+ a:[0,1,2,4],e:"La croissance secondaire a lieu au niveau des cambiums / zones génératrices (histogènes) et n'existe QUE chez les plantes ligneuses."},
+{q:"À propos de la division cellulaire végétale :",o:[
+ "La caryokinèse est la division du matériel génétique (mitose)",
+ "Cytokinèse, cytocinèse et cytodiérèse sont synonymes",
+ "La cytokinèse précède la caryokinèse",
+ "Le cloisonnement nécessite la construction d'une paroi en plus de la membrane plasmique",
+ "Les constituants de la paroi sont apportés par des vésicules"],
+ a:[0,1,3,4],e:"Ordre : caryokinèse PUIS cytokinèse (division du reste de la cellule : membrane + paroi = cloisonnement des 2 cellules filles)."},
+{q:"À propos de la mise en place de la paroi :",o:[
+ "Dans la paroi primaire, les éléments pariétaux s'intercalent",
+ "La croissance par intussusception concerne la paroi primaire",
+ "Dans la paroi secondaire, les éléments s'apposent en couches successives",
+ "L'intussusception caractérise la paroi secondaire",
+ "L'organisation des nouveaux éléments dépend de leur position"],
+ a:[0,1,2,4],e:"Paroi primaire → intercalation (intussusception). Paroi secondaire → apposition en couches successives."},
+{q:"À propos des méristèmes primaires :",o:[
+ "Ils sont présents chez toutes les plantes",
+ "Ils assurent la croissance longitudinale",
+ "Ils sont aussi appelés points végétatifs",
+ "Ils peuvent être caulinaires ou racinaires",
+ "Ils produisent les tissus secondaires"],
+ a:[0,1,2,3],e:"Les méristèmes primaires sont apicaux, existent chez tous les spermaphytes/cormophytes et produisent tous les tissus PRIMAIRES."},
+{q:"Un exemple de méristème intercalaire donné dans le cours :",o:[
+ "Les entre-nœuds du bambou",
+ "L'extrémité des racines",
+ "Le bourgeon terminal",
+ "La périphérie des tiges de chêne",
+ "Les poils absorbants"],
+ a:[0],e:"Il existe des méristèmes intercalaires, par exemple chez les bambous au niveau des entre-nœuds."},
+{q:"À propos des méristèmes secondaires :",o:[
+ "Ils portent aussi le nom de cambium",
+ "Ils existent chez les gymnospermes",
+ "Ils existent chez les dicotylédones / eudicotylédones",
+ "Ils assurent le développement en largeur (diamètre des tiges et racines)",
+ "Ils sont prépondérants chez les plantes herbacées annuelles"],
+ a:[0,1,2,3],e:"Ces formations sont peu importantes chez les herbacées annuelles et deviennent prépondérantes chez les plantes ligneuses pérennes (arbres)."},
+{q:"À propos du caractère de la croissance végétale :",o:[
+ "Grâce aux méristèmes, la croissance d'une plante est en général indéfinie",
+ "Il existe une notion de taille adulte pour les organes",
+ "La capacité d'extension des organes est permanente",
+ "Le grandissement des organes se fait selon des gradients diversement orientés",
+ "Tous les organes grandissent de façon identique quelle que soit l'espèce"],
+ a:[0,1,3],e:"Développement indéfini de la plante, MAIS capacité d'extension des organes éphémère, selon des gradients plus ou moins nets, variables selon les organes et les espèces."},
+{q:"Phytohormones stimulatrices du développement et de la croissance :",o:[
+ "Auxines (AIA)",
+ "Cytokinines (zéatine)",
+ "Gibbérellines (GA3)",
+ "Brassinostéroïdes",
+ "Éthylène"],
+ a:[0,1,2,3],e:"L'acide abscissique et l'éthylène sont cités à part, avec « d'autres rôles »."},
+{q:"Parmi les propositions suivantes, laquelle n'est PAS un des 4 grands types de tissus végétaux ?",o:[
+ "Méristèmes","Tissus fondamentaux","Tissus de revêtement","Tissus vasculaires","Tissus sécréteurs"],
+ a:[4],e:"Les 4 « tissue systems » : méristèmes, tissus fondamentaux, tissus de revêtement, tissus vasculaires."},
+{q:"À propos des méristèmes apical et latéral :",o:[
+ "Le méristème apical assure la croissance en longueur",
+ "Le méristème latéral assure la croissance en épaisseur",
+ "Le méristème apical se trouve dans les bourgeons et à l'extrémité des racines",
+ "Le méristème latéral se trouve au centre des tiges",
+ "Le méristème latéral est responsable de la croissance primaire"],
+ a:[0,1,2],e:"Méristème latéral = à la PÉRIPHÉRIE des tiges et racines → croissance secondaire (épaisseur)."},
+{q:"Fonctions des tissus fondamentaux :",o:[
+ "Remplir les espaces non occupés par les autres tissus",
+ "Mise en réserve de nutriments",
+ "Soutien et photosynthèse",
+ "Sécrétion de substances de défense ou attractives",
+ "Transport de la sève brute"],
+ a:[0,1,2,3],e:"Le transport de la sève est assuré par les tissus vasculaires (xylème / phloème)."},
+{q:"À propos des tissus simples et complexes :",o:[
+ "Un tissu simple n'est formé que d'un seul type de cellule",
+ "Parenchyme, collenchyme et sclérenchyme sont des tissus simples",
+ "Le xylème et le phloème sont des tissus complexes",
+ "Le phloème est un tissu simple",
+ "Un tissu complexe peut contenir plusieurs types de cellules"],
+ a:[0,1,2,4],e:"Xylème et phloème = tissus complexes (plusieurs sortes de cellules)."},
+{q:"À propos du parenchyme :",o:[
+ "Ses cellules sont peu différenciées",
+ "Il possède une paroi primaire mince et flexible, sans paroi secondaire",
+ "Il effectue la plupart des fonctions métaboliques (synthèse, photosynthèse)",
+ "Il peut stocker de l'amidon sous forme d'amyloplastes",
+ "Ses cellules ne peuvent jamais changer de type"],
+ a:[0,1,2,3],e:"Les cellules parenchymateuses peuvent se transformer en d'autres types de cellules dans certaines conditions (ex. blessure)."},
+{q:"À propos du parenchyme chlorophyllien de la feuille :",o:[
+ "Le parenchyme palissadique est situé à la face supérieure",
+ "Il existe un parenchyme chlorophyllien lacuneux",
+ "Ses cellules sont très proches des nervures",
+ "Ses cellules sont éloignées des éléments conducteurs",
+ "Il est responsable de la photosynthèse"],
+ a:[0,1,2,4],e:"Les cellules du parenchyme chlorophyllien sont très proches des nervures, donc des éléments conducteurs."},
+{q:"À propos du collenchyme :",o:[
+ "C'est un tissu de soutien",
+ "Sa paroi primaire est épaisse, surtout « dans les coins »",
+ "Ses cellules sont mortes à maturité",
+ "Il n'a pas de paroi secondaire donc pas de lignine",
+ "Exemple : les « fibres » du céleri"],
+ a:[0,1,3,4],e:"Collenchyme = cellules VIVANTES, allongées (~2 mm), paroi élastique et peu rigide → soutien des parties en croissance (jeunes tiges, feuilles)."},
+{q:"À propos du sclérenchyme :",o:[
+ "Il soutient les parties de la plante qui ne sont plus en croissance",
+ "Sa paroi secondaire est épaisse, rigide et imprégnée de lignine",
+ "Ses cellules sont mortes à maturité",
+ "Ses cellules peuvent continuer à croître",
+ "Il forme par exemple les fibres de lin et de sisal"],
+ a:[0,1,2,4],e:"Sclérenchyme : rigide, ne peut pas croître. Cellules allongées (quelques mm à plusieurs cm), regroupées en faisceaux = fibres végétales."},
+{q:"Collenchyme ou sclérenchyme : quelle proposition est vraie pour le COLLENCHYME uniquement ?",o:[
+ "Tissu de soutien",
+ "Cellules vivantes capables de s'allonger",
+ "Cellules allongées formant des fibres",
+ "Paroi lignifiée",
+ "Cellules mortes à maturité"],
+ a:[1],e:"Les deux sont des tissus de soutien à cellules allongées. Seul le collenchyme est vivant et extensible ; le sclérenchyme est lignifié et mort."},
+{q:"À propos de l'épiderme :",o:[
+ "Il recouvre les jeunes tiges, les jeunes racines et les feuilles",
+ "Il est généralement formé d'une seule couche de cellules",
+ "Il est souvent recouvert d'une cuticule imperméable",
+ "Celui des feuilles comprend des stomates",
+ "C'est un tissu vasculaire"],
+ a:[0,1,2,3],e:"L'épiderme appartient aux tissus de revêtement."},
+{q:"À propos des stomates :",o:[
+ "Ils contrôlent les échanges gazeux",
+ "Quand les cellules de garde se gorgent d'eau, l'ostiole s'agrandit",
+ "Quand les cellules de garde perdent de l'eau, l'ostiole se ferme",
+ "Les mouvements d'eau se font par osmose",
+ "L'ostiole se ferme quand les cellules de garde se gorgent d'eau"],
+ a:[0,1,2,3],e:"Cellules de garde gorgées d'eau (osmose) → ouverture ; perte d'eau → fermeture."},
+{q:"À propos des poils épidermiques :",o:[
+ "Ce sont des cellules épidermiques modifiées",
+ "On les trouve sur feuilles, tiges ou racines",
+ "Les poils absorbants sont situés sur la racine primaire",
+ "Certains sécrètent des substances irritantes, collantes ou aromatiques",
+ "Ce sont des cellules de sclérenchyme"],
+ a:[0,1,2,3],e:"Les poils sont des cellules de l'épiderme (tissu de revêtement) modifiées."},
+{q:"Besoins des plantes terrestres :",o:[
+ "Le CO₂ et la lumière sont pris dans l'air",
+ "L'eau et les minéraux sont pris dans le sol",
+ "Le système racinaire correspond à la partie aérienne",
+ "Le système caulinaire comprend tige, feuilles, fleurs",
+ "Les tissus conducteurs assurent le lien entre les deux parties"],
+ a:[0,1,3,4],e:"Système racinaire = partie dans le sol ; système caulinaire = partie aérienne."},
+{q:"À propos du xylème et du phloème :",o:[
+ "Le xylème transporte la sève brute (eau et minéraux)",
+ "Le phloème transporte la sève élaborée (sucres et matières organiques)",
+ "Le phloème conduit la sève vers les parties qui ne font généralement pas de photosynthèse",
+ "« Xylème » vient du grec xylos : bois",
+ "Le xylème transporte les sucres"],
+ a:[0,1,2,3],e:"Les sucres sont transportés par le phloème (sève élaborée)."},
+{q:"À propos des cellules conductrices du xylème :",o:[
+ "Les trachéides sont minces et allongées",
+ "Les éléments de vaisseau sont plus courts et plus gros",
+ "Les conifères (gymnospermes) ne contiennent que des trachéides",
+ "Les angiospermes ne contiennent que des éléments de vaisseau",
+ "Le transport est plus efficace et rapide dans les vaisseaux"],
+ a:[0,1,2,4],e:"Les angiospermes (plantes à fleurs) contiennent LES DEUX types. Le xylème constitue le bois des plantes ligneuses."},
+{q:"À propos des cellules des tubes criblés du phloème :",o:[
+ "Elles sont vivantes",
+ "Elles sont dépourvues de noyau",
+ "Leurs parois transversales sont « criblées »",
+ "Leurs besoins sont assurés par les cellules compagnes, qui possèdent un noyau",
+ "Elles vivent généralement plusieurs dizaines d'années"],
+ a:[0,1,2,3],e:"Elles ne vivent généralement pas plus d'un an. Les cribles permettent la diffusion de substances d'une cellule à l'autre."}
+];
+
+// VRAI / FAUX
+const VF = [
+["La croissance est un aspect quantitatif.",true,"Augmentation des dimensions."],
+["Le développement est un ensemble de modifications réversibles.",false,"Modifications IRRÉVERSIBLES."],
+["Le MAR est capable d'organogenèse.",false,"Seul le MAC en est capable."],
+["Les cellules méristématiques sont totipotentes.",true,"Elles peuvent donner n'importe quel type cellulaire."],
+["L'auxèse précède la mérèse.",false,"Mérèse → auxèse → différenciation."],
+["La croissance secondaire n'a lieu que chez les plantes ligneuses.",true,"Au niveau des cambiums / zones génératrices."],
+["La cytokinèse correspond à la division du matériel génétique.",false,"C'est la caryokinèse. La cytokinèse = division du reste de la cellule."],
+["La croissance par intussusception concerne la paroi primaire.",true,"Les éléments pariétaux s'y intercalent."],
+["Les méristèmes primaires produisent tous les tissus primaires.",true,""],
+["Le cambium est un méristème primaire.",false,"Le cambium = méristème secondaire."],
+["L'AIA est une cytokinine.",false,"AIA = auxine. Zéatine = cytokinine."],
+["GA3 est une gibbérelline.",true,""],
+["Le méristème latéral se situe à la périphérie des tiges et des racines.",true,""],
+["Le parenchyme possède une paroi secondaire lignifiée.",false,"Paroi primaire mince et flexible, pas de paroi secondaire."],
+["Les amyloplastes contiennent de l'amidon.",true,""],
+["Les cellules du collenchyme sont vivantes.",true,"Allongées, ~2 mm."],
+["Le collenchyme soutient les parties de la plante qui ne sont plus en croissance.",false,"C'est le rôle du sclérenchyme ; le collenchyme soutient les parties EN croissance."],
+["Les cellules du sclérenchyme sont mortes à maturité.",true,""],
+["Les fibres de lin sont formées de sclérenchyme.",true,"Linum usitatissimum. Idem pour le sisal (Agave sisalana)."],
+["L'épiderme est généralement formé de plusieurs couches de cellules.",false,"Généralement UNE seule couche."],
+["Des cellules de garde qui perdent de l'eau ferment l'ostiole.",true,"Par osmose."],
+["Le xylème et le phloème sont des tissus simples.",false,"Tissus complexes."],
+["Les conifères possèdent des éléments de vaisseau.",false,"Uniquement des trachéides."],
+["Les cellules compagnes possèdent un noyau.",true,"Contrairement aux cellules des tubes criblés."],
+["Le phloème transporte la sève brute.",false,"Sève élaborée ; la sève brute est dans le xylème."]
+];
+
+// TEXTES À TROUS : [texte avec ___ , [réponses acceptées par trou]]
+const TROUS = [
+["La croissance est un aspect ___, le développement un aspect ___.",[["quantitatif"],["qualitatif"]]],
+["Les trois processus cellulaires du développement sont la ___, l'___ et la ___.",[["merese"],["auxese"],["differenciation"]]],
+["Le seul méristème capable d'organogenèse est le ___ (sigle).",[["mac","meristeme apical caulinaire"]]],
+["La croissance primaire est une ___ ; la croissance secondaire est une augmentation en ___.",[["elongation"],["epaisseur"]]],
+["La division cellulaire comprend la ___ (division du matériel génétique) puis la ___.",[["caryokinese"],["cytokinese","cytocinese","cytodierese"]]],
+["Dans la paroi primaire, les éléments s'intercalent : c'est la croissance par ___.",[["intussusception"]]],
+["Les méristèmes primaires sont aussi appelés ___ ___.",[["points"],["vegetatifs"]]],
+["Les méristèmes secondaires portent aussi le nom de ___.",[["cambium","cambiums"]]],
+["Exemple de méristème intercalaire : chez les ___, au niveau des entre-nœuds.",[["bambous","bambou"]]],
+["Auxine : ___ ; cytokinine : ___ ; gibbérelline : ___.",[["aia"],["zeatine"],["ga3"]]],
+["Le parenchyme stocke l'amidon sous forme d'___.",[["amyloplastes","amyloplaste"]]],
+["La paroi secondaire du sclérenchyme est imprégnée de ___.",[["lignine"]]],
+["L'ouverture du stomate s'appelle l'___ ; elle est bordée par les cellules de ___.",[["ostiole"],["garde"]]],
+["Le xylème contient deux types de cellules conductrices : les ___ et les éléments de ___.",[["tracheides","tracheide"],["vaisseau","vaisseaux"]]],
+["Le phloème est formé des cellules des tubes ___ et des cellules ___.",[["cribles","crible"],["compagnes","compagne"]]]
+];
+
+// ASSOCIATIONS (plusieurs séries)
+const ASSOC = [
+{t:"Processus & définitions",p:[
+ ["Mérèse","Multiplication cellulaire par mitose"],
+ ["Auxèse","Agrandissement de la cellule"],
+ ["Différenciation","Spécialisation cellulaire"],
+ ["Histogenèse","Formation des tissus"],
+ ["Organogenèse","Formation des organes"],
+ ["Morphogenèse","Élaboration de nouvelles structures morphologiques et fonctionnelles"]]},
+{t:"Tissus de soutien & de base",p:[
+ ["Parenchyme","Paroi primaire mince, réserves (amyloplastes), photosynthèse"],
+ ["Collenchyme","Vivant, paroi épaisse « dans les coins », sans lignine"],
+ ["Sclérenchyme","Mort à maturité, paroi secondaire lignifiée"],
+ ["Épiderme","Une couche de cellules, souvent recouverte de cuticule"],
+ ["Cambium","Méristème secondaire → croissance en épaisseur"],
+ ["MAC","Seul méristème organogène"]]},
+{t:"Tissus conducteurs",p:[
+ ["Xylème","Sève brute (eau + minéraux)"],
+ ["Phloème","Sève élaborée (sucres)"],
+ ["Trachéides","Cellules minces et allongées, seules chez les conifères"],
+ ["Éléments de vaisseau","Plus courts et plus gros, transport plus rapide"],
+ ["Tubes criblés","Vivants, sans noyau, parois criblées"],
+ ["Cellules compagnes","Possèdent un noyau, assurent les besoins des tubes criblés"]]},
+{t:"Phytohormones & exemples",p:[
+ ["Auxines","AIA"],
+ ["Cytokinines","Zéatine"],
+ ["Gibbérellines","GA3"],
+ ["Brassinostéroïdes","Stimulateurs de croissance (4e famille citée)"],
+ ["Acide abscissique & éthylène","« Autres rôles »"],
+ ["Exemple de méristème intercalaire","Entre-nœuds du bambou"]]}
+];
+
+// FLASHCARDS
+const FLASH = [
+["Définition de la croissance ?","Augmentation des dimensions (aspect quantitatif) : taille, volume, masse. Représentée par masse fraîche ou sèche."],
+["Inconvénient de la masse fraîche ?","Elle dépend de la quantité d'eau de la plante, qui est variable."],
+["Inconvénient de la masse sèche ?","L'individu est perdu (passage au four) : pas de suivi temporel possible."],
+["Définition du développement ?","Ensemble des modifications irréversibles ; inclut la croissance + la différenciation (aspect qualitatif)."],
+["Combien de types cellulaires pour fabriquer un végétal ?","40"],
+["Les 3 processus cellulaires du développement ?","Mérèse (méristèmes), auxèse (zones d'élongation), différenciation."],
+["Caractéristiques des cellules méristématiques ?","Indifférenciées, totipotentes, histogènes, fort pouvoir mitotique, divisions asymétriques."],
+["Seul méristème capable d'organogenèse ?","Le méristème apical caulinaire (MAC)."],
+["Histogenèse ? Organogenèse ? Morphogenèse ?","Formation des tissus / formation des organes (ex. rhizogenèse, caulogenèse) / ensemble de ces développements."],
+["Croissance primaire ?","Élongation, au niveau des méristèmes apicaux (organogènes), chez tous les végétaux (port herbacé)."],
+["Croissance secondaire ?","Augmentation en épaisseur, au niveau des cambiums / zones génératrices (histogènes), uniquement chez les ligneuses."],
+["Les 2 étapes de la division cellulaire ?","Caryokinèse (mitose) puis cytokinèse / cytocinèse / cytodiérèse (cloisonnement)."],
+["Intussusception ?","Croissance de la paroi primaire : les nouveaux éléments pariétaux s'intercalent."],
+["Mise en place de la paroi secondaire ?","Apposition en couches successives."],
+["Autre nom des méristèmes primaires ?","Points végétatifs (apicaux, caulinaires ou racinaires)."],
+["Exemple de méristème intercalaire ?","Bambous, au niveau des entre-nœuds."],
+["Chez qui trouve-t-on des méristèmes secondaires ?","Dicotylédones / eudicotylédones et gymnospermes."],
+["Ordre des zones le long d'un axe ?","Mérèse → auxèse → différenciation."],
+["4 phytohormones stimulatrices + exemples ?","Auxines (AIA), cytokinines (zéatine), gibbérellines (GA3), brassinostéroïdes."],
+["Hormones citées avec « d'autres rôles » ?","Acide abscissique et éthylène."],
+["Les 4 grands types de tissus végétaux ?","Méristèmes, tissus fondamentaux, tissus de revêtement, tissus vasculaires."],
+["Localisation méristème apical / latéral ?","Apical : bourgeons + extrémité des racines. Latéral : périphérie des tiges et racines."],
+["Fonctions des tissus fondamentaux ?","Remplissage, réserve, soutien, photosynthèse, sécrétion."],
+["Les 3 types cellulaires des tissus fondamentaux ?","Parenchyme, collenchyme, sclérenchyme (tissus simples)."],
+["Tissu simple vs complexe ?","Simple : un seul type cellulaire. Complexe : plusieurs types (ex. xylème, phloème)."],
+["Caractéristiques du parenchyme ?","Peu différencié, paroi primaire mince, pas de paroi secondaire, métabolisme, réserves (amyloplastes), peut se transformer."],
+["Parenchyme chlorophyllien : 2 types ?","Palissadique (face supérieure) et lacuneux ; proches des nervures."],
+["Caractéristiques du collenchyme ?","Soutien des parties en croissance ; vivant ; paroi primaire épaisse « dans les coins » ; pas de lignine ; ex. céleri."],
+["Caractéristiques du sclérenchyme ?","Soutien des parties qui ne croissent plus ; paroi secondaire lignifiée ; mort à maturité ; fibres (lin, sisal)."],
+["Caractéristiques de l'épiderme ?","Une couche de cellules, souvent une cuticule imperméable ; stomates ; poils."],
+["Fonctionnement du stomate ?","Cellules de garde gorgées d'eau (osmose) → ostiole ouvert ; perte d'eau → fermé."],
+["Rôle du xylème ? du phloème ?","Xylème : sève brute (eau + minéraux). Phloème : sève élaborée (sucres) vers les parties non photosynthétiques."],
+["Trachéides vs éléments de vaisseau ?","Trachéides : minces, allongées (seules chez les conifères). Vaisseaux : courts, gros, plus efficaces (angiospermes : les deux)."],
+["Cellules des tubes criblés ?","Vivantes (< 1 an), sans noyau, parois criblées, dépendantes des cellules compagnes."]
+];
+
+/* ========================= OUTILS ========================= */
+const $ = s => document.querySelector(s);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+const L = "ABCDEFGH";
+const store = { get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}} };
+
+/* ========================= ONGLETS ========================= */
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
+  ["qcm","vf","trous","assoc","flash"].forEach(id=>$("#"+id).classList.toggle("hidden",id!==b.dataset.t));
+});
+// thème
+(function(){
+  const r=document.documentElement, t=store.get("pv2-theme",null); if(t) r.dataset.theme=t;
+  $("#themeBtn").onclick=()=>{
+    const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    r.dataset.theme = dark?"light":"dark"; store.set("pv2-theme",r.dataset.theme);
+  };
+})();
+
+/* ========================= QCM ========================= */
+const Q = {list:[],i:0,score:0,wrong:[],sel:new Set(),done:false,order:[]};
+function qcmStart(indices){
+  Q.list = shuffle(indices ?? QCM.map((_,i)=>i)); Q.i=0; Q.score=0; Q.wrong=[]; qcmShow();
+}
+function qcmShow(){
+  const box=$("#qcm");
+  if(Q.i>=Q.list.length) return qcmEnd();
+  const it=QCM[Q.list[Q.i]]; Q.sel=new Set(); Q.done=false;
+  Q.order = shuffle(it.o.map((_,k)=>k));
+  const pct = Q.i/Q.list.length*100;
+  box.innerHTML=`<div class="card">
+   <div class="row"><span class="pill">Question ${Q.i+1} / ${Q.list.length}</span><span class="pill">Score : ${Q.score}</span></div>
+   <div class="bar"><i style="width:${pct}%"></i></div>
+   <div class="q">${it.q}</div>
+   <div class="hint">Une ou plusieurs réponses exactes</div>
+   <div id="opts">${Q.order.map((k,n)=>`<button class="opt" data-k="${k}"><b>${L[n]}</b><span>${it.o[k]}</span></button>`).join("")}</div>
+   <div class="expl" id="expl"></div>
+   <div class="btns"><button class="btn" id="val" disabled>Valider</button><button class="btn ghost hidden" id="next">Suivante →</button></div>
+  </div>`;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(Q.done) return; const k=+b.dataset.k;
+    Q.sel.has(k)?Q.sel.delete(k):Q.sel.add(k); b.classList.toggle("sel");
+    $("#val").disabled = Q.sel.size===0;
+  });
+  $("#val").onclick=()=>{
+    Q.done=true; const good=new Set(it.a);
+    let exact = Q.sel.size===good.size && [...Q.sel].every(k=>good.has(k));
+    box.querySelectorAll(".opt").forEach(b=>{
+      const k=+b.dataset.k; b.disabled=true; b.classList.remove("sel");
+      if(Q.sel.has(k)&&good.has(k)) b.classList.add("good");
+      else if(Q.sel.has(k)) b.classList.add("bad");
+      else if(good.has(k)) b.classList.add("miss");
+    });
+    if(exact) Q.score++; else Q.wrong.push(Q.list[Q.i]);
+    const letters = Q.order.map((k,n)=>good.has(k)?L[n]:null).filter(Boolean).join(", ");
+    const ex=$("#expl"); ex.classList.add("show");
+    ex.innerHTML=`<div class="verdict ${exact?"ok":"ko"}">${exact?"✔ Exact !":"✘ Pas tout à fait"} — Réponse(s) : ${letters}</div>${it.e}`;
+    $("#val").classList.add("hidden"); $("#next").classList.remove("hidden");
+  };
+  $("#next").onclick=()=>{Q.i++;qcmShow();window.scrollTo({top:0,behavior:"smooth"});};
+}
+function qcmEnd(){
+  const n=Q.list.length, best=store.get("pv2-qcm-best",0), pc=Math.round(Q.score/n*100);
+  if(pc>best) store.set("pv2-qcm-best",pc);
+  $("#qcm").innerHTML=`<div class="card" style="text-align:center">
+    <div class="pill">Résultat</div><div class="big">${Q.score} / ${n}</div>
+    <div>${pc} % · meilleur score : ${Math.max(best,pc)} %</div>
+    <div class="btns" style="justify-content:center">
+      ${Q.wrong.length?`<button class="btn" id="redo">Refaire mes ${Q.wrong.length} erreur(s)</button>`:""}
+      <button class="btn ghost" id="restart">Recommencer tout</button></div></div>
+    ${Q.wrong.length?`<div class="card"><b>À revoir :</b><ul class="review">${Q.wrong.map(i=>`<li>${QCM[i].q}<br><small style="color:var(--muted)">${QCM[i].e}</small></li>`).join("")}</ul></div>`:""}`;
+  const w=[...Q.wrong];
+  if(w.length) $("#redo").onclick=()=>qcmStart(w);
+  $("#restart").onclick=()=>qcmStart();
+}
+qcmStart();
+
+/* ========================= VRAI / FAUX ========================= */
+const V={list:[],i:0,score:0};
+function vfStart(){V.list=shuffle(VF);V.i=0;V.score=0;vfShow();}
+function vfShow(){
+  const box=$("#vf");
+  if(V.i>=V.list.length){
+    box.innerHTML=`<div class="card" style="text-align:center"><div class="pill">Résultat</div><div class="big">${V.score} / ${V.list.length}</div><div class="btns" style="justify-content:center"><button class="btn" id="vfr">Recommencer</button></div></div>`;
+    $("#vfr").onclick=vfStart; return;
+  }
+  const [s,ans,ex]=V.list[V.i];
+  box.innerHTML=`<div class="card"><div class="row"><span class="pill">${V.i+1} / ${V.list.length}</span><span class="pill">Score : ${V.score}</span></div>
+   <div class="bar"><i style="width:${V.i/V.list.length*100}%"></i></div>
+   <div class="q">${s}</div>
+   <div class="vf"><button class="btn" id="bv">Vrai</button><button class="btn f" id="bf">Faux</button></div>
+   <div class="expl" id="vfe"></div>
+   <div class="btns"><button class="btn ghost hidden" id="vfn">Suivante →</button></div></div>`;
+  const go=r=>{
+    const ok=r===ans; if(ok)V.score++;
+    $("#bv").disabled=$("#bf").disabled=true;
+    const e=$("#vfe"); e.classList.add("show");
+    e.innerHTML=`<div class="verdict ${ok?"ok":"ko"}">${ok?"✔ Exact":"✘ Faux"} — c'était ${ans?"VRAI":"FAUX"}</div>${ex}`;
+    $("#vfn").classList.remove("hidden");
+  };
+  $("#bv").onclick=()=>go(true); $("#bf").onclick=()=>go(false);
+  $("#vfn").onclick=()=>{V.i++;vfShow();};
+}
+vfStart();
+
+/* ========================= TEXTES À TROUS ========================= */
+function trousBuild(){
+  const box=$("#trous");
+  box.innerHTML=`<div class="card"><div class="row"><span class="pill">Complète les phrases (les accents ne comptent pas)</span><span class="pill" id="tscore">0 / ${TROUS.reduce((s,t)=>s+t[1].length,0)}</span></div>
+  <div id="gaps">${TROUS.map((t,i)=>{let n=0;return `<div class="gap" data-i="${i}">${t[0].replace(/___/g,()=>`<input data-g="${n++}" autocomplete="off" autocapitalize="off" spellcheck="false">`)} <div class="sol hidden"></div></div>`}).join("")}</div>
+  <div class="btns"><button class="btn" id="tcheck">Vérifier</button><button class="btn ghost" id="tsol">Afficher les réponses</button><button class="btn ghost" id="treset">Effacer</button></div></div>`;
+  const check=(show)=>{
+    let ok=0;
+    box.querySelectorAll(".gap").forEach(g=>{
+      const t=TROUS[+g.dataset.i];
+      g.querySelectorAll("input").forEach(inp=>{
+        const acc=t[1][+inp.dataset.g], v=norm(inp.value);
+        inp.classList.remove("good","bad");
+        if(!v) return;
+        if(acc.includes(v)){inp.classList.add("good");ok++;} else inp.classList.add("bad");
+      });
+      const sol=g.querySelector(".sol");
+      if(show){sol.classList.remove("hidden");sol.textContent="→ "+t[1].map(a=>a[0]).join(" · ");}
+    });
+    $("#tscore").textContent=`${ok} / ${TROUS.reduce((s,t)=>s+t[1].length,0)}`;
+  };
+  $("#tcheck").onclick=()=>check(false);
+  $("#tsol").onclick=()=>check(true);
+  $("#treset").onclick=trousBuild;
+  box.querySelectorAll("input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")check(false);}));
+}
+trousBuild();
+
+/* ========================= ASSOCIATIONS ========================= */
+let A={set:0};
+function assocShow(){
+  const s=ASSOC[A.set], box=$("#assoc");
+  const left=shuffle(s.p.map((p,i)=>({i,t:p[0]}))), right=shuffle(s.p.map((p,i)=>({i,t:p[1]})));
+  box.innerHTML=`<div class="card"><div class="row"><span class="pill">Série ${A.set+1} / ${ASSOC.length} · ${s.t}</span><span class="pill" id="acount">0 / ${s.p.length}</span></div>
+   <p class="hint" style="margin:10px 0">Clique un terme à gauche puis sa correspondance à droite.</p>
+   <div class="match"><div class="col" id="lc">${left.map(x=>`<button class="tile" data-i="${x.i}">${x.t}</button>`).join("")}</div>
+   <div class="col" id="rc">${right.map(x=>`<button class="tile" data-i="${x.i}">${x.t}</button>`).join("")}</div></div>
+   <div class="btns"><button class="btn ghost" id="aprev">← Série précédente</button><button class="btn ghost" id="aredo">Mélanger</button><button class="btn" id="anext">Série suivante →</button></div></div>`;
+  let pick=null, found=0;
+  const all=box.querySelectorAll(".tile");
+  all.forEach(t=>t.onclick=()=>{
+    if(t.classList.contains("done")) return;
+    const isLeft=t.parentElement.id==="lc";
+    if(!pick || pick.parentElement===t.parentElement){
+      box.querySelectorAll(".tile.sel").forEach(x=>x.classList.remove("sel"));
+      pick=t; t.classList.add("sel"); return;
+    }
+    const a=pick, b=t; pick=null; a.classList.remove("sel");
+    if(a.dataset.i===b.dataset.i){ a.classList.add("done"); b.classList.add("done"); found++;
+      $("#acount").textContent=`${found} / ${s.p.length}`;
+      if(found===s.p.length) $("#acount").textContent="✔ Série réussie !";
+    } else { [a,b].forEach(x=>{x.classList.add("shake");setTimeout(()=>x.classList.remove("shake"),400);}); }
+  });
+  $("#aprev").disabled=A.set===0; $("#anext").disabled=A.set===ASSOC.length-1;
+  $("#aprev").onclick=()=>{A.set--;assocShow();};
+  $("#anext").onclick=()=>{A.set++;assocShow();};
+  $("#aredo").onclick=assocShow;
+}
+assocShow();
+
+/* ========================= FLASHCARDS ========================= */
+const F={deck:[],i:0,review:[]};
+function flashStart(deck){F.deck=shuffle(deck??FLASH);F.i=0;F.review=[];flashShow();}
+function flashShow(){
+  const box=$("#flash");
+  if(F.i>=F.deck.length){
+    box.innerHTML=`<div class="card" style="text-align:center"><div class="pill">Paquet terminé</div>
+     <div class="big">${F.deck.length-F.review.length} / ${F.deck.length}</div><div>cartes connues</div>
+     <div class="btns" style="justify-content:center">${F.review.length?`<button class="btn" id="frev">Revoir les ${F.review.length} carte(s) ratée(s)</button>`:""}<button class="btn ghost" id="fall">Tout recommencer</button></div></div>`+exportCard();
+    const r=[...F.review]; if(r.length) $("#frev").onclick=()=>flashStart(r);
+    $("#fall").onclick=()=>flashStart(); bindExport(); return;
+  }
+  const [q,a]=F.deck[F.i];
+  box.innerHTML=`<div class="row" style="margin-bottom:10px"><span class="pill">Carte ${F.i+1} / ${F.deck.length}</span><span class="pill">À revoir : ${F.review.length}</span></div>
+   <div class="flip" id="fc"><div class="in"><div class="face"><small>Question</small><p>${q}</p></div><div class="face back"><small>Réponse</small><p>${a}</p></div></div></div>
+   <p class="hint" style="text-align:center;margin-top:8px">Touche la carte pour la retourner</p>
+   <div class="btns" style="justify-content:center"><button class="btn f" style="background:var(--ko)" id="fno">✘ À revoir</button><button class="btn" id="fyes">✔ Je savais</button></div>`+exportCard();
+  $("#fc").onclick=()=>$("#fc").classList.toggle("on");
+  $("#fyes").onclick=()=>{F.i++;flashShow();};
+  $("#fno").onclick=()=>{F.review.push(F.deck[F.i]);F.i++;flashShow();};
+  bindExport();
+}
+function exportCard(){
+  return `<div class="card" style="margin-top:18px"><details><summary style="cursor:pointer;font-weight:600">📋 Exporter toutes les flashcards (format Q&amp;R)</summary>
+   <textarea id="fexp" readonly>${FLASH.map(([q,a])=>`Q: ${q}\nR: ${a}`).join("\n\n")}</textarea>
+   <div class="btns"><button class="btn ghost" id="fcopy">Copier</button></div></details></div>`;
+}
+function bindExport(){
+  const b=$("#fcopy"); if(!b) return;
+  b.onclick=()=>{const t=$("#fexp"); t.select();
+    (navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(()=>b.textContent="Copié ✔").catch(()=>{document.execCommand("copy");b.textContent="Copié ✔";});};
+}
+flashStart();
+</script>
+</body>
+</html>
